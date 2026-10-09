@@ -18,15 +18,18 @@ export function middleware(req: NextRequest) {
   const hostname = req.headers.get('host') || '';
   const pathname = url.pathname;
 
-  // 1. Identify if request is targeting the Admin Subdomain (adm.qwenton.shop / admin.*)
-  const isAdmSubdomain =
+  // 1. Identify if request is targeting the Admin Portal (adm.qwenton.shop, NEXT_PUBLIC_APP_MODE=admin, or admin preview)
+  const isAdmPortal =
+    process.env.NEXT_PUBLIC_APP_MODE === 'admin' ||
     hostname.startsWith('adm.') ||
     hostname.startsWith('admin.') ||
-    hostname === 'adm.qwenton.shop';
+    hostname === 'adm.qwenton.shop' ||
+    hostname.includes('-admin-') ||
+    hostname.includes('qwenton-admin');
 
-  // 2. Admin Subdomain Logic
-  if (isAdmSubdomain) {
-    // If browsing root of adm.qwenton.shop, rewrite directly to /admin
+  // 2. Admin Portal Logic
+  if (isAdmPortal) {
+    // If browsing root of admin deployment, rewrite directly to /admin
     if (pathname === '/') {
       url.pathname = '/admin';
       return NextResponse.rewrite(url);
