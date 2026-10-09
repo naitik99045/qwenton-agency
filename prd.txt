@@ -1,0 +1,388 @@
+# qwenton-agents — Product Requirements Document
+
+## 1. Product definition
+
+Product: qwenton-agents
+
+Version: 0.2 Vercel/Firebase SaaS MVP
+
+Category: AI coworker and agent workspace
+
+Primary users: Business owners, small teams, and marketing teams
+
+Primary deployment: Vercel from one GitHub repository, without Docker as a required tool
+
+Identity: Firebase Authentication
+
+Primary application data: Firestore
+
+File storage: Firebase Storage or Vercel Blob
+
+Billing: Stripe
+
+Messaging channel: Web application plus Telegram Bot API
+
+Model development provider: LM Studio through an OpenAI-compatible API
+
+Production model provider: Public HTTPS OpenAI-compatible endpoint or managed model provider
+
+## 2. Product summary
+
+qwenton-agents is an original AI coworker platform. A user can create up to three specialized agents, give each agent instructions and approved tools, upload knowledge, chat through the web, connect Telegram, review activity, approve sensitive actions, and schedule draft work.
+
+The initial product focuses on a practical Marketing Research Assistant. It can analyze uploaded documents, perform approved web research, prepare reports, suggest content, and respond through the web or Telegram. It must not publish, send, change external systems, or spend money without explicit human approval.
+
+## 3. Problem statement
+
+Small businesses need practical AI assistance but want a product that is easy to deploy, understandable, and safe. Existing chat tools lack reliable company context. Automation tools require too much step-by-step configuration. Autonomous systems can hide activity and make uncontrolled changes. qwenton-agents combines agent configuration, knowledge, tool use, user-visible activity, human approvals, Telegram access, and subscription management in one product.
+
+## 4. Goals
+
+The first production-oriented MVP must:
+
+1. Deploy from one GitHub repository to Vercel without Docker.
+2. Provide secure Firebase login and protected user areas.
+3. Enforce a maximum of three active agents per user.
+4. Allow users to create, configure, pause, and archive agents.
+5. Connect the agent runtime to LM Studio locally and a production model endpoint remotely.
+6. Support chat, streaming where possible, safe tools, file knowledge, and run history.
+7. Support Telegram bot chat with an assigned agent.
+8. Provide Stripe-ready subscription checkout, portal, webhook handling, and plan entitlements.
+9. Provide a protected admin panel for users, plans, subscriptions, usage, integrations, Telegram connections, runs, approvals, and audit events.
+10. Provide a safe foundation for future connectors to business services.
+
+## 5. Non-goals
+
+The MVP will not include a self-hosted model cluster, unrestricted shell execution, automatic ad spending, automatic public publishing, uncontrolled browser automation, native mobile apps, complex agent-to-agent collaboration, or a promise that every service supported by another platform is available immediately. The integration architecture must be extensible, but providers should be implemented in phases.
+
+## 6. Personas
+
+### Owner/operator
+
+Creates agents, manages plan and usage, reviews approvals, and wants a simple interface without Docker or infrastructure knowledge.
+
+### Marketing contributor
+
+Uses research, document analysis, content drafting, reports, and Telegram chat. Needs source links, knowledge controls, and safe drafts.
+
+### Administrator
+
+Manages users, plans, subscriptions, entitlement settings, system health, failed runs, integrations, Telegram connections, and audit records.
+
+## 7. Account and authentication requirements
+
+Use Firebase Authentication with email/password, Google sign-in, password reset, email verification, logout, and persistent session handling. Create a server-controlled user profile after registration. Store `uid`, email, display name, role, plan ID, status, timestamps, and usage counters.
+
+Protected pages and API handlers must verify Firebase ID tokens. Admin access must be checked server-side using a database role and, optionally, Firebase custom claims. The frontend must not be trusted to enforce authorization.
+
+User states: active, suspended, deleted, and pending verification.
+
+Admin roles: admin and support-admin. Do not expose sensitive billing or secret information to support-admin unless explicitly authorized.
+
+## 8. Agent entitlements and limit
+
+The base user entitlement is a maximum of **3 active agents**. Archived agents do not count toward the active limit unless the selected plan says otherwise.
+
+Agent creation must be enforced server-side with a Firestore transaction or an equivalent atomic counter:
+
+- Authenticate the user.
+- Load current subscription and plan entitlement.
+- Read active-agent count.
+- Reject when `activeAgents >= maxAgents`.
+- Create the agent and increment the count atomically.
+
+The UI must show `2 of 3 agents used`. Duplicate requests and concurrent creates must not result in a fourth agent. Archiving and restoring an agent must update the count atomically.
+
+Plan fields:
+
+```text
+id
+name
+stripeProductId
+stripePriceId
+maxAgents
+maxRunsPerMonth
+maxFileStorageBytes
+maxTelegramConnections
+features
+active
+```
+
+The entitlement service must be the only place that decides whether a user can create an agent, run a task, connect Telegram, or use a feature.
+
+## 9. Subscription and billing requirements
+
+Use Stripe Checkout and the Stripe-hosted Billing Portal. qwenton-agents must never collect raw card information.
+
+Required flows:
+
+- Public pricing page.
+- Authenticated checkout session creation.
+- Stripe customer creation and Firebase UID mapping.
+- Billing Portal session.
+- Webhook handling with raw-body signature verification.
+- Idempotent event processing.
+- Subscription status synchronization.
+- Plan changes, cancellation, renewal, past-due, unpaid, and incomplete states.
+- Grace period behavior documented and implemented.
+- Admin plan management and subscription overview.
+
+Required webhook events include checkout completion, subscription created/updated/deleted, invoice paid, and invoice payment failed. Store event IDs to prevent duplicate processing. Do not trust client-supplied plan IDs or prices.
+
+## 10. Core use cases
+
+### Create a marketing agent
+
+The user chooses Marketing Research Assistant, enters a name and instructions, selects safe tools, reviews permissions, and creates the agent. The interface shows the remaining agent allowance.
+
+### Research and report
+
+The user asks a question. The agent retrieves relevant files and uses approved web research. It returns a report with citations, evidence, assumptions, and recommendations. The report is saved to the conversation or as a file.
+
+### Telegram chat
+
+The user connects a Telegram bot, selects an agent, and speaks to that agent through Telegram. The system maps the Telegram chat to the authenticated account and selected agent. The user can change the selected agent or disconnect the bot from the web panel.
+
+### Approve an external action
+
+The agent prepares an action such as sending a Telegram reply, Slack message, or email. The run changes to `waiting_for_approval`. The user approves or rejects from the web panel and, where safe, from Telegram inline controls.
+
+### Manage billing
+
+The user views plan and usage, starts Checkout, opens the Billing Portal, sees subscription status, and understands how the three-agent allowance applies.
+
+### Admin management
+
+An admin searches users, views subscription state and usage, adjusts plan configuration, suspends accounts, inspects failed runs, and reviews audit events. Secrets must not be displayed.
+
+## 11. Functional requirements
+
+### FR-1: User panel
+
+Provide dashboard, agents, conversations, approvals, knowledge/files, routines, integrations, billing, and settings. Show account status, plan, agent usage, active runs, pending approvals, and Telegram status.
+
+### FR-2: Agent management
+
+Support create, read, update, archive, restore, duplicate, pause, resume, and delete where safe. Each agent has name, purpose, system instructions, model setting, status, enabled tools, knowledge access, Telegram assignment, and timestamps.
+
+### FR-3: Chat
+
+Support conversations, message persistence, Markdown, attachments, retry, cancellation, streaming or polling fallback, and visible status. A conversation is always scoped to the authenticated user and agent.
+
+### FR-4: LLM provider
+
+Implement a provider interface and an OpenAI-compatible client. Local development uses LM Studio. Production uses a public HTTPS provider. Store provider credentials only on the server. Include health checks, timeout handling, response validation, and useful errors.
+
+### FR-5: Agent runtime
+
+Implement a bounded tool-calling loop with maximum steps, timeout, cancellation, token/context limits, output limits, event logging, and graceful failure. Do not execute arbitrary shell commands or raw model-generated SQL.
+
+### FR-6: Tools
+
+Initial tools: calculator, current time, read uploaded file, internal knowledge search, public web research through a configured provider, and Markdown report creation. Every tool requires a typed schema, permission class, timeout, and audit event.
+
+### FR-7: Integrations
+
+Create a connector catalog with provider, auth type, scopes, encrypted secret reference, status, last-tested time, and agent permissions. Design adapters for Google Drive, Slack, Gmail, Calendar, Notion, GitHub, Canva, Telegram, and generic REST API keys. Implement the first release with Telegram and at least one safe internal/document connector; document other connectors as planned adapters if they are not yet implemented.
+
+API-key connectors must validate keys server-side, support rotation and revocation, mask values in the UI, and never expose them to models or clients unnecessarily. OAuth connectors must store provider-managed token references or encrypted server-side tokens.
+
+### FR-8: Telegram
+
+Support token validation through Bot API `getMe`, webhook registration, webhook verification, chat-to-user mapping, selected-agent routing, `/start`, `/help`, `/agents`, `/use`, `/stop`, and `/status`. Use HTTPS in production. Provide local polling or secure tunnel instructions for development. Rate-limit and deduplicate webhook updates.
+
+### FR-9: Files and knowledge
+
+Upload PDF, DOCX, TXT, and Markdown where practical. Store files in Firebase Storage or Vercel Blob. Extract text server-side, chunk it, index it, and retrieve relevant content. Store ownership and agent-access metadata. Do not use local disk as production storage.
+
+### FR-10: Memory
+
+Store conversation history, explicit user-approved memories, and document knowledge. Allow users to view, correct, and delete memories. Do not store credentials or sensitive values as memories.
+
+### FR-11: Approvals
+
+External messages, publication, document changes, CRM writes, calendar changes, browser actions, shell actions, destructive changes, and spending must require an approval record. The backend must enforce the pause. Approval dialogs show exact action, target, content, risk, and expiration.
+
+### FR-12: Routines
+
+Support scheduled draft reports and checks. Use a durable job adapter compatible with Vercel Workflow, Inngest, or Trigger.dev. Do not rely on an infinite in-process scheduler in a Vercel Function. The first routine should generate a weekly marketing report without publishing or sending externally.
+
+### FR-13: Admin panel
+
+Admin pages include overview metrics, users, agents, subscriptions, plans, usage, runs, approvals, integrations, Telegram connections, billing events, audit events, and system health. Admin actions include suspend/reactivate user, pause agent, update plan configuration, inspect webhook failures, retry safe events, and view non-secret connection status.
+
+Every admin mutation must verify role server-side and create an audit record.
+
+## 12. Data collections
+
+Use Firestore collections with ownership and timestamps:
+
+```text
+users
+plans
+subscriptions
+billingEvents
+agents
+conversations
+messages
+runs
+runEvents
+toolCalls
+approvals
+files
+documentChunks
+memories
+routines
+integrations
+telegramConnections
+auditEvents
+systemHealth
+```
+
+Important fields include `ownerUid`, `agentId`, `status`, `createdAt`, and `updatedAt`. Use Firestore indexes for user-agent, run status, approvals, subscriptions, Telegram mappings, and admin search views.
+
+## 13. Security rules
+
+Firestore rules must prevent users from reading or writing another user's data. Storage rules must enforce owner and agent access. Admin data must not be readable through client-side rules by ordinary users. Sensitive mutations must go through server Route Handlers using Firebase Admin SDK.
+
+Protect webhook endpoints with Stripe signature verification, Telegram secret token or equivalent verification, rate limiting, and idempotency. Redact model keys, API keys, bot tokens, OAuth tokens, authorization headers, and sensitive file content from logs.
+
+## 14. API routes
+
+Implement typed Route Handlers for:
+
+```text
+GET    /api/health
+GET    /api/auth/session
+GET    /api/agents
+POST   /api/agents
+GET    /api/agents/{agentId}
+PATCH  /api/agents/{agentId}
+POST   /api/agents/{agentId}/archive
+POST   /api/agents/{agentId}/restore
+GET    /api/conversations
+POST   /api/conversations
+GET    /api/conversations/{conversationId}
+POST   /api/conversations/{conversationId}/messages
+GET    /api/runs/{runId}
+GET    /api/runs/{runId}/events
+POST   /api/runs/{runId}/cancel
+GET    /api/approvals
+POST   /api/approvals/{approvalId}/approve
+POST   /api/approvals/{approvalId}/reject
+POST   /api/files
+GET    /api/files
+DELETE /api/files/{fileId}
+GET    /api/integrations
+POST   /api/integrations/{provider}/connect
+POST   /api/integrations/{provider}/test
+DELETE /api/integrations/{provider}
+POST   /api/telegram/connect
+POST   /api/telegram/disconnect
+POST   /api/telegram/webhook
+GET    /api/routines
+POST   /api/routines
+PATCH  /api/routines/{routineId}
+POST   /api/billing/checkout
+POST   /api/billing/portal
+POST   /api/billing/webhook
+GET    /api/admin/overview
+GET    /api/admin/users
+GET    /api/admin/subscriptions
+GET    /api/admin/plans
+PATCH  /api/admin/plans/{planId}
+GET    /api/admin/audit-events
+POST   /api/admin/users/{uid}/suspend
+POST   /api/admin/users/{uid}/reactivate
+```
+
+## 15. Frontend pages
+
+Public pages: landing, pricing, privacy, terms, and help.
+
+Auth pages: login, signup, password reset, email verification.
+
+User pages: dashboard, agents, create agent, agent workspace, conversations, approvals, knowledge, routines, integrations, billing, and settings.
+
+Admin pages: admin overview, users, user detail, plans, subscriptions, usage, runs, integrations, Telegram, audit events, and health.
+
+## 16. Vercel and no-Docker requirements
+
+The primary setup must use Node.js and managed services. Provide commands such as:
+
+```text
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Provide Firebase CLI steps for deploying Firestore rules, Storage rules, and indexes. Provide Vercel steps for importing the GitHub repository, adding environment variables, configuring the production domain, and deploying. Do not require Docker.
+
+The application must not depend on local filesystem persistence, a permanent Node process, or an in-process scheduler in production. Use Firebase Storage, Firestore, Vercel-compatible APIs, and a durable job provider adapter.
+
+Local development may use:
+
+```env
+MODEL_PROVIDER=lmstudio
+MODEL_BASE_URL=http://127.0.0.1:1234/v1
+MODEL_API_KEY=lm-studio-local
+MODEL_NAME=your-loaded-model-id
+```
+
+Production must use a public HTTPS model endpoint. Explain clearly that Vercel cannot call LM Studio running only on a developer's localhost.
+
+## 17. Testing and acceptance criteria
+
+The system is accepted when:
+
+- A user can sign up and log in through Firebase.
+- A normal user cannot access admin pages or admin APIs.
+- A user can create three active agents and the fourth creation is rejected server-side.
+- Concurrent create requests cannot exceed three.
+- A user cannot read or change another user's data.
+- A user can chat with an agent through the web UI.
+- LM Studio works in local development and provider errors are actionable.
+- Files can be uploaded, indexed, searched, and deleted.
+- A safe tool works and appears in the activity timeline.
+- An approval-required action pauses and does not execute until approved.
+- Stripe checkout, portal, webhook signature validation, and idempotent subscription sync work in test mode.
+- Telegram bot token validation, webhook routing, agent selection, and reply delivery work.
+- Admin can view plan and subscription state without seeing secret values.
+- Vercel build succeeds.
+- Firebase rules and indexes deploy successfully.
+- Secrets are absent from client bundles and logs.
+- The main smoke test runs on a deployed preview environment.
+
+## 18. Milestones
+
+### Milestone 1: Vercel/Firebase foundation
+
+Create Next.js app, Firebase project configuration, Auth, Firestore rules, Storage rules, user panel, and protected routes.
+
+### Milestone 2: Agent limit and chat
+
+Implement agent templates, three-agent entitlement, agent CRUD, conversations, LM Studio provider, chat UI, and run events.
+
+### Milestone 3: Tools and knowledge
+
+Implement safe tools, file upload, indexing, retrieval, memory controls, reports, and approvals.
+
+### Milestone 4: Billing
+
+Implement Stripe Checkout, Billing Portal, webhook sync, plans, entitlements, billing UI, and admin plan management.
+
+### Milestone 5: Telegram
+
+Implement BotFather setup guidance, token validation, webhook/polling development path, chat mapping, agent selection, replies, and safe approvals.
+
+### Milestone 6: Admin and hardening
+
+Implement admin pages, audit logs, rate limits, redaction, error states, monitoring, tests, documentation, and Vercel deployment verification.
+
+## 19. Required documentation
+
+README must include zero-Docker setup, Firebase project creation, Auth provider setup, Firestore/Storage rules deployment, LM Studio local setup, production model setup, Stripe test mode, Telegram BotFather setup, Vercel deployment, environment variables, webhook URLs, limits, security assumptions, and troubleshooting.
+
+Provide `.env.example` with placeholders only. Never commit real Firebase service-account JSON, Stripe secret keys, Telegram bot tokens, model API keys, or integration credentials.

@@ -1,0 +1,140 @@
+{
+  "users": {
+    "demo_user_1": {
+      "uid": "demo_user_1",
+      "email": "founder@qwenton.ai",
+      "displayName": "Alex Chen",
+      "role": "admin",
+      "planId": "normal",
+      "activeAgentsCount": 1,
+      "status": "active",
+      "createdAt": "2026-10-02T08:36:49.177Z",
+      "updatedAt": "2026-10-09T08:36:49.177Z"
+    }
+  },
+  "agents": {
+    "agent_marketing_1": {
+      "id": "agent_marketing_1",
+      "ownerUid": "demo_user_1",
+      "name": "Marketing Research Assistant",
+      "role": "Market Analyst & Copy Strategist",
+      "description": "Analyzes market trends, reviews uploaded pitch decks, conducts safe web research, and drafts marketing briefs.",
+      "systemPrompt": "You are a Senior Marketing Research Assistant. You help small businesses research competitive landscapes, synthesize documents, and draft high-converting copy. Always cite your sources, remain objective, and seek human approval before proposing any external messaging.",
+      "status": "active",
+      "enabledTools": [
+        "calculator",
+        "current_time",
+        "read_file",
+        "search_knowledge",
+        "web_research",
+        "generate_report",
+        "send_telegram_message"
+      ],
+      "createdAt": "2026-10-06T08:36:49.177Z",
+      "updatedAt": "2026-10-09T08:36:49.177Z"
+    }
+  },
+  "conversations": {
+    "conv_welcome_1": {
+      "id": "conv_welcome_1",
+      "ownerUid": "demo_user_1",
+      "agentId": "agent_marketing_1",
+      "title": "Q3 Competitor Briefing",
+      "lastMessageAt": "2026-10-09T08:36:49.177Z",
+      "createdAt": "2026-10-08T08:36:49.177Z"
+    }
+  },
+  "messages": {
+    "msg_welcome_1": {
+      "id": "msg_welcome_1",
+      "conversationId": "conv_welcome_1",
+      "agentId": "agent_marketing_1",
+      "ownerUid": "demo_user_1",
+      "sender": "agent",
+      "content": "Hello! I am your AI coworker. I'm ready to analyze uploaded research files, calculate metrics, and draft launch briefs for you. What would you like to explore today?",
+      "createdAt": "2026-10-08T08:36:49.177Z"
+    }
+  },
+  "runs": {},
+  "runEvents": {},
+  "approvals": {},
+  "files": {},
+  "documentChunks": {},
+  "routines": {},
+  "integrations": {},
+  "telegramConnections": {},
+  "plans": {
+    "normal": {
+      "id": "normal",
+      "name": "Normal (Free)",
+      "price": 0,
+      "priceFormatted": "$0",
+      "maxAgents": 2,
+      "maxRunsPerMonth": 50,
+      "maxFileStorageBytes": 26214400,
+      "maxTelegramBots": 1,
+      "features": [
+        "2 AI Agents for Free Work",
+        "Local LM Studio & Ollama",
+        "Safe Web Research",
+        "Human Approvals"
+      ],
+      "active": true
+    },
+    "lite": {
+      "id": "lite",
+      "name": "Lite Coworker",
+      "price": 9,
+      "priceFormatted": "$9 / mo",
+      "maxAgents": 4,
+      "maxRunsPerMonth": 300,
+      "maxFileStorageBytes": 104857600,
+      "maxTelegramBots": 1,
+      "features": [
+        "4 AI Agents",
+        "Priority LLM Streaming",
+        "Telegram Bot Chat",
+        "100MB File Knowledge"
+      ],
+      "active": true
+    },
+    "pro": {
+      "id": "pro",
+      "name": "Pro Coworker",
+      "price": 29,
+      "priceFormatted": "$29 / mo",
+      "maxAgents": 9,
+      "maxRunsPerMonth": 1000,
+      "maxFileStorageBytes": 524288000,
+      "maxTelegramBots": 3,
+      "features": [
+        "9 AI Agents",
+        "Gemini & OpenAI Cloud Access",
+        "Automated Scheduled Routines",
+        "500MB Storage"
+      ],
+      "active": true
+    },
+    "ultra": {
+      "id": "ultra",
+      "name": "Ultra Business",
+      "price": 79,
+      "priceFormatted": "$79 / mo",
+      "maxAgents": 15,
+      "maxRunsPerMonth": 5000,
+      "maxFileStorageBytes": 2147483648,
+      "maxTelegramBots": 5,
+      "features": [
+        "15 AI Agents",
+        "Custom BaseURL & API Keys",
+        "Multi-channel Slack & Telegram",
+        "Unlimited Storage & Priority Queue"
+      ],
+      "active": true
+    }
+  },
+  "orders": {},
+  "subscriptions": {},
+  "billingEvents": {},
+  "auditEvents": {}
+}

@@ -1,0 +1,283 @@
+# qwenton-agents — UX and Visual Design Specification
+
+## Product character
+
+qwenton-agents is a calm, trustworthy AI coworker workspace for business owners and small teams. It should feel like a polished productivity product with warmth and tactility, not a gaming dashboard or a cyberpunk console.
+
+Use **claymorphism** as the primary visual language: soft rounded surfaces, gentle depth, friendly 3D illustrations, soft shadows, tactile cards, and approachable colors. Use small 3D elements to give the product identity, but keep the interface fast, readable, and functional. Do not use neon-punk colors, glowing borders, glitch effects, aggressive gradients, scan lines, or hacker-console styling.
+
+## Visual principles
+
+### Calm confidence
+
+Use a warm light canvas, soft surfaces, restrained contrast, and predictable interactions. The user should feel in control of the agent.
+
+### Tactile but professional
+
+Cards may appear slightly raised like clay objects, but typography, tables, settings, and forms must remain crisp and business-ready.
+
+### Observable work
+
+Show real activity such as `Searching knowledge`, `Reading file`, `Waiting for approval`, and `Sending Telegram reply`. Do not show fabricated hidden reasoning.
+
+### Safety is visible
+
+Read-only tools should have a quiet blue or green label. External writes should have an amber `Approval required` label. Destructive actions should use red only for warnings and confirmation buttons.
+
+## Color palette
+
+Use this warm, non-neon palette:
+
+- Canvas cream: `#F8F6F1`
+- Cloud blue: `#E6EEF8`
+- Soft lavender: `#EAE7F5`
+- Sage: `#DCEBE1`
+- Peach: `#F5DED1`
+- Butter: `#F6E8BA`
+- Ink: `#263247`
+- Muted ink: `#697386`
+- Primary blue: `#4667B1`
+- Primary deep: `#34518F`
+- Success: `#3E856A`
+- Approval amber: `#B98232`
+- Danger: `#B95151`
+- Border: `#E3E0D8`
+
+Avoid pure black, overly saturated backgrounds, and neon cyan/magenta combinations.
+
+## Typography
+
+Use Inter, Geist Sans, or a similar clean sans-serif. Use a friendly semibold for headings and normal weight for body text. Use a monospace font only for API endpoints, tool payloads, and logs.
+
+Suggested scale:
+
+- Page title: 28–34px.
+- Section title: 18–22px.
+- Body: 14–16px.
+- Supporting text: 12–14px.
+- Button text: 13–14px semibold.
+
+## Claymorphism system
+
+Use consistent radius values: 16px for controls, 22px for cards, and 28px for hero panels. Use soft two-layer shadows rather than sharp drop shadows:
+
+```css
+box-shadow:
+  10px 10px 24px rgba(82, 78, 70, 0.10),
+  -6px -6px 18px rgba(255, 255, 255, 0.80);
+```
+
+Use subtle inner highlights on important cards. Do not use shadows so strong that text appears to float or the UI feels toy-like.
+
+## Subtle 3D elements
+
+Use small original 3D-style elements in these places:
+
+- A friendly clay agent orb or abstract assistant figure on the landing page.
+- Tiny 3D icons for research, files, approval, Telegram, and routines.
+- A soft 3D stack of documents in the knowledge empty state.
+- A small 3D calendar object on the routines page.
+- A rounded 3D Telegram paper-plane mark on the integration card.
+- Agent avatars made from simple clay shapes and initials.
+
+Use CSS transforms, SVG, or lightweight Three.js/R3F only where it improves identity. Respect reduced-motion settings. Avoid large WebGL scenes, because the product must remain fast on ordinary laptops and mobile devices.
+
+## Application shell
+
+```text
+┌──────────────────────┬─────────────────────────────────────────┐
+│ qwenton-agents       │ Breadcrumb · search · alerts · profile   │
+│                      ├─────────────────────────────────────────┤
+│ Overview             │                                         │
+│ My agents            │ Main content                            │
+│ Conversations        │                                         │
+│ Approvals            │                                         │
+│ Knowledge            │                                         │
+│ Routines             │                                         │
+│ Integrations         │                                         │
+│ Billing              │                                         │
+│ Settings             │                                         │
+│                      │                                         │
+│ Admin (admins only)  │                                         │
+└──────────────────────┴─────────────────────────────────────────┘
+```
+
+The sidebar should show a soft 3D clay mark beside the qwenton-agents wordmark. Include a `Create agent` button and an entitlement meter such as `2 / 3 agents`.
+
+## Landing and authentication
+
+The landing page should explain the product in plain language with a warm clay hero illustration and two actions: `Create your workspace` and `See how it works`.
+
+Authentication screens should be simple and spacious. Include email/password, Google sign-in, password reset, and email verification states. Do not put dense product controls on the login screen.
+
+## User dashboard
+
+The dashboard should answer:
+
+- How many agents do I have?
+- What is currently running?
+- What needs approval?
+- What subscription am I using?
+- Is Telegram connected?
+
+Top summary cards:
+
+- `Agents: 2 / 3`.
+- `Active runs`.
+- `Pending approvals`.
+- `Plan and usage`.
+
+Below, show recent activity, agent cards, and a gentle upgrade card only when relevant. Do not use aggressive sales popups.
+
+## Agent list and creation
+
+Agent cards should include the clay avatar, name, purpose, status, last activity, tool count, and a menu for open, edit, pause, duplicate, and archive.
+
+The creation flow should be a four-step wizard:
+
+1. Choose a template or start blank.
+2. Name the agent and describe its role.
+3. Choose tools and permissions.
+4. Review limits and create.
+
+The page must show the 3-agent limit before creation. If the user has reached the limit, replace the create action with a clear explanation and a link to manage existing agents or billing.
+
+## Agent workspace
+
+Use a three-panel desktop layout:
+
+```text
+┌──────────────┬─────────────────────────┬────────────────────┐
+│ Agent card   │ Conversation            │ Activity           │
+│ Tools        │ Messages                │ Current run        │
+│ Knowledge    │ Composer                │ Tool timeline      │
+│ Telegram     │                         │ Approvals          │
+└──────────────┴─────────────────────────┴────────────────────┘
+```
+
+The left panel shows agent purpose, status, tools, knowledge count, Telegram connection, and agent settings. The center panel is the main chat. The right panel shows observable activity, run state, tool calls, approval state, and retry/cancel actions.
+
+The composer supports multi-line text, attachments, voice-ready placeholder, send, stop, and model availability status.
+
+## Activity timeline
+
+Use a vertical clay timeline with compact event cards:
+
+```text
+✓ Task started
+✓ Retrieved 4 knowledge chunks
+✓ Searched public sources
+! Approval required
+○ Waiting
+```
+
+Clicking an event opens sanitized details. Never show secret values or hidden model reasoning.
+
+## Approvals
+
+The approvals inbox should use amber accents and clear action summaries. Each card must show:
+
+- Agent name.
+- Requested action.
+- Target service.
+- Exact content or parameters.
+- Risk level.
+- Time requested.
+- `Reject` and explicit action button such as `Approve and send`.
+
+Telegram approvals should use the same action language in the web panel and, where possible, inline approve/reject buttons in Telegram.
+
+## Knowledge and files
+
+Use a soft 3D document-stack empty state. The page should include upload, file list, indexing status, agent access, search, and delete actions. Processing statuses: Uploading, Extracting, Indexing, Ready, Failed.
+
+## Integrations
+
+Show integrations as approachable clay cards with a provider icon, connection state, permission scope, last-tested time, and actions. Include:
+
+- Telegram.
+- Slack.
+- Google Drive.
+- Gmail.
+- Calendar.
+- Notion.
+- GitHub.
+- Canva.
+- Generic API key connector.
+
+Never display full credentials. Use `Connected`, `Needs attention`, `Not connected`, and `Revoked` states.
+
+## Telegram connection UX
+
+Create a guided wizard:
+
+1. Explain how to create a bot with BotFather.
+2. Accept the bot token securely.
+3. Validate the token.
+4. Select the agent.
+5. Register webhook.
+6. Show test-message instructions.
+
+Show a clear status card in both Integrations and the agent workspace. Include a `Disconnect bot` action with confirmation.
+
+## Billing and subscription UX
+
+The billing page should show:
+
+- Current plan.
+- Agent allowance: `2 of 3 used`.
+- Usage summary.
+- Renewal date.
+- Payment status.
+- Upgrade/manage subscription actions.
+- Stripe billing portal action.
+
+Use friendly comparison cards for plans. Do not imply that an upgrade bypasses safety controls. For failed billing, show recovery guidance without exposing payment details.
+
+## Admin panel
+
+The admin area may use a slightly denser layout while preserving the same warm visual system. Include:
+
+- Overview metrics.
+- User table with search and filters.
+- User detail drawer.
+- Agent and run counts.
+- Subscription status and plan assignment controls.
+- Billing webhook event log.
+- Integration and Telegram status.
+- Failed runs and system health.
+- Audit events.
+- Suspend/reactivate controls with confirmation.
+
+Mark the admin area clearly with an `Admin` badge. Require server-side admin authorization for every route and action.
+
+## Responsive behavior
+
+On tablets, collapse the activity panel into a tab. On mobile, use a drawer for navigation and stack the workspace panels. Keep the composer fixed near the bottom with safe-area padding. Tables should become cards or horizontal scroll regions.
+
+## Accessibility and performance
+
+Use semantic HTML, keyboard navigation, visible focus, accessible labels, WCAG AA contrast, reduced motion, and descriptive error messages. Lazy-load heavy 3D assets. Disable nonessential 3D effects on low-power devices or when `prefers-reduced-motion` is enabled. Never make a 3D canvas necessary to complete a task.
+
+## Copy style
+
+Use clear, supportive language:
+
+- `Your agent is ready.`
+- `This task is waiting for your approval.`
+- `You have used 2 of 3 agents.`
+- `Telegram is connected to Marketing Researcher.`
+- `LM Studio is not reachable. Start the local server and try again.`
+- `This action will send a message to an external service.`
+
+Avoid:
+
+- `Neon AI command center`.
+- `Magic automation`.
+- `Unrestricted autonomy`.
+- Fake thinking claims.
+- Aggressive upgrade language.
+
+## Design acceptance criteria
+
+A new user can sign up, see the dashboard, create an agent if under the three-agent limit, chat with it, upload a file, connect Telegram, inspect activity, and open billing without confusion. The interface clearly distinguishes drafts from external actions. Normal users cannot see admin navigation or admin data. The visual language remains claymorphic, warm, subtle, and professional on desktop and mobile.

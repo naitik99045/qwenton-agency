@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isResourceOwner() {
+      return isAuthenticated() && resource.data.ownerUid == request.auth.uid;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isAdmin(); // User creation & role management strictly server-side
+    }
+
+    // Agents Collection (Enforce ownership & server-side transactions for limit)
+    match /agents/{agentId} {
+      allow read: if isResourceOwner() || isAdmin();
+      allow write: if isResourceOwner() || isAdmin();
+    }
+
+    // Conversations & Messages
+    match /conversations/{conversationId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+    match /messages/{messageId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+
+    // Runs & Events
+    match /runs/{runId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+    match /runEvents/{eventId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Server Admin SDK only
+    }
+
+    // Approvals
+    match /approvals/{approvalId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+
+    // Knowledge Files & Chunks
+    match /files/{fileId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+    match /documentChunks/{chunkId} {
+      allow read: if isResourceOwner() || isAdmin();
+      allow write: if false; // Server-side extraction only
+    }
+
+    // Routines & Telegram
+    match /routines/{routineId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+    match /telegramConnections/{connId} {
+      allow read, write: if isResourceOwner() || isAdmin();
+    }
+
+    // Plans & Subscriptions (Public read for active plans)
+    match /plans/{planId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /subscriptions/{subId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow write: if false; // Stripe webhook server-side only
+    }
+
+    // Audit Events (Admin only)
+    match /auditEvents/{auditId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+  }
+}

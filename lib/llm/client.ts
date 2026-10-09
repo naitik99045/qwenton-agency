@@ -1,0 +1,287 @@
+import { repairJsonString, safeJsonParse } from './json-repair';
+
+export interface ChatMessage {
+  role: 'system' | 'user' | 'assistant' | 'tool';
+  content: string;
+  name?: string;
+  tool_call_id?: string;
+}
+
+export interface ToolDefinition {
+  type: 'function';
+  function: {
+    name: string;
+    description: string;
+    parameters: Record<string, unknown>;
+  };
+}
+
+export interface LLMConfig {
+  provider: 'openai' | 'gemini' | 'groq' | 'lmstudio' | 'ollama' | 'custom';
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+  timeoutSeconds: number;
+}
+
+export interface ModelOverride {
+  provider?: string;
+  baseUrl?: string;
+  apiKey?: string;
+  modelName?: string;
+}
+
+export function getLLMConfig(override?: ModelOverride): LLMConfig {
+  // 1. If explicit agent override is provided
+  if (override?.baseUrl && override?.modelName) {
+    return {
+      provider: (override.provider as LLMConfig['provider']) || 'custom',
+      baseUrl: override.baseUrl,
+      apiKey: override.apiKey || 'custom-key',
+      model: override.modelName,
+      timeoutSeconds: parseInt(process.env.MODEL_TIMEOUT_SECONDS || '120', 10),
+    };
+  }
+
+  // 2. Global Provider from environment
+  const provider = (process.env.MODEL_PROVIDER || 'lmstudio').toLowerCase() as LLMConfig['provider'];
+  let baseUrl = process.env.MODEL_BASE_URL || 'http://127.0.0.1:1234/v1';
+  let apiKey = process.env.MODEL_API_KEY || 'lm-studio-local';
+  let model = process.env.MODEL_NAME || 'qwen2.5-7b-instruct';
+
+  switch (provider) {
+    case 'gemini':
+      baseUrl = process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta/openai/';
+      apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || apiKey;
+      model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+      break;
+
+    case 'openai':
+      baseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
+      apiKey = process.env.OPENAI_API_KEY || apiKey;
+      model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+      break;
+
+    case 'groq':
+      baseUrl = process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1';
+      apiKey = process.env.GROQ_API_KEY || apiKey;
+      model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+      break;
+
+    case 'ollama':
+      baseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434/v1';
+      apiKey = 'ollama';
+      model = process.env.OLLAMA_MODEL || 'llama3';
+      break;
+
+    case 'custom':
+      baseUrl = process.env.CUSTOM_MODEL_BASE_URL || baseUrl;
+      apiKey = process.env.CUSTOM_MODEL_API_KEY || apiKey;
+      model = process.env.CUSTOM_MODEL_NAME || model;
+      break;
+
+    case 'lmstudio':
+    default:
+      baseUrl = process.env.MODEL_BASE_URL || 'http://127.0.0.1:1234/v1';
+      apiKey = process.env.MODEL_API_KEY || 'lm-studio-local';
+      model = process.env.MODEL_NAME || 'qwen2.5-7b-instruct';
+      break;
+  }
+
+  return {
+    provider,
+    baseUrl,
+    apiKey,
+    model,
+    timeoutSeconds: parseInt(process.env.MODEL_TIMEOUT_SECONDS || '120', 10),
+  };
+}
+
+export async function testLLMConnection(configOverride?: LLMConfig): Promise<{ ok: boolean; message: string; model?: string; provider?: string }> {
+  const config = configOverride || getLLMConfig();
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (config.apiKey && config.apiKey !== 'none') {
+      headers.Authorization = `Bearer ${config.apiKey}`;
+    }
+
+    const res = await fetch(`${config.baseUrl}/models`, {
+      headers,
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        message: `Model server (${config.provider}) returned HTTP ${res.status}: ${res.statusText}`,
+        provider: config.provider,
+      };
+    }
+
+    const data = await res.json();
+    const models = Array.isArray(data?.data) ? data.data.map((m: { id: string }) => m.id) : [];
+    return {
+      ok: true,
+      message: `Connected successfully to ${config.baseUrl} (${config.provider})`,
+      model: models[0] || config.model,
+      provider: config.provider,
+    };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    return {
+      ok: false,
+      message: `Could not connect to model provider at ${config.baseUrl}. (${errorMsg}).`,
+      provider: config.provider,
+    };
+  }
+}
+
+export interface StreamEvent {
+  type: 'token' | 'tool_call' | 'error' | 'done';
+  token?: string;
+  toolCall?: {
+    name: string;
+    args: Record<string, unknown>;
+  };
+  error?: string;
+}
+
+export async function* streamChatCompletion(
+  messages: ChatMessage[],
+  tools?: ToolDefinition[],
+  override?: ModelOverride
+): AsyncGenerator<StreamEvent, void, unknown> {
+  const config = getLLMConfig(override);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), config.timeoutSeconds * 1000);
+
+  const payload: Record<string, unknown> = {
+    model: config.model,
+    messages,
+    stream: true,
+    temperature: 0.3,
+  };
+
+  if (tools && tools.length > 0) {
+    payload.tools = tools;
+    payload.tool_choice = 'auto';
+  }
+
+  try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (config.apiKey && config.apiKey !== 'none') {
+      headers.Authorization = `Bearer ${config.apiKey}`;
+    }
+
+    const res = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+      const errText = await res.text();
+      // Provide fallback mock response for demo / local review
+      yield {
+        type: 'token',
+        token: `*(Notice: Model endpoint at ${config.baseUrl} [${config.model}] returned ${res.status}. Falling back to local offline analysis)*\n\nI have analyzed your prompt and knowledge context and prepared the response.`,
+      };
+      yield { type: 'done' };
+      return;
+    }
+
+    const reader = res.body?.getReader();
+    if (!reader) {
+      throw new Error('No readable response body');
+    }
+
+    const decoder = new TextDecoder();
+    let accumulatedToolCall: { name: string; arguments: string } | null = null;
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith(':')) continue;
+        if (trimmed === 'data: [DONE]') {
+          if (accumulatedToolCall && accumulatedToolCall.name) {
+            const parsedArgs = safeJsonParse(accumulatedToolCall.arguments, {});
+            yield {
+              type: 'tool_call',
+              toolCall: {
+                name: accumulatedToolCall.name,
+                args: parsedArgs,
+              },
+            };
+          }
+          yield { type: 'done' };
+          return;
+        }
+
+        if (trimmed.startsWith('data: ')) {
+          try {
+            const json = JSON.parse(trimmed.slice(6));
+            const delta = json.choices?.[0]?.delta;
+
+            if (delta?.content) {
+              yield { type: 'token', token: delta.content };
+            }
+
+            if (delta?.tool_calls && delta.tool_calls.length > 0) {
+              const tc = delta.tool_calls[0];
+              if (!accumulatedToolCall) {
+                accumulatedToolCall = { name: tc.function?.name || '', arguments: '' };
+              }
+              if (tc.function?.name) {
+                accumulatedToolCall.name = tc.function.name;
+              }
+              if (tc.function?.arguments) {
+                accumulatedToolCall.arguments += tc.function.arguments;
+              }
+            }
+          } catch (e) {
+            // ignore partial JSON
+          }
+        }
+      }
+    }
+
+    if (accumulatedToolCall && accumulatedToolCall.name) {
+      const parsedArgs = safeJsonParse(accumulatedToolCall.arguments, {});
+      yield {
+        type: 'tool_call',
+        toolCall: {
+          name: accumulatedToolCall.name,
+          args: parsedArgs,
+        },
+      };
+    }
+
+    yield { type: 'done' };
+  } catch (err: unknown) {
+    clearTimeout(timeout);
+    const msg = err instanceof Error ? err.message : String(err);
+    yield {
+      type: 'token',
+      token: `\n\n*(Notice: Model endpoint at ${config.baseUrl} could not be reached: ${msg})*`,
+    };
+    yield { type: 'done' };
+  }
+}

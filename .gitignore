@@ -1,0 +1,62 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js Build Output
+/.next/
+/out/
+/build
+/dist
+
+# Production & Local Environment Variables
+.env
+.env*.local
+.env.production
+.env.development
+.env.local
+
+# Allow env.example
+!.env.example
+
+# Vercel & Turbopack
+.vercel
+.turbo
+
+# Debug & Error Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs.txt
+*.log
+
+# Firebase & Database Logs
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# OS Metadata & Cache
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE & Editor Configuration
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace

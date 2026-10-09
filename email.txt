@@ -1,0 +1,113 @@
+email js variables 
+{
+  "app_name": "qwenton-agents",
+  "user_name": "John",
+  "otp_code": "482913",
+  "expires_in_minutes": "10",
+  "purchase_reference": "QW-2026-00125",
+  "requested_at": "October 9, 2026 at 1:05 PM",
+  "support_email": "support@example.com",
+  "current_year": "2026"
+}
+
+template id - template_qwk3yw4
+public key - OSw8hsFWod_PR0CAl
+private key - i19DT2N0T7cMlepB-nivt
+service id - service_abzu8zd
+
+template code  - 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>{{app_name}} purchase verification</title>
+    <style>
+      @media only screen and (max-width: 480px) {
+        .email-outer { padding: 20px 10px !important; }
+        .email-card { padding: 28px 18px !important; border-radius: 22px !important; }
+        .email-title { font-size: 23px !important; line-height: 30px !important; }
+        .email-copy { font-size: 14px !important; line-height: 22px !important; }
+        .otp-box { padding: 17px 16px !important; font-size: 28px !important; line-height: 34px !important; letter-spacing: 6px !important; }
+        .info-box { padding: 14px !important; }
+        .brand-pill { font-size: 14px !important; padding: 10px 14px !important; }
+      }
+    </style>
+  </head>
+  <body style="margin:0;padding:0;background:#f8f6f1;color:#263247;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#f8f6f1;margin:0;padding:0;border-collapse:collapse;">
+      <tr>
+        <td class="email-outer" align="center" style="padding:34px 16px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;width:100%;border-collapse:collapse;">
+            <tr>
+              <td align="center" style="padding:0 0 22px 0;">
+                <div class="brand-pill" style="display:inline-block;background:#e6eef8;border-radius:24px;padding:12px 18px;color:#34518f;font-size:16px;font-weight:700;letter-spacing:.2px;box-shadow:8px 8px 18px rgba(82,78,70,.10),-5px -5px 14px rgba(255,255,255,.86);">
+                  {{app_name}}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="email-card" style="background:#ffffff;border:1px solid #e3e0d8;border-radius:28px;padding:38px 34px;box-shadow:12px 12px 28px rgba(82,78,70,.12),-8px -8px 22px rgba(255,255,255,.92);">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
+                  <tr>
+                    <td align="center" style="padding-bottom:22px;">
+                      <div style="width:64px;height:64px;line-height:64px;background:#f5ded1;border-radius:22px;color:#b95151;font-size:28px;font-weight:700;text-align:center;box-shadow:7px 7px 15px rgba(82,78,70,.12),-5px -5px 12px rgba(255,255,255,.88);">
+                        ✓
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" style="padding-bottom:10px;">
+                      <h1 class="email-title" style="margin:0;color:#263247;font-size:26px;line-height:34px;font-weight:700;">Verify your purchase</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="email-copy" align="center" style="padding:0 0 26px 0;color:#697386;font-size:15px;line-height:24px;">
+                      Hi {{user_name}}, use the one-time code below to confirm your purchase with {{app_name}}.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" style="padding:0 0 26px 0;">
+                      <div class="otp-box" style="display:inline-block;background:#eae7f5;border:1px solid #d9d4eb;border-radius:20px;padding:20px 28px;color:#34518f;font-size:34px;line-height:40px;font-weight:700;letter-spacing:9px;white-space:nowrap;box-shadow:inset 3px 3px 8px rgba(82,78,70,.06),8px 8px 18px rgba(82,78,70,.10),-6px -6px 14px rgba(255,255,255,.90);">
+                        {{otp_code}}
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="info-box email-copy" style="background:#f8f6f1;border-radius:18px;padding:16px 18px;color:#697386;font-size:13px;line-height:21px;">
+                      <strong style="color:#263247;">This code expires in {{expires_in_minutes}} minutes.</strong><br />
+                      For your security, do not share this code with anyone. {{app_name}} support will never ask you for your OTP.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="email-copy" style="padding-top:24px;color:#697386;font-size:13px;line-height:21px;">
+                      <strong style="color:#263247;">Purchase reference:</strong> {{purchase_reference}}<br />
+                      <strong style="color:#263247;">Requested at:</strong> {{requested_at}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="email-copy" style="padding-top:28px;color:#697386;font-size:14px;line-height:22px;">
+                      If you did not try to make this purchase, you can safely ignore this email and contact us at
+                      <a href="mailto:{{support_email}}" style="color:#4667b1;text-decoration:none;font-weight:700;">{{support_email}}</a>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="email-copy" style="padding-top:28px;border-top:1px solid #e3e0d8;color:#8a93a3;font-size:12px;line-height:19px;">
+                      This is an automated security email from {{app_name}}. Please do not reply directly to this message.
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="email-copy" align="center" style="padding:22px 12px 0 12px;color:#8a93a3;font-size:12px;line-height:18px;">
+                © {{current_year}} {{app_name}} · Secure purchase verification
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
