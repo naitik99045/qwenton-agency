@@ -23,6 +23,7 @@ export default function AdminDashboardPage() {
   const [audits, setAudits] = useState<AuditEvent[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   const fetchAdminData = async () => {
     try {
@@ -31,6 +32,12 @@ export default function AdminDashboardPage() {
         fetch('/api/admin/users'),
         fetch('/api/admin/orders'),
       ]);
+
+      if (overviewRes.status === 403 || usersRes.status === 403) {
+        setIsUnauthorized(true);
+        setLoading(false);
+        return;
+      }
 
       if (overviewRes.ok) {
         const oData = await overviewRes.json();
@@ -47,6 +54,7 @@ export default function AdminDashboardPage() {
       }
     } catch (e) {
       console.error('Admin data fetch error:', e);
+      setIsUnauthorized(true);
     } finally {
       setLoading(false);
     }
@@ -87,6 +95,33 @@ export default function AdminDashboardPage() {
       u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.displayName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isUnauthorized) {
+    return (
+      <AppShell>
+        <div className="max-w-lg mx-auto py-16 text-center space-y-6">
+          <div className="w-16 h-16 rounded-[22px] bg-danger/10 border border-danger/20 flex items-center justify-center mx-auto shadow-clay-card">
+            <AlertCircle className="w-8 h-8 text-danger" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-ink">Admin Access Restricted</h1>
+            <p className="text-sm text-ink-muted mt-2">
+              This area is strictly restricted to platform administrators. Your authenticated Google account does not currently hold administrative entitlements.
+            </p>
+          </div>
+          <div className="p-4 bg-cloud-blue/50 rounded-control border border-[#D0DFEF] text-xs text-ink-muted text-left space-y-1 font-mono">
+            <div>• Subdomain: adm.qwenton.shop / admin</div>
+            <div>• Required: ADMIN_EMAILS access rule</div>
+          </div>
+          <a href="/dashboard">
+            <Button variant="primary" className="shadow-clay-button">
+              Return to User Workspace
+            </Button>
+          </a>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell>
