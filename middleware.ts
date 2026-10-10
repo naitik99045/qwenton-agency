@@ -51,5 +51,15 @@ export function middleware(req: NextRequest) {
   }
 
   // 3. User Subdomain (agents.qwenton.shop) & Default Platform Routing
+  // Strict isolation: If on user domain and trying to access /admin or /api/admin, return 404 Not Found
+  if (!isAdmPortal && (pathname === '/admin' || pathname.startsWith('/admin/'))) {
+    url.pathname = '/not-found';
+    return NextResponse.rewrite(url, { status: 404 });
+  }
+
+  if (!isAdmPortal && pathname.startsWith('/api/admin')) {
+    return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+  }
+
   return NextResponse.next();
 }

@@ -92,50 +92,6 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   },
 };
 
-const DEFAULT_USER: User = {
-  uid: 'demo_user_1',
-  email: 'founder@qwenton.ai',
-  displayName: 'Alex Chen',
-  role: 'admin',
-  planId: 'normal',
-  activeAgentsCount: 1,
-  status: 'active',
-  createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-const DEFAULT_AGENT: Agent = {
-  id: 'agent_marketing_1',
-  ownerUid: 'demo_user_1',
-  name: 'Marketing Research Assistant',
-  role: 'Market Analyst & Copy Strategist',
-  description: 'Analyzes market trends, reviews uploaded pitch decks, conducts safe web research, and drafts marketing briefs.',
-  systemPrompt: 'You are a Senior Marketing Research Assistant. You help small businesses research competitive landscapes, synthesize documents, and draft high-converting copy. Always cite your sources, remain objective, and seek human approval before proposing any external messaging.',
-  status: 'active',
-  enabledTools: ['calculator', 'current_time', 'read_file', 'search_knowledge', 'web_research', 'generate_report', 'send_telegram_message'],
-  createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-const DEFAULT_CONVERSATION: Conversation = {
-  id: 'conv_welcome_1',
-  ownerUid: 'demo_user_1',
-  agentId: 'agent_marketing_1',
-  title: 'Q3 Competitor Briefing',
-  lastMessageAt: new Date().toISOString(),
-  createdAt: new Date(Date.now() - 86400000).toISOString(),
-};
-
-const DEFAULT_MESSAGE: Message = {
-  id: 'msg_welcome_1',
-  conversationId: 'conv_welcome_1',
-  agentId: 'agent_marketing_1',
-  ownerUid: 'demo_user_1',
-  sender: 'agent',
-  content: "Hello! I am your AI coworker. I'm ready to analyze uploaded research files, calculate metrics, and draft launch briefs for you. What would you like to explore today?",
-  createdAt: new Date(Date.now() - 86400000).toISOString(),
-};
-
 class LocalDB {
   private data: DatabaseSchema;
   private filePath: string;
@@ -153,6 +109,19 @@ class LocalDB {
         // Ensure plans and orders match the new 4-tier structure
         parsed.plans = { ...DEFAULT_PLANS, ...(parsed.plans || {}) };
         parsed.orders = parsed.orders || {};
+        // Clean any stale demo accounts
+        if (parsed.users && parsed.users['demo_user_1']) {
+          delete parsed.users['demo_user_1'];
+        }
+        if (parsed.agents && parsed.agents['agent_marketing_1']) {
+          delete parsed.agents['agent_marketing_1'];
+        }
+        if (parsed.conversations && parsed.conversations['conv_welcome_1']) {
+          delete parsed.conversations['conv_welcome_1'];
+        }
+        if (parsed.messages && parsed.messages['msg_welcome_1']) {
+          delete parsed.messages['msg_welcome_1'];
+        }
         return parsed;
       } catch (e) {
         console.warn('[LocalDB] Could not parse .local_db.json, reinitializing memory store', e);
@@ -160,10 +129,10 @@ class LocalDB {
     }
 
     const initialData: DatabaseSchema = {
-      users: { [DEFAULT_USER.uid]: DEFAULT_USER },
-      agents: { [DEFAULT_AGENT.id]: DEFAULT_AGENT },
-      conversations: { [DEFAULT_CONVERSATION.id]: DEFAULT_CONVERSATION },
-      messages: { [DEFAULT_MESSAGE.id]: DEFAULT_MESSAGE },
+      users: {},
+      agents: {},
+      conversations: {},
+      messages: {},
       runs: {},
       runEvents: {},
       approvals: {},

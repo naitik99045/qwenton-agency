@@ -157,8 +157,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {user?.role === 'admin' ? (
               <div className="pt-4 mt-4 border-t border-border/50">
                 <div className="px-3 text-[10px] font-bold text-ink-light uppercase tracking-wider mb-2">Administrator</div>
-                <Link
-                  href="/admin"
+                <a
+                  href={typeof window !== 'undefined' && window.location.hostname.endsWith('qwenton.shop') ? 'https://adm.qwenton.shop' : '/admin'}
                   className={cn(
                     'flex items-center gap-3 px-3.5 py-2.5 rounded-control text-sm font-medium transition-all select-none',
                     pathname.startsWith('/admin')
@@ -167,8 +167,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   )}
                 >
                   <ShieldCheck className="w-4 h-4 text-[#523E8C]" />
-                  <span>Admin Panel</span>
-                </Link>
+                  <span>Admin Panel (adm.qwenton.shop)</span>
+                </a>
               </div>
             ) : null}
           </nav>
@@ -201,8 +201,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-2.5 min-w-0">
               <Avatar name={user?.displayName || 'User'} size="md" variant="user" />
               <div className="min-w-0">
-                <div className="text-xs font-bold text-ink truncate">{user?.displayName || 'Alex Chen'}</div>
-                <div className="text-[11px] text-ink-muted truncate">{user?.email || 'user@example.com'}</div>
+                <div className="text-xs font-bold text-ink truncate">{user?.displayName || user?.email?.split('@')[0] || 'User'}</div>
+                <div className="text-[11px] text-ink-muted truncate">{user?.email || ''}</div>
               </div>
             </div>
 

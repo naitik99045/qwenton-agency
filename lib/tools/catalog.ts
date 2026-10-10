@@ -221,21 +221,23 @@ export const TOOL_CATALOG: Record<string, ToolMeta> = {
   },
   publish_instagram_post: {
     name: 'publish_instagram_post',
-    displayName: 'Publish Instagram Post / Carousel',
-    description: 'Publishes a carousel or image post to connected Instagram account. Requires Approval.',
+    displayName: 'Publish Instagram Post / Reel / Carousel',
+    description: 'Publishes a video, single image, or carousel from Google Drive/assets to connected Instagram account. Requires Approval.',
     category: 'communication',
     requiresApproval: true,
     definition: {
       type: 'function',
       function: {
         name: 'publish_instagram_post',
-        description: 'Publish visual content and marketing copy to connected Instagram Business profile. Requires human approval.',
+        description: 'Publish visual content and marketing copy to connected Instagram Business profile. Supports Google Drive video/image assets and automated Meta Graph container publishing. Requires human approval.',
         parameters: {
           type: 'object',
           properties: {
-            caption: { type: 'string', description: 'Post caption with hooks and emojis' },
-            hashtags: { type: 'array', items: { type: 'string' }, description: 'Target hashtags' },
-            mediaUrls: { type: 'array', items: { type: 'string' }, description: 'Image asset URLs or FLUX generated IDs' },
+            caption: { type: 'string', description: 'Trending post caption with hooks, line breaks, and emojis' },
+            hashtags: { type: 'array', items: { type: 'string' }, description: 'High-converting viral hashtags' },
+            mediaType: { type: 'string', enum: ['IMAGE', 'VIDEO', 'REEL', 'CAROUSEL'], description: 'Format of media to publish' },
+            driveFileNameOrUrl: { type: 'string', description: 'Filename, folder path, or URL of the video/image in Google Drive' },
+            mediaUrls: { type: 'array', items: { type: 'string' }, description: 'Direct image or video URLs' },
           },
           required: ['caption', 'hashtags'],
         },

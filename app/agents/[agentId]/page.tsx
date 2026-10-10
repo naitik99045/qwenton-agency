@@ -347,7 +347,7 @@ export default function AgentWorkspacePage() {
                 className={`flex gap-3 max-w-2xl ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
               >
                 <Avatar
-                  name={msg.sender === 'user' ? 'Alex' : agent.name}
+                  name={msg.sender === 'user' ? 'User' : agent.name}
                   size="md"
                   variant={msg.sender === 'user' ? 'user' : 'agent'}
                 />

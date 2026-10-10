@@ -156,15 +156,30 @@ export async function executeTool(
 
       case 'search_google_drive': {
         const query = String(args.query || '');
+        const isVideoSearch = query.toLowerCase().includes('.mp4') || query.toLowerCase().includes('video') || query.toLowerCase().includes('reel');
         return {
           ok: true,
           data: {
             query,
-            matches: [
-              { fileName: `Q3 Marketing Strategy - ${query}.gdoc`, fileType: 'Google Doc', lastModified: '2 days ago', link: 'https://docs.google.com/document/d/sample' },
-              { fileName: `Financial Projections & Budget - ${query}.gsheet`, fileType: 'Google Sheet', lastModified: '1 week ago', link: 'https://docs.google.com/spreadsheets/d/sample' },
-            ],
-            summary: `Found 2 matching documents in Google Drive related to "${query}".`,
+            matches: isVideoSearch
+              ? [
+                  {
+                    fileId: 'drive_media_98124',
+                    fileName: query.includes('.') ? query : `${query}_final_render.mp4`,
+                    fileType: 'video/mp4',
+                    folderPath: 'Google Drive / Summer Launch / Videos',
+                    size: '42.8 MB',
+                    duration: '00:38',
+                    accessibleUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                    previewThumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
+                    readyForMetaPublishing: true,
+                  },
+                ]
+              : [
+                  { fileName: `Marketing Campaign - ${query}.gdoc`, fileType: 'Google Doc', lastModified: '2 days ago', link: 'https://docs.google.com/document/d/sample' },
+                  { fileName: `Visual Asset Pack - ${query}.png`, fileType: 'image/png', accessibleUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1080&q=80', readyForMetaPublishing: true },
+                ],
+            summary: `Located matching asset in connected Google Drive ready for Instagram container processing.`,
           },
         };
       }

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const { uid, email, displayName } = syncSessionSchema.parse(body);
     const db = getDB();
 
-    const defaultAdmins = ['netiktalreja@gmail.com', 'founder@qwenton.ai', 'admin@qwenton.ai', 'admin@qwenton.shop'];
+    const defaultAdmins = ['netiktalreja@gmail.com', 'admin@qwenton.shop'];
     const adminEmails = (process.env.ADMIN_EMAILS || defaultAdmins.join(','))
       .toLowerCase()
       .split(',')
@@ -44,9 +44,7 @@ export async function POST(req: NextRequest) {
       adminEmails.includes(lowerEmail) ||
       defaultAdmins.includes(lowerEmail) ||
       lowerEmail === 'netiktalreja@gmail.com' ||
-      uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' ||
-      lowerEmail.startsWith('admin@') ||
-      lowerEmail.includes('+admin');
+      uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1';
 
     let user = await db.getUser(uid);
     if (!user) {

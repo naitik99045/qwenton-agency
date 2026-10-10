@@ -10,6 +10,8 @@ import { ShieldCheck, Users, Bot, Activity, ShoppingCart, RefreshCw, CheckCircle
 import { User, AuditEvent, Order } from '@/lib/db/types';
 import { formatDate } from '@/lib/utils';
 
+import NotFound from '@/app/not-found';
+
 export default function AdminDashboardPage() {
   const [metrics, setMetrics] = useState<{
     totalUsers: number;
@@ -33,7 +35,7 @@ export default function AdminDashboardPage() {
         fetch('/api/admin/orders'),
       ]);
 
-      if (overviewRes.status === 403 || usersRes.status === 403) {
+      if (overviewRes.status === 403 || usersRes.status === 403 || overviewRes.status === 404 || usersRes.status === 404) {
         setIsUnauthorized(true);
         setLoading(false);
         return;
@@ -97,30 +99,7 @@ export default function AdminDashboardPage() {
   );
 
   if (isUnauthorized) {
-    return (
-      <AppShell>
-        <div className="max-w-lg mx-auto py-16 text-center space-y-6">
-          <div className="w-16 h-16 rounded-[22px] bg-danger/10 border border-danger/20 flex items-center justify-center mx-auto shadow-clay-card">
-            <AlertCircle className="w-8 h-8 text-danger" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-ink">Admin Access Restricted</h1>
-            <p className="text-sm text-ink-muted mt-2">
-              This area is strictly restricted to platform administrators. Your authenticated Google account does not currently hold administrative entitlements.
-            </p>
-          </div>
-          <div className="p-4 bg-cloud-blue/50 rounded-control border border-[#D0DFEF] text-xs text-ink-muted text-left space-y-1 font-mono">
-            <div>• Subdomain: adm.qwenton.shop / admin</div>
-            <div>• Required: ADMIN_EMAILS access rule</div>
-          </div>
-          <a href="/dashboard">
-            <Button variant="primary" className="shadow-clay-button">
-              Return to User Workspace
-            </Button>
-          </a>
-        </div>
-      </AppShell>
-    );
+    return <NotFound />;
   }
 
   return (

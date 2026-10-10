@@ -12,13 +12,13 @@ export class AuthError extends Error {
 }
 
 function isEmailAdmin(email: string): boolean {
-  const defaultAdmins = ['netiktalreja@gmail.com', 'founder@qwenton.ai', 'admin@qwenton.ai', 'admin@qwenton.shop'];
+  const defaultAdmins = ['netiktalreja@gmail.com', 'admin@qwenton.shop'];
   const adminEmails = (process.env.ADMIN_EMAILS || defaultAdmins.join(','))
     .toLowerCase()
     .split(',')
     .map((e) => e.trim());
   const em = (email || '').toLowerCase();
-  return adminEmails.includes(em) || defaultAdmins.includes(em) || em.startsWith('admin@') || em.includes('+admin');
+  return adminEmails.includes(em) || defaultAdmins.includes(em) || em === 'netiktalreja@gmail.com';
 }
 
 function decodeJwtPayload(token: string): { uid: string; email?: string; name?: string } | null {

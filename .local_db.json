@@ -1,60 +1,8 @@
 {
-  "users": {
-    "demo_user_1": {
-      "uid": "demo_user_1",
-      "email": "founder@qwenton.ai",
-      "displayName": "Alex Chen",
-      "role": "admin",
-      "planId": "normal",
-      "activeAgentsCount": 1,
-      "status": "active",
-      "createdAt": "2026-10-02T08:36:49.177Z",
-      "updatedAt": "2026-10-09T08:36:49.177Z"
-    }
-  },
-  "agents": {
-    "agent_marketing_1": {
-      "id": "agent_marketing_1",
-      "ownerUid": "demo_user_1",
-      "name": "Marketing Research Assistant",
-      "role": "Market Analyst & Copy Strategist",
-      "description": "Analyzes market trends, reviews uploaded pitch decks, conducts safe web research, and drafts marketing briefs.",
-      "systemPrompt": "You are a Senior Marketing Research Assistant. You help small businesses research competitive landscapes, synthesize documents, and draft high-converting copy. Always cite your sources, remain objective, and seek human approval before proposing any external messaging.",
-      "status": "active",
-      "enabledTools": [
-        "calculator",
-        "current_time",
-        "read_file",
-        "search_knowledge",
-        "web_research",
-        "generate_report",
-        "send_telegram_message"
-      ],
-      "createdAt": "2026-10-06T08:36:49.177Z",
-      "updatedAt": "2026-10-09T08:36:49.177Z"
-    }
-  },
-  "conversations": {
-    "conv_welcome_1": {
-      "id": "conv_welcome_1",
-      "ownerUid": "demo_user_1",
-      "agentId": "agent_marketing_1",
-      "title": "Q3 Competitor Briefing",
-      "lastMessageAt": "2026-10-09T08:36:49.177Z",
-      "createdAt": "2026-10-08T08:36:49.177Z"
-    }
-  },
-  "messages": {
-    "msg_welcome_1": {
-      "id": "msg_welcome_1",
-      "conversationId": "conv_welcome_1",
-      "agentId": "agent_marketing_1",
-      "ownerUid": "demo_user_1",
-      "sender": "agent",
-      "content": "Hello! I am your AI coworker. I'm ready to analyze uploaded research files, calculate metrics, and draft launch briefs for you. What would you like to explore today?",
-      "createdAt": "2026-10-08T08:36:49.177Z"
-    }
-  },
+  "users": {},
+  "agents": {},
+  "conversations": {},
+  "messages": {},
   "runs": {},
   "runEvents": {},
   "approvals": {},
