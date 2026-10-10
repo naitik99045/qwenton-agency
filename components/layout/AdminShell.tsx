@@ -141,7 +141,7 @@ export function AdminShell({
           {/* Executive Brand Mark */}
           <div className="flex items-center justify-between px-2 py-3 mb-6 border-b border-white/10 pb-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[14px] bg-gradient-to-br from-[#7C5CFC] to-[#523E8C] text-white flex items-center justify-center shadow-lg ring-2 ring-white/20">
+              <div className="w-10 h-10 rounded-[14px] bg-[#523E8C] text-white flex items-center justify-center shadow-lg ring-2 ring-white/20 border border-[#7C5CFC]/40">
                 <ShieldCheck className="w-6 h-6 text-white" />
               </div>
               <div>

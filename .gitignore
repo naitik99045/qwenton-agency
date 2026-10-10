@@ -1,5 +1,5 @@
 # ==============================================================================
-# QWENTON AGENTS — PRODUCTION .GITIGNORE
+# QWENTON AGENTS — PRODUCTION-GRADE HARDENED .GITIGNORE
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -22,13 +22,13 @@
 # ------------------------------------------------------------------------------
 /.next/
 /out/
-/build
-/dist
-.tsbuildinfo
+/build/
+/dist/
+*.tsbuildinfo
 next-env.d.ts.bak
 
 # ------------------------------------------------------------------------------
-# 3. Environment Variables & Secrets (CRITICAL)
+# 3. Environment Variables & Secrets (STRICT ZERO-LEAKAGE)
 # ------------------------------------------------------------------------------
 .env
 .env*
@@ -39,12 +39,25 @@ next-env.d.ts.bak
 .env.test.local
 .env.production
 .env.production.local
+*.env
 
-# Allow env.example for repository reference
+# Whitelist safe documentation template
 !.env.example
 
+# Private Keys & Service Account Credentials
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*service-account*.json
+*firebase-adminsdk*.json
+*serviceAccountKey*.json
+*credentials*.json
+
 # ------------------------------------------------------------------------------
-# 4. Sensitive Local Credential & Notes Files
+# 4. Sensitive Local Notes, Prompts & Credentials Files
 # ------------------------------------------------------------------------------
 vercel_variables.txt
 fiirebase.txt
@@ -52,32 +65,40 @@ email.txt
 prompt.txt
 prd.txt
 design.txt
-*.pem
-*.key
-*.cert
-*.pfx
-*.p12
-*service-account*.json
-*firebase-adminsdk*.json
-*serviceAccountKey*.json
+secret*.txt
+token*.txt
+credentials*.txt
 
 # ------------------------------------------------------------------------------
-# 5. Local Database & State Files
+# 5. Local Database, State & Temporary Storage
 # ------------------------------------------------------------------------------
 .local_db.json
 *.local_db.json
+local_db.json
 *.sqlite
 *.sqlite3
 *.db
+/tmp/
+tmp/
+temp/
 
 # ------------------------------------------------------------------------------
-# 6. Vercel & Deployment Caches
+# 6. Agentic & Workspace Scratchpads
+# ------------------------------------------------------------------------------
+.agent/
+.agent
+.cortex/
+
+# ------------------------------------------------------------------------------
+# 7. Vercel, Firebase & Deployment Tooling
 # ------------------------------------------------------------------------------
 .vercel
 .turbo
+.firebase/
+firebase-export*
 
 # ------------------------------------------------------------------------------
-# 7. Debug, Error & Execution Logs
+# 8. Debug, Error & Execution Logs
 # ------------------------------------------------------------------------------
 logs.txt
 logs2.txt
@@ -93,7 +114,7 @@ firestore-debug.log*
 ui-debug.log*
 
 # ------------------------------------------------------------------------------
-# 8. OS Generated Files & Metadata
+# 9. OS Generated Files & Metadata
 # ------------------------------------------------------------------------------
 .DS_Store
 .DS_Store?
@@ -101,11 +122,15 @@ ui-debug.log*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+ehthumbs_vista.db
 Thumbs.db
+Thumbs.db:encryptable
+[Tt]humbs.db
+[Dd]esktop.ini
 Desktop.ini
 
 # ------------------------------------------------------------------------------
-# 9. IDE & Editor Files
+# 10. IDE & Editor Configuration
 # ------------------------------------------------------------------------------
 .vscode/*
 !.vscode/settings.json

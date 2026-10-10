@@ -133,7 +133,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Brand Logo & Tactile Mark */}
           <div className="flex items-center justify-between mb-6 px-2 py-2">
             <Link href="/dashboard" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-[12px] bg-gradient-to-br from-primary to-primary-deep text-white flex items-center justify-center shadow-clay-button">
+              <div className="w-9 h-9 rounded-[12px] bg-primary text-white flex items-center justify-center shadow-clay-button border border-primary-deep/30">
                 <Sparkles className="w-5 h-5 animate-pulse" />
               </div>
               <div>

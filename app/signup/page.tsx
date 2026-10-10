@@ -64,7 +64,7 @@ export default function SignupPage() {
     <div className="min-h-screen bg-canvas flex items-center justify-center p-6">
       <div className="max-w-md w-full clay-surface p-8">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-[16px] bg-gradient-to-br from-primary to-primary-deep text-white flex items-center justify-center mx-auto mb-4 shadow-clay-button">
+          <div className="w-12 h-12 rounded-[16px] bg-primary text-white flex items-center justify-center mx-auto mb-4 shadow-clay-button border border-primary-deep/30">
             <Sparkles className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-ink">Create your workspace</h1>

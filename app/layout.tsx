@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700', '800'],
+});
 
 export const viewport: Viewport = {
   themeColor: '#4667B1',
@@ -30,12 +38,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`h-full ${inter.variable}`}>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
-      <body className="h-full bg-canvas text-ink antialiased selection:bg-cloud-blue selection:text-primary-deep overflow-x-hidden">
+      <body className="h-full font-sans bg-canvas text-ink antialiased selection:bg-cloud-blue selection:text-primary-deep overflow-x-hidden">
         {children}
       </body>
     </html>

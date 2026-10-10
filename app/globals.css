@@ -4,72 +4,124 @@
 
 @layer base {
   :root {
-    --canvas-cream: #F8F6F1;
-    --cloud-blue: #E6EEF8;
-    --soft-lavender: #EAE7F5;
-    --sage: #DCEBE1;
-    --peach: #F5DED1;
-    --butter: #F6E8BA;
-    --ink: #263247;
-    --muted-ink: #697386;
-    --primary-blue: #4667B1;
-    --primary-deep: #34518F;
-    --success: #3E856A;
-    --approval-amber: #B98232;
-    --danger: #B95151;
-    --border: #E3E0D8;
+    /* ----------------------------------------------------
+       60-30-10 TRI-COLOR SOLID OKLCH DESIGN SYSTEM
+       Strictly Zero Gradients — Pure Color Science
+       ---------------------------------------------------- */
+
+    /* 60% Dominant Base: Tactile Linen Cream & Crisp Surface */
+    --canvas-cream: oklch(97.8% 0.008 85);          /* #F8F6F1 Warm tactile linen */
+    --surface-white: oklch(100% 0 0);              /* Pure solid card surface */
+    --surface-inset: oklch(96.5% 0.01 85);          /* Inset panel */
+    --border-subtle: oklch(91% 0.006 85);          /* #E3E0D8 Muted structure border */
+    --border-strong: oklch(84% 0.012 85);          /* #D4CEBF Crisp border */
+
+    /* 30% Structural Ink & Typography */
+    --ink: oklch(28% 0.038 260);                   /* #263247 Deep slate architectural navy */
+    --ink-muted: oklch(46% 0.026 260);             /* #697386 Secondary readable text */
+    --ink-light: oklch(65% 0.015 260);             /* #9AA2B1 Metadata / subtle text */
+
+    /* 10% High-Energy Accent: Single Brand Anchor Derivation */
+    --brand-primary: oklch(52% 0.16 258);          /* #4667B1 Royal cobalt primary */
+    --brand-primary-deep: oklch(42% 0.14 258);     /* #34518F Deep cobalt interactive */
+    --brand-primary-light: oklch(93% 0.03 258);    /* #E6EEF8 Soft cloud tint */
+    --brand-primary-glow: oklch(52% 0.16 258 / 0.18);
+
+    /* Functional Accents */
+    --approval-amber: oklch(62% 0.15 75);          /* #B98232 Amber approval gate */
+    --approval-amber-bg: oklch(96% 0.03 75);       /* Soft amber tint */
+    --success: oklch(55% 0.13 155);                /* #3E856A Emerald success */
+    --success-bg: oklch(95% 0.03 155);
+    --danger: oklch(52% 0.18 25);                  /* #B95151 Carmine danger */
+    --danger-bg: oklch(95% 0.03 25);
+
+    /* Subtle Functional Pastels */
+    --soft-lavender: oklch(92% 0.03 295);
+    --peach: oklch(91% 0.04 55);
+    --butter: oklch(93% 0.05 90);
   }
 
   body {
     background-color: var(--canvas-cream);
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.011em;
   }
 }
 
 @layer components {
+  /* Tactile Solid Clay Surfaces (Strictly No Gradients) */
   .clay-surface {
-    background-color: #FFFFFF;
+    background-color: var(--surface-white);
     border-radius: 22px;
-    border: 1px solid rgba(227, 224, 216, 0.7);
-    box-shadow: 10px 10px 24px rgba(82, 78, 70, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.90);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 10px 10px 24px rgba(82, 78, 70, 0.07), -6px -6px 18px rgba(255, 255, 255, 0.95);
     transition: all 0.2s ease-in-out;
   }
 
   .clay-surface-interactive {
-    background-color: #FFFFFF;
+    background-color: var(--surface-white);
     border-radius: 22px;
-    border: 1px solid rgba(227, 224, 216, 0.7);
-    box-shadow: 10px 10px 24px rgba(82, 78, 70, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.90);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 10px 10px 24px rgba(82, 78, 70, 0.07), -6px -6px 18px rgba(255, 255, 255, 0.95);
     transition: all 0.2s ease-in-out;
   }
 
   .clay-surface-interactive:hover {
-    box-shadow: 12px 12px 28px rgba(82, 78, 70, 0.12), -8px -8px 20px rgba(255, 255, 255, 0.95);
-    transform: translateY(-1px);
+    box-shadow: 14px 14px 30px rgba(82, 78, 70, 0.11), -8px -8px 20px rgba(255, 255, 255, 0.98);
+    transform: translateY(-2px);
   }
 
   .clay-control {
-    background-color: #FFFFFF;
+    background-color: var(--surface-white);
     border-radius: 16px;
-    border: 1px solid rgba(227, 224, 216, 0.8);
-    box-shadow: 4px 4px 12px rgba(82, 78, 70, 0.05), -3px -3px 8px rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 4px 4px 12px rgba(82, 78, 70, 0.05), -3px -3px 8px rgba(255, 255, 255, 0.90);
     transition: all 0.15s ease-in-out;
   }
 
   .clay-control:focus {
     outline: none;
-    border-color: #4667B1;
-    box-shadow: 0 0 0 3px rgba(70, 103, 177, 0.15), 4px 4px 12px rgba(82, 78, 70, 0.05);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--brand-primary-glow), 4px 4px 12px rgba(82, 78, 70, 0.05);
   }
 
   .clay-inset-panel {
-    background-color: #F8F6F1;
+    background-color: var(--surface-inset);
     border-radius: 16px;
-    box-shadow: inset 2px 2px 6px rgba(82, 78, 70, 0.07), inset -2px -2px 6px rgba(255, 255, 255, 0.80);
-    border: 1px solid rgba(227, 224, 216, 0.5);
+    box-shadow: inset 2px 2px 6px rgba(82, 78, 70, 0.06), inset -2px -2px 6px rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* 3D Perspective Tactile Workstation */
+  .tactile-perspective-stage {
+    perspective: 1200px;
+  }
+
+  .tactile-perspective-card {
+    transform: perspective(1200px) rotateX(3deg) scale(0.995);
+    box-shadow: 0 30px 60px -15px rgba(38, 50, 71, 0.15), 0 12px 24px -10px rgba(38, 50, 71, 0.08);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  }
+
+  .tactile-perspective-card:hover {
+    transform: perspective(1200px) rotateX(0deg) scale(1);
+    box-shadow: 0 36px 70px -15px rgba(38, 50, 71, 0.18), 0 16px 28px -10px rgba(38, 50, 71, 0.10);
+  }
+
+  /* Fluid Headline Rules */
+  .font-fluid-hero {
+    font-size: clamp(2.4rem, 5.2vw, 4.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+  }
+
+  .font-fluid-section {
+    font-size: clamp(1.85rem, 3.8vw, 2.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
   }
 
   /* Custom scrollbar */

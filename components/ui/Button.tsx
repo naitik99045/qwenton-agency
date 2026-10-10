@@ -18,12 +18,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      primary: 'bg-gradient-to-b from-[#4667B1] to-[#34518F] text-white shadow-clay-button hover:brightness-105',
-      secondary: 'bg-[#E6EEF8] text-[#34518F] hover:bg-[#D6E4F5] shadow-clay-button-subtle border border-[#D0DFEF]',
-      outline: 'bg-white text-ink border border-border shadow-clay-button-subtle hover:bg-[#F8F6F1]',
-      danger: 'bg-gradient-to-b from-[#D9534F] to-[#B95151] text-white shadow-clay-button hover:brightness-105',
-      amber: 'bg-gradient-to-b from-[#C9913E] to-[#B98232] text-white shadow-clay-button hover:brightness-105',
-      ghost: 'bg-transparent text-ink-muted hover:text-ink hover:bg-black/5',
+      primary: 'bg-primary text-white shadow-clay-button hover:bg-primary-deep active:bg-primary-deep/95 border border-primary-deep/30',
+      secondary: 'bg-cloud-blue text-primary-deep hover:bg-cloud-blue/80 shadow-clay-button-subtle border border-primary/20',
+      outline: 'bg-white text-ink border border-border shadow-clay-button-subtle hover:bg-canvas hover:border-ink/20',
+      danger: 'bg-danger text-white shadow-clay-button hover:bg-danger/90 border border-danger/40',
+      amber: 'bg-amber-approval text-white shadow-clay-button hover:bg-amber-approval/90 border border-amber-approval/40',
+      ghost: 'bg-transparent text-ink-muted hover:text-ink hover:bg-ink/5',
     };
 
     return (
