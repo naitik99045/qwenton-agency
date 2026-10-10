@@ -119,7 +119,7 @@ export default function LandingPage() {
       tools: ['Web Research', 'Document Extraction', 'Math Calculator', 'Executive Briefing'],
       sampleInput: 'Track the latest pricing updates across top 3 competitors and model how a 10% price adjustment impacts our annual recurring revenue.',
       sampleOutput:
-        'Competitor analysis complete: Average tier increased by 14.2%. Modeling indicates our annual revenue would expand by +$64,800 while maintaining a 12% price advantage over market leader.',
+        'Competitor analysis complete: Average tier increased by 14.2%. Modeling indicates our annual revenue would expand by +₹5,00,000 while maintaining a 12% price advantage over market leader.',
     },
     operations: {
       name: 'Devon — Operations & Workflow Coordinator',

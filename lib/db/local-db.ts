@@ -46,7 +46,7 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
     id: 'normal',
     name: 'Normal (Free)',
     price: 0,
-    priceFormatted: '$0',
+    priceFormatted: '₹0',
     maxAgents: 2,
     maxRunsPerMonth: 50,
     maxFileStorageBytes: 25 * 1024 * 1024, // 25MB
@@ -57,8 +57,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   lite: {
     id: 'lite',
     name: 'Lite Coworker',
-    price: 9,
-    priceFormatted: '$9 / mo',
+    price: 499,
+    priceFormatted: '₹499 / mo',
     maxAgents: 4,
     maxRunsPerMonth: 300,
     maxFileStorageBytes: 100 * 1024 * 1024, // 100MB
@@ -69,8 +69,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   pro: {
     id: 'pro',
     name: 'Pro Coworker',
-    price: 29,
-    priceFormatted: '$29 / mo',
+    price: 1499,
+    priceFormatted: '₹1,499 / mo',
     maxAgents: 9,
     maxRunsPerMonth: 1000,
     maxFileStorageBytes: 500 * 1024 * 1024, // 500MB
@@ -81,8 +81,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   ultra: {
     id: 'ultra',
     name: 'Ultra Business',
-    price: 79,
-    priceFormatted: '$79 / mo',
+    price: 3999,
+    priceFormatted: '₹3,999 / mo',
     maxAgents: 15,
     maxRunsPerMonth: 5000,
     maxFileStorageBytes: 2 * 1024 * 1024 * 1024, // 2GB
@@ -514,8 +514,8 @@ class LocalDB {
       priceFormatted:
         updates.price !== undefined
           ? updates.price === 0
-            ? '$0'
-            : `$${updates.price} / mo`
+            ? '₹0'
+            : `₹${updates.price.toLocaleString('en-IN')} / mo`
           : plan.priceFormatted,
     };
     this.data.plans[id] = updated;

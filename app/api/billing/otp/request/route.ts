@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       userName: user.displayName || user.email.split('@')[0],
       planId: plan.id as PlanId,
       amount: plan.price,
-      currency: 'USD',
+      currency: 'INR',
       status: 'otp_pending',
       otpCode,
       otpExpiresAt,

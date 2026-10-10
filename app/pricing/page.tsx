@@ -21,7 +21,7 @@ export default function PricingPage() {
     {
       id: 'normal',
       name: 'Normal (Free)',
-      price: '$0',
+      price: '₹0',
       period: 'forever free',
       description: 'Ideal for solo testing and exploring AI agent tools.',
       maxAgents: '2 Agents for Free Work',
@@ -40,7 +40,7 @@ export default function PricingPage() {
     {
       id: 'lite',
       name: 'Lite Coworker',
-      price: '$9',
+      price: '₹499',
       period: 'per month',
       description: 'For growing individual creators and freelancers.',
       maxAgents: '4 Active AI Agents',
@@ -59,7 +59,7 @@ export default function PricingPage() {
     {
       id: 'pro',
       name: 'Pro Coworker',
-      price: '$29',
+      price: '₹1,499',
       period: 'per month',
       description: 'For teams requiring priority LLM streaming and automation routines.',
       maxAgents: '9 Active AI Agents',
@@ -78,7 +78,7 @@ export default function PricingPage() {
     {
       id: 'ultra',
       name: 'Ultra Business',
-      price: '$79',
+      price: '₹3,999',
       period: 'per month',
       description: 'Maximum capacity and dedicated enterprise throughput.',
       maxAgents: '15 Active AI Agents',
@@ -102,7 +102,13 @@ export default function PricingPage() {
     return {
       ...bp,
       name: live.name || bp.name,
-      price: live.price !== undefined ? (live.price === 0 ? '$0' : `$${live.price}`) : bp.price,
+      price:
+        live.priceFormatted ||
+        (live.price !== undefined
+          ? live.price === 0
+            ? '₹0'
+            : `₹${live.price.toLocaleString('en-IN')}`
+          : bp.price),
       maxAgents: live.maxAgents ? `${live.maxAgents} Active AI Agents` : bp.maxAgents,
       description: live.description || bp.description,
       features: live.features && live.features.length > 0 ? live.features : bp.features,

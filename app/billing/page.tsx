@@ -133,7 +133,7 @@ export default function BillingPage() {
       id: 'normal',
       name: 'Normal (Free)',
       price: 0,
-      priceFormatted: '$0',
+      priceFormatted: '₹0',
       period: 'forever free',
       maxAgents: 2,
       description: 'Ideal for testing autonomous workflows.',
@@ -143,8 +143,8 @@ export default function BillingPage() {
     {
       id: 'lite',
       name: 'Lite Coworker',
-      price: 9,
-      priceFormatted: '$9 / mo',
+      price: 499,
+      priceFormatted: '₹499 / mo',
       period: 'per month',
       maxAgents: 4,
       description: 'For growing individual creators and freelancers.',
@@ -154,8 +154,8 @@ export default function BillingPage() {
     {
       id: 'pro',
       name: 'Pro Coworker',
-      price: 29,
-      priceFormatted: '$29 / mo',
+      price: 1499,
+      priceFormatted: '₹1,499 / mo',
       period: 'per month',
       maxAgents: 9,
       description: 'For teams requiring deep research and routines.',
@@ -165,8 +165,8 @@ export default function BillingPage() {
     {
       id: 'ultra',
       name: 'Ultra Business',
-      price: 79,
-      priceFormatted: '$79 / mo',
+      price: 3999,
+      priceFormatted: '₹3,999 / mo',
       period: 'per month',
       maxAgents: 15,
       description: 'Maximum capacity and dedicated enterprise throughput.',
@@ -182,7 +182,13 @@ export default function BillingPage() {
       ...bp,
       name: live.name || bp.name,
       price: live.price !== undefined ? live.price : bp.price,
-      priceFormatted: live.price !== undefined ? (live.price === 0 ? '$0' : `$${live.price}`) : bp.priceFormatted,
+      priceFormatted:
+        live.priceFormatted ||
+        (live.price !== undefined
+          ? live.price === 0
+            ? '₹0'
+            : `₹${live.price.toLocaleString('en-IN')} / mo`
+          : bp.priceFormatted),
       maxAgents: live.maxAgents || bp.maxAgents,
       description: live.description || bp.description,
       features: live.features && live.features.length > 0 ? live.features : bp.features,
@@ -254,7 +260,11 @@ export default function BillingPage() {
                   <p className="text-[11px] text-ink-muted mb-4">{p.description}</p>
 
                   <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-2xl font-extrabold text-ink">{typeof p.priceFormatted === 'string' && p.priceFormatted.startsWith('$') ? p.priceFormatted.split(' ')[0] : `$${p.price}`}</span>
+                    <span className="text-2xl font-extrabold text-ink">
+                      {typeof p.priceFormatted === 'string' && p.priceFormatted.length > 0
+                        ? p.priceFormatted.split(' ')[0]
+                        : `₹${p.price.toLocaleString('en-IN')}`}
+                    </span>
                     <span className="text-xs text-ink-muted">/ {p.period}</span>
                   </div>
 
@@ -320,7 +330,7 @@ export default function BillingPage() {
                 <div className="flex justify-between">
                   <span className="text-ink-muted">Amount Due:</span>
                   <span className="font-bold text-ink">
-                    ${selectedPlanObj.price}.00 / mo
+                    ₹{selectedPlanObj.price.toLocaleString('en-IN')} / mo
                   </span>
                 </div>
                 <div className="flex justify-between">

@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { User, AuditEvent, Order, Plan, Agent } from '@/lib/db/types';
 import { formatDate } from '@/lib/utils';
+import { auth } from '@/lib/firebase/config';
 import NotFound from '@/app/not-found';
 
 interface EnrichedAgent extends Agent {
@@ -65,6 +66,57 @@ interface SystemDiagnostics {
   };
 }
 
+const INITIAL_PLANS: Plan[] = [
+  {
+    id: 'normal',
+    name: 'Normal (Free)',
+    price: 0,
+    priceFormatted: '₹0',
+    maxAgents: 2,
+    maxRunsPerMonth: 50,
+    maxFileStorageBytes: 25 * 1024 * 1024,
+    maxTelegramBots: 1,
+    features: ['2 AI Agents for Free Work', 'Local LM Studio & Ollama', 'Safe Web Research', 'Human Approvals'],
+    active: true,
+  },
+  {
+    id: 'lite',
+    name: 'Lite Coworker',
+    price: 499,
+    priceFormatted: '₹499 / mo',
+    maxAgents: 4,
+    maxRunsPerMonth: 300,
+    maxFileStorageBytes: 100 * 1024 * 1024,
+    maxTelegramBots: 1,
+    features: ['4 AI Agents', 'Priority LLM Streaming', 'Telegram Bot Chat', '100MB File Knowledge'],
+    active: true,
+  },
+  {
+    id: 'pro',
+    name: 'Pro Coworker',
+    price: 1499,
+    priceFormatted: '₹1,499 / mo',
+    maxAgents: 9,
+    maxRunsPerMonth: 1000,
+    maxFileStorageBytes: 500 * 1024 * 1024,
+    maxTelegramBots: 3,
+    features: ['9 AI Agents', 'Gemini & OpenAI Cloud Access', 'Automated Scheduled Routines', '500MB Storage'],
+    active: true,
+  },
+  {
+    id: 'ultra',
+    name: 'Ultra Business',
+    price: 3999,
+    priceFormatted: '₹3,999 / mo',
+    maxAgents: 15,
+    maxRunsPerMonth: 5000,
+    maxFileStorageBytes: 2 * 1024 * 1024 * 1024,
+    maxTelegramBots: 5,
+    features: ['15 AI Agents', 'Custom BaseURL & API Keys', 'Multi-channel Slack & Telegram', 'Unlimited Storage & Priority Queue'],
+    active: true,
+  },
+];
+
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<
     'overview' | 'users' | 'agents' | 'pricing' | 'orders' | 'system' | 'audits'
@@ -81,7 +133,7 @@ export default function AdminDashboardPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [agents, setAgents] = useState<EnrichedAgent[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plans, setPlans] = useState<Plan[]>(INITIAL_PLANS);
   const [audits, setAudits] = useState<AuditEvent[]>([]);
   const [systemDiag, setSystemDiag] = useState<SystemDiagnostics | null>(null);
 
@@ -101,15 +153,29 @@ export default function AdminDashboardPage() {
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [updatingUserUid, setUpdatingUserUid] = useState<string | null>(null);
 
+  const getAuthHeaders = async (): Promise<Record<string, string>> => {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    try {
+      if (auth.currentUser) {
+        const token = await auth.currentUser.getIdToken();
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+      }
+    } catch {
+      // Ignore token fetch error, fallback to cookies
+    }
+    return headers;
+  };
+
   const fetchAdminData = async () => {
     try {
+      const headers = await getAuthHeaders();
       const [overviewRes, usersRes, agentsRes, ordersRes, plansRes, systemRes] = await Promise.all([
-        fetch('/api/admin/overview'),
-        fetch('/api/admin/users'),
-        fetch('/api/admin/agents'),
-        fetch('/api/admin/orders'),
-        fetch('/api/admin/plans'),
-        fetch('/api/admin/system'),
+        fetch('/api/admin/overview', { headers }),
+        fetch('/api/admin/users', { headers }),
+        fetch('/api/admin/agents', { headers }),
+        fetch('/api/admin/orders', { headers }),
+        fetch('/api/admin/plans', { headers }),
+        fetch('/api/admin/system', { headers }),
       ]);
 
       if (overviewRes.status === 403 || usersRes.status === 403 || overviewRes.status === 404) {
@@ -161,9 +227,10 @@ export default function AdminDashboardPage() {
 
     try {
       setUpdatingUserUid(uid);
+      const headers = await getAuthHeaders();
       const res = await fetch(`/api/admin/users/${uid}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ status: nextStatus }),
       });
       if (res.ok) fetchAdminData();
@@ -180,9 +247,10 @@ export default function AdminDashboardPage() {
 
     try {
       setUpdatingUserUid(uid);
+      const headers = await getAuthHeaders();
       const res = await fetch(`/api/admin/users/${uid}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ role: nextRole }),
       });
       if (res.ok) fetchAdminData();
@@ -196,9 +264,10 @@ export default function AdminDashboardPage() {
   const handleUpdateUserPlan = async (uid: string, planId: string) => {
     try {
       setUpdatingUserUid(uid);
+      const headers = await getAuthHeaders();
       const res = await fetch(`/api/admin/users/${uid}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ planId }),
       });
       if (res.ok) fetchAdminData();
@@ -212,9 +281,10 @@ export default function AdminDashboardPage() {
   const handleDeleteAgent = async (agentId: string, agentName: string) => {
     if (!confirm(`Are you sure you want to permanently delete agent "${agentName}"?`)) return;
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch('/api/admin/agents', {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ agentId }),
       });
       if (res.ok) fetchAdminData();
@@ -226,9 +296,10 @@ export default function AdminDashboardPage() {
   const handleManualActivateOrder = async (orderId: string) => {
     if (!confirm('Mark this order as Paid and activate user subscription?')) return;
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch('/api/admin/orders', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ orderId, status: 'paid', activatePlan: true }),
       });
       if (res.ok) fetchAdminData();
@@ -253,9 +324,25 @@ export default function AdminDashboardPage() {
     setSavingPlan(true);
     setPlanSaveNotice(null);
     try {
+      const headers = await getAuthHeaders();
+
+      // Optimistic update so UI reflects the new INR price immediately
+      setPlans((prev) =>
+        prev.map((pl) =>
+          pl.id === planId
+            ? {
+                ...pl,
+                price: Number(editPrice),
+                maxAgents: Number(editMaxAgents),
+                priceFormatted: `₹${Number(editPrice).toLocaleString('en-IN')} / mo`,
+              }
+            : pl
+        )
+      );
+
       const res = await fetch('/api/admin/plans', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           planId,
           price: Number(editPrice),
@@ -268,12 +355,13 @@ export default function AdminDashboardPage() {
         throw new Error(data.error || 'Failed to update plan');
       }
 
-      setPlanSaveNotice(`Plan ${planId.toUpperCase()} updated to ₹/$${editPrice}/mo (${editMaxAgents} max agents)!`);
+      setPlanSaveNotice(`Plan ${planId.toUpperCase()} updated to ₹${editPrice}/mo (${editMaxAgents} max agents)!`);
       setEditingPlanId(null);
       fetchAdminData();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       alert(`Error updating plan: ${msg}`);
+      fetchAdminData();
     } finally {
       setSavingPlan(false);
     }
@@ -395,7 +483,7 @@ export default function AdminDashboardPage() {
                         <div className="text-ink-muted text-[11px] font-mono">{ord.orderReference}</div>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-primary">${ord.amount} ({ord.planId.toUpperCase()})</div>
+                        <div className="font-bold text-primary">₹{ord.amount} ({ord.planId.toUpperCase()})</div>
                         <Badge
                           variant={
                             ord.status === 'paid' ? 'success' : ord.status === 'otp_verified' ? 'amber' : 'outline'
@@ -655,13 +743,22 @@ export default function AdminDashboardPage() {
               )}
             </div>
 
+            <div className="bg-[#EBF1FA] border border-[#C5D7F2] p-3.5 rounded-card flex items-center justify-between text-xs text-[#2A4374]">
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">💡</span>
+                <span>
+                  <strong>How to Edit Pricing:</strong> Click the <strong>Edit Price & Limit</strong> button on the right side of any tier below. Enter your price in <strong>₹ INR</strong> and agent limit, then click <strong>Save</strong>.
+                </span>
+              </div>
+            </div>
+
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs text-ink">
                 <thead>
                   <tr className="border-b border-border/80 text-ink-muted uppercase font-bold text-[10px]">
                     <th className="pb-3 px-2">Tier ID</th>
                     <th className="pb-3 px-2">Plan Name</th>
-                    <th className="pb-3 px-2">Monthly Price ($/₹)</th>
+                    <th className="pb-3 px-2">Monthly Price (₹ INR)</th>
                     <th className="pb-3 px-2">Max Agents Quota</th>
                     <th className="pb-3 px-2">Storage / Features</th>
                     <th className="pb-3 px-2 text-right">Actions</th>
@@ -677,7 +774,7 @@ export default function AdminDashboardPage() {
                         <td className="py-3 px-2">
                           {isEditing ? (
                             <div className="flex items-center gap-1">
-                              <span className="font-bold text-sm">$</span>
+                              <span className="font-bold text-sm">₹</span>
                               <input
                                 type="number"
                                 min={0}
@@ -688,7 +785,7 @@ export default function AdminDashboardPage() {
                               <span className="text-[11px] text-ink-muted">/ mo</span>
                             </div>
                           ) : (
-                            <span className="font-bold text-sm text-ink">{p.priceFormatted || `$${p.price} / mo`}</span>
+                            <span className="font-bold text-sm text-ink">{p.priceFormatted || `₹${p.price} / mo`}</span>
                           )}
                         </td>
                         <td className="py-3 px-2">
@@ -809,7 +906,7 @@ export default function AdminDashboardPage() {
                           <div className="text-ink-muted text-[11px]">{ord.userEmail}</div>
                         </td>
                         <td className="py-3 px-2 font-semibold uppercase">{ord.planId}</td>
-                        <td className="py-3 px-2 font-bold">${ord.amount}</td>
+                        <td className="py-3 px-2 font-bold">₹{ord.amount}</td>
                         <td className="py-3 px-2">
                           <Badge
                             variant={

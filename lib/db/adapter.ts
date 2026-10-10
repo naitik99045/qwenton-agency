@@ -443,7 +443,7 @@ class FirestoreAdapter implements DatabaseAdapter {
         id: id as PlanId,
         name: id,
         price: 0,
-        priceFormatted: '$0',
+        priceFormatted: '₹0',
         maxAgents: 2,
         maxRunsPerMonth: 50,
         maxFileStorageBytes: 25 * 1024 * 1024,
@@ -455,9 +455,9 @@ class FirestoreAdapter implements DatabaseAdapter {
       priceFormatted:
         updates.price !== undefined
           ? updates.price === 0
-            ? '$0'
-            : `$${updates.price} / mo`
-          : existing?.priceFormatted || '$0',
+            ? '₹0'
+            : `₹${updates.price.toLocaleString('en-IN')} / mo`
+          : existing?.priceFormatted || '₹0',
     };
     await ref.set(updated, { merge: true });
     return updated;
