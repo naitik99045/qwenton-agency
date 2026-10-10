@@ -18,6 +18,9 @@ import {
   CheckCircle2,
   AlertTriangle,
   LogOut,
+  Menu,
+  X,
+  Plus,
 } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
@@ -31,6 +34,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(null);
   const [pendingApprovalsCount, setPendingApprovalsCount] = useState(0);
   const [llmStatus, setLlmStatus] = useState<{ ok: boolean; message: string; provider?: string } | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile drawer on route navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const fetchSessionAndTelemetry = async () => {
     try {
@@ -63,14 +72,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    // 1. Subscribe to live Firebase Client Auth state
     const unsubscribe = subscribeToAuthState(async (fbUser) => {
       if (fbUser) {
         const token = await fbUser.getIdToken();
         await syncSessionToken(token, fbUser.uid, fbUser.email || '', fbUser.displayName || undefined);
         await fetchSessionAndTelemetry();
       } else {
-        // Double check session from cookies before redirecting
         const res = await fetch('/api/auth/session');
         if (res.ok) {
           const data = await res.json();
@@ -85,7 +92,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [pathname, router]);
+  }, [router]);
 
   const handleLogout = async () => {
     await logoutUser();
@@ -105,22 +112,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="flex min-h-screen bg-canvas">
-      {/* Tactile Sidebar */}
-      <aside className="w-64 border-r border-border/70 bg-white/70 backdrop-blur-md flex flex-col justify-between p-4 shrink-0 shadow-xs">
+    <div className="flex min-h-screen bg-canvas text-ink selection:bg-cloud-blue selection:text-primary-deep">
+      {/* Mobile Drawer Overlay */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs lg:hidden transition-opacity"
+        />
+      )}
+
+      {/* Tactile Sidebar (Persistent on Desktop, Slide-out Drawer on Mobile/Android) */}
+      <aside
+        className={cn(
+          'w-64 border-r border-border/70 bg-white/95 backdrop-blur-md flex flex-col justify-between p-4 shrink-0 shadow-xs z-50 transition-transform duration-300 ease-in-out',
+          'fixed inset-y-0 left-0 lg:static lg:translate-x-0',
+          mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
+        )}
+      >
         <div>
           {/* Brand Logo & Tactile Mark */}
-          <Link href="/dashboard" className="flex items-center gap-3 px-2 py-3 mb-6 group">
-            <div className="w-9 h-9 rounded-[12px] bg-gradient-to-br from-primary to-primary-deep text-white flex items-center justify-center shadow-clay-button">
-              <Sparkles className="w-5 h-5 animate-pulse" />
-            </div>
-            <div>
-              <div className="font-bold text-base text-ink tracking-tight flex items-center gap-1.5">
-                qwenton<span className="text-primary font-extrabold">agents</span>
+          <div className="flex items-center justify-between mb-6 px-2 py-2">
+            <Link href="/dashboard" className="flex items-center gap-3 group">
+              <div className="w-9 h-9 rounded-[12px] bg-gradient-to-br from-primary to-primary-deep text-white flex items-center justify-center shadow-clay-button">
+                <Sparkles className="w-5 h-5 animate-pulse" />
               </div>
-              <div className="text-[10px] text-ink-muted uppercase tracking-wider font-semibold">AI Coworker Space</div>
-            </div>
-          </Link>
+              <div>
+                <div className="font-bold text-base text-ink tracking-tight flex items-center gap-1.5">
+                  qwenton<span className="text-primary font-extrabold">agents</span>
+                </div>
+                <div className="text-[10px] text-ink-muted uppercase tracking-wider font-semibold">AI Coworker Space</div>
+              </div>
+            </Link>
+
+            {/* Mobile Drawer Close Button */}
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-1.5 rounded-control text-ink-muted hover:text-ink lg:hidden hover:bg-black/5"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
           {/* Navigation Links */}
           <nav className="space-y-1">
@@ -218,19 +249,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
         {/* Top Header */}
-        <header className="h-16 border-b border-border/70 bg-white/50 backdrop-blur-md px-8 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3 text-sm text-ink-muted">
-            <span className="font-medium text-ink">Workspace</span>
-            <span>/</span>
-            <span className="capitalize">{pathname.split('/')[1] || 'Dashboard'}</span>
+        <header className="h-16 border-b border-border/70 bg-white/70 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between shrink-0 sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            {/* Mobile Drawer Trigger (Android/iOS) */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-2 rounded-control text-ink-muted hover:text-ink hover:bg-black/5 lg:hidden"
+              aria-label="Open Navigation Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-2 text-sm text-ink-muted">
+              <span className="font-medium text-ink hidden sm:inline">Workspace</span>
+              <span className="hidden sm:inline">/</span>
+              <span className="capitalize font-bold text-ink sm:text-ink-muted">
+                {pathname.split('/')[1] || 'Dashboard'}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5 sm:gap-4">
             {/* LLM Status Pill */}
             {llmStatus ? (
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-white border border-border shadow-clay-button-subtle">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-white border border-border shadow-clay-button-subtle">
                 {llmStatus.ok ? (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5 text-success" />
@@ -241,7 +285,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 ) : (
                   <>
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-approval" />
-                    <span className="text-ink-muted font-medium">Local Model Mode</span>
+                    <span className="text-ink-muted font-medium">Local Model</span>
                   </>
                 )}
               </div>
@@ -250,16 +294,76 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link href="/agents/new">
               <button
                 disabled={entitlements?.isAtLimit}
-                className="px-3.5 py-1.5 bg-gradient-to-b from-primary to-primary-deep text-white text-xs font-semibold rounded-[12px] shadow-clay-button hover:brightness-105 active:scale-95 transition-all disabled:opacity-50"
+                className="px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-gradient-to-b from-primary to-primary-deep text-white text-xs font-semibold rounded-[12px] shadow-clay-button hover:brightness-105 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1"
               >
-                + New Agent
+                <Plus className="w-3.5 h-3.5 sm:hidden" />
+                <span className="hidden sm:inline">+ New Agent</span>
+                <span className="sm:hidden">New</span>
               </button>
             </Link>
           </div>
         </header>
 
         {/* Page Container */}
-        <main className="flex-1 p-8 overflow-y-auto">{children}</main>
+        <main className="flex-1 p-4 sm:p-8 overflow-y-auto">{children}</main>
+
+        {/* Android / Mobile Bottom Tab Bar */}
+        <div className="fixed bottom-0 inset-x-0 h-14 bg-white/95 backdrop-blur-md border-t border-border/80 flex items-center justify-around px-2 z-30 lg:hidden shadow-lg">
+          <Link
+            href="/dashboard"
+            className={cn(
+              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors',
+              pathname === '/dashboard' ? 'text-primary font-bold' : 'text-ink-muted'
+            )}
+          >
+            <LayoutDashboard className="w-4 h-4 mb-0.5" />
+            <span>Home</span>
+          </Link>
+
+          <Link
+            href="/agents"
+            className={cn(
+              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors',
+              pathname.startsWith('/agents') ? 'text-primary font-bold' : 'text-ink-muted'
+            )}
+          >
+            <Bot className="w-4 h-4 mb-0.5" />
+            <span>Agents</span>
+          </Link>
+
+          <Link
+            href="/conversations"
+            className={cn(
+              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors',
+              pathname.startsWith('/conversations') ? 'text-primary font-bold' : 'text-ink-muted'
+            )}
+          >
+            <MessageSquare className="w-4 h-4 mb-0.5" />
+            <span>Chat</span>
+          </Link>
+
+          <Link
+            href="/approvals"
+            className={cn(
+              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors relative',
+              pathname.startsWith('/approvals') ? 'text-primary font-bold' : 'text-ink-muted'
+            )}
+          >
+            <ShieldAlert className="w-4 h-4 mb-0.5" />
+            <span>Approvals</span>
+            {pendingApprovalsCount > 0 && (
+              <span className="absolute top-1.5 right-2.5 w-2 h-2 rounded-full bg-amber-approval animate-pulse" />
+            )}
+          </Link>
+
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium text-ink-muted hover:text-ink transition-colors"
+          >
+            <Menu className="w-4 h-4 mb-0.5" />
+            <span>Menu</span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -141,16 +141,16 @@ export default function NewAgentWizard() {
         </Link>
 
         {/* Wizard Stepper */}
-        <div className="clay-surface p-4 flex items-center justify-between">
+        <div className="clay-surface p-3 sm:p-4 flex items-center justify-between overflow-x-auto gap-2">
           {[
             { num: 1, label: 'Template' },
             { num: 2, label: 'Identity' },
-            { num: 3, label: 'Tools & Safety' },
+            { num: 3, label: 'Tools' },
             { num: 4, label: 'Provision' },
           ].map((s) => (
-            <div key={s.num} className="flex items-center gap-2">
+            <div key={s.num} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <div
-                className={`w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all ${
+                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all ${
                   step === s.num
                     ? 'bg-primary text-white shadow-clay-button'
                     : step > s.num
@@ -158,9 +158,9 @@ export default function NewAgentWizard() {
                     : 'bg-[#F8F6F1] text-ink-muted'
                 }`}
               >
-                {step > s.num ? <Check className="w-4 h-4" /> : s.num}
+                {step > s.num ? <Check className="w-3.5 h-3.5" /> : s.num}
               </div>
-              <span className={`text-xs font-semibold ${step === s.num ? 'text-ink' : 'text-ink-muted'}`}>
+              <span className={`text-[11px] sm:text-xs font-semibold ${step === s.num ? 'text-ink font-bold' : 'text-ink-muted'}`}>
                 {s.label}
               </span>
             </div>
