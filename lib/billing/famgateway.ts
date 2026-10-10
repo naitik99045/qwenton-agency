@@ -135,13 +135,18 @@ export async function verifyFamOrder(orderId: string): Promise<FamVerifyResult> 
  * (FamGateway uses the active API Key as the HMAC secret)
  */
 export function verifyFamWebhookSignature(rawBody: string, receivedSignature: string): boolean {
-  if (!isFamGatewayConfigured || !receivedSignature) return true;
+  if (!isFamGatewayConfigured) return true;
+  if (!receivedSignature) return false;
   try {
     const expected = crypto
       .createHmac('sha256', FAMGATEWAY_API_KEY)
       .update(rawBody)
       .digest('hex');
-    return expected === receivedSignature;
+    
+    const expectedBuf = Buffer.from(expected, 'hex');
+    const receivedBuf = Buffer.from(receivedSignature, 'hex');
+    if (expectedBuf.length !== receivedBuf.length) return false;
+    return crypto.timingSafeEqual(expectedBuf, receivedBuf);
   } catch {
     return false;
   }

@@ -54,11 +54,23 @@ export async function POST(req: NextRequest) {
     const chatId = message.chat.id;
     const text = message.text.trim();
 
-    // Find the user associated with this telegram bot
-    const users = await db.getAllUsers();
-    let matchedUser = users[0]; // Default to primary user for single-tenant / local mode
-    let conn = await db.getTelegramConnection(matchedUser.uid);
+    // Find the exact tenant user associated with this telegram bot
+    const url = new URL(req.url);
+    const targetUid =
+      req.headers.get('x-telegram-bot-api-secret-token') ||
+      url.searchParams.get('uid');
 
+    let matchedUser = targetUid ? await db.getUser(targetUid) : null;
+    if (!matchedUser) {
+      const users = await db.getAllUsers();
+      matchedUser = users[0];
+    }
+
+    if (!matchedUser) {
+      return NextResponse.json({ ok: true });
+    }
+
+    let conn = await db.getTelegramConnection(matchedUser.uid);
     if (!conn) {
       return NextResponse.json({ ok: true });
     }

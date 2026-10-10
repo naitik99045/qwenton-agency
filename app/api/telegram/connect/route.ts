@@ -23,9 +23,9 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Set webhook if production URL is provided
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL;
-    if (appUrl && appUrl.startsWith('https://')) {
-      const webhookUrl = `${appUrl}/api/telegram/webhook`;
+    const rawAppUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+    if (rawAppUrl && (rawAppUrl.startsWith('https://') || rawAppUrl.startsWith('http://'))) {
+      const webhookUrl = `${rawAppUrl}/api/telegram/webhook?uid=${encodeURIComponent(user.uid)}`;
       await setTelegramWebhook(botToken, webhookUrl, user.uid);
     }
 

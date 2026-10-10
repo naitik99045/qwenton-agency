@@ -102,10 +102,9 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       (activeUid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' ? 'netiktalreja@gmail.com' : 'user@example.com');
     
     const isKnownAdmin =
-      isEmailAdmin(email) ||
-      activeUid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' ||
-      email === 'netiktalreja@gmail.com' ||
-      user?.role === 'admin';
+      user?.role === 'admin' ||
+      (decodedPayload && isEmailAdmin(email)) ||
+      (!isFirebaseAdminConfigured && (isEmailAdmin(email) || activeUid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1'));
 
     if (!user) {
       user = await db.saveUser({

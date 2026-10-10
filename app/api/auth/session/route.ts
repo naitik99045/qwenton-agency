@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/require-user';
 import { getUserEntitlements } from '@/lib/limits/entitlements';
 import { getDB } from '@/lib/db/adapter';
+import { adminAuth, isFirebaseAdminConfigured } from '@/lib/firebase/admin';
 import { z } from 'zod';
 
 const syncSessionSchema = z.object({
@@ -30,28 +31,45 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const authHeader = req.headers.get('authorization');
     const body = await req.json();
     const { uid, email, displayName } = syncSessionSchema.parse(body);
     const db = getDB();
+
+    let verifiedUid = uid;
+    let verifiedEmail = email;
+
+    // Cryptographically verify Bearer token if Firebase Admin is configured
+    if (authHeader?.startsWith('Bearer ') && isFirebaseAdminConfigured) {
+      const token = authHeader.split('Bearer ')[1];
+      try {
+        const decoded = await adminAuth.verifyIdToken(token);
+        verifiedUid = decoded.uid;
+        verifiedEmail = decoded.email || email;
+      } catch (tokenErr) {
+        console.warn('[Session Sync] Invalid Firebase ID Token rejected:', tokenErr);
+        return NextResponse.json({ error: 'Invalid authentication token' }, { status: 401 });
+      }
+    }
 
     const defaultAdmins = ['netiktalreja@gmail.com', 'admin@qwenton.shop'];
     const adminEmails = (process.env.ADMIN_EMAILS || defaultAdmins.join(','))
       .toLowerCase()
       .split(',')
       .map((e) => e.trim());
-    const lowerEmail = email.toLowerCase();
+    const lowerEmail = verifiedEmail.toLowerCase();
     const isAdmin =
       adminEmails.includes(lowerEmail) ||
       defaultAdmins.includes(lowerEmail) ||
       lowerEmail === 'netiktalreja@gmail.com' ||
-      uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1';
+      verifiedUid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1';
 
-    let user = await db.getUser(uid);
+    let user = await db.getUser(verifiedUid);
     if (!user) {
       user = await db.saveUser({
-        uid,
-        email,
-        displayName: displayName || email.split('@')[0],
+        uid: verifiedUid,
+        email: verifiedEmail,
+        displayName: displayName || verifiedEmail.split('@')[0],
         role: isAdmin ? 'admin' : 'user',
         planId: isAdmin ? 'ultra' : 'normal',
         activeAgentsCount: 0,

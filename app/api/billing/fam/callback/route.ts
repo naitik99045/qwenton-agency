@@ -50,13 +50,18 @@ async function handleCallback(req: NextRequest) {
     return NextResponse.redirect(`${appUrl}/billing?error=order_not_found`);
   }
 
-  // Authoritative server-to-server verification with FamGateway if orderId exists
-  if (orderId && !orderId.startsWith('fg_mock_')) {
-    const verification = await verifyFamOrder(orderId);
-    if (verification.status === 'success') {
-      status = 'success';
-    } else if (verification.status === 'expired') {
-      status = 'expired';
+  // Authoritative server-to-server verification with FamGateway
+  const { isFamGatewayConfigured } = await import('@/lib/billing/famgateway');
+  if (isFamGatewayConfigured) {
+    if (!orderId || orderId.startsWith('fg_mock_')) {
+      status = 'failed';
+    } else {
+      const verification = await verifyFamOrder(orderId);
+      if (verification.status === 'success') {
+        status = 'success';
+      } else {
+        status = verification.status === 'expired' ? 'expired' : 'failed';
+      }
     }
   }
 

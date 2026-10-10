@@ -232,3 +232,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const user = await requireUser(req);
+    const url = new URL(req.url);
+    const provider = url.searchParams.get('provider');
+
+    if (!provider) {
+      return NextResponse.json({ error: 'Provider parameter required.' }, { status: 400 });
+    }
+
+    const db = getDB();
+    await db.deleteIntegration(user.uid, provider);
+
+    await db.createAuditEvent({
+      actorUid: user.uid,
+      action: 'integration_disconnected',
+      resource: provider,
+      details: { status: 'not_connected', provider },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: `${provider} integration disconnected and credentials removed from Firestore.`,
+      status: 'not_connected',
+    });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
+}
+
