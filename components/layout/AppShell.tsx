@@ -157,8 +157,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {user?.role === 'admin' ? (
               <div className="pt-4 mt-4 border-t border-border/50">
                 <div className="px-3 text-[10px] font-bold text-ink-light uppercase tracking-wider mb-2">Administrator</div>
-                <a
-                  href={typeof window !== 'undefined' && window.location.hostname.endsWith('qwenton.shop') ? 'https://adm.qwenton.shop' : '/admin'}
+                <Link
+                  href="/admin"
                   className={cn(
                     'flex items-center gap-3 px-3.5 py-2.5 rounded-control text-sm font-medium transition-all select-none',
                     pathname.startsWith('/admin')
@@ -167,8 +167,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   )}
                 >
                   <ShieldCheck className="w-4 h-4 text-[#523E8C]" />
-                  <span>Admin Panel (adm.qwenton.shop)</span>
-                </a>
+                  <span>Admin Command Panel</span>
+                </Link>
               </div>
             ) : null}
           </nav>

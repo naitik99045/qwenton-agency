@@ -34,12 +34,15 @@ export async function POST(req: NextRequest) {
     const checkoutResult = await createFamCheckout(order, returnUrl);
 
     await db.updateOrder(order.id, {
-      gatewayTransactionId: checkoutResult.transactionId,
+      gatewayTransactionId: checkoutResult.orderId,
     });
 
     return NextResponse.json({
       checkoutUrl: checkoutResult.checkoutUrl,
-      transactionId: checkoutResult.transactionId,
+      orderId: checkoutResult.orderId,
+      qrUrl: checkoutResult.qrUrl,
+      upiIntent: checkoutResult.upiIntent,
+      payableAmount: checkoutResult.payableAmount,
       mock: checkoutResult.mock,
     });
   } catch (err: unknown) {

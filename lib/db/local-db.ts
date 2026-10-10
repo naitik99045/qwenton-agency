@@ -188,6 +188,10 @@ class LocalDB {
     return Object.values(this.data.agents).filter((a) => a.ownerUid === ownerUid);
   }
 
+  getAllAgents(): Agent[] {
+    return Object.values(this.data.agents);
+  }
+
   getAgent(id: string): Agent | null {
     return this.data.agents[id] || null;
   }
@@ -499,6 +503,24 @@ class LocalDB {
 
   getPlan(id: string): Plan | null {
     return this.data.plans[id] || null;
+  }
+
+  updatePlan(id: string, updates: Partial<Plan>): Plan {
+    const plan = this.getPlan(id);
+    if (!plan) throw new Error('Plan not found');
+    const updated: Plan = {
+      ...plan,
+      ...updates,
+      priceFormatted:
+        updates.price !== undefined
+          ? updates.price === 0
+            ? '$0'
+            : `$${updates.price} / mo`
+          : plan.priceFormatted,
+    };
+    this.data.plans[id] = updated;
+    this.save();
+    return updated;
   }
 
   // Orders (FAM Gateway & EmailJS OTP)

@@ -29,6 +29,7 @@ export interface DatabaseAdapter {
   // Agents & Limit
   getAgentsByUser(ownerUid: string): Promise<Agent[]>;
   getAllAgentsByUser(ownerUid: string): Promise<Agent[]>;
+  getAllAgents(): Promise<Agent[]>;
   getAgent(id: string): Promise<Agent | null>;
   createAgent(agent: Omit<Agent, 'id' | 'createdAt' | 'updatedAt'>): Promise<Agent>;
   updateAgent(id: string, updates: Partial<Agent>): Promise<Agent>;
@@ -80,6 +81,7 @@ export interface DatabaseAdapter {
   // Plans
   getPlans(): Promise<Plan[]>;
   getPlan(id: string): Promise<Plan | null>;
+  updatePlan(id: string, updates: Partial<Plan>): Promise<Plan>;
 
   // Orders (FAM Gateway & OTP)
   createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<Order>;
@@ -132,6 +134,11 @@ class FirestoreAdapter implements DatabaseAdapter {
 
   async getAllAgentsByUser(ownerUid: string): Promise<Agent[]> {
     const snap = await adminFirestore.collection('agents').where('ownerUid', '==', ownerUid).get();
+    return snap.docs.map((d) => d.data() as Agent);
+  }
+
+  async getAllAgents(): Promise<Agent[]> {
+    const snap = await adminFirestore.collection('agents').get();
     return snap.docs.map((d) => d.data() as Agent);
   }
 
@@ -405,11 +412,55 @@ class FirestoreAdapter implements DatabaseAdapter {
   }
 
   async getPlans(): Promise<Plan[]> {
-    return Object.values(DEFAULT_PLANS);
+    try {
+      const snap = await adminFirestore.collection('plans').get();
+      if (snap.empty) {
+        return Object.values(DEFAULT_PLANS);
+      }
+      return snap.docs.map((d) => d.data() as Plan);
+    } catch {
+      return Object.values(DEFAULT_PLANS);
+    }
   }
 
   async getPlan(id: string): Promise<Plan | null> {
-    return DEFAULT_PLANS[id as PlanId] || null;
+    try {
+      const doc = await adminFirestore.collection('plans').doc(id).get();
+      if (doc.exists) {
+        return doc.data() as Plan;
+      }
+      return DEFAULT_PLANS[id as PlanId] || null;
+    } catch {
+      return DEFAULT_PLANS[id as PlanId] || null;
+    }
+  }
+
+  async updatePlan(id: string, updates: Partial<Plan>): Promise<Plan> {
+    const ref = adminFirestore.collection('plans').doc(id);
+    const existing = await this.getPlan(id);
+    const updated: Plan = {
+      ...(existing || DEFAULT_PLANS[id as PlanId] || {
+        id: id as PlanId,
+        name: id,
+        price: 0,
+        priceFormatted: '$0',
+        maxAgents: 2,
+        maxRunsPerMonth: 50,
+        maxFileStorageBytes: 25 * 1024 * 1024,
+        maxTelegramBots: 1,
+        features: [],
+        active: true,
+      }),
+      ...updates,
+      priceFormatted:
+        updates.price !== undefined
+          ? updates.price === 0
+            ? '$0'
+            : `$${updates.price} / mo`
+          : existing?.priceFormatted || '$0',
+    };
+    await ref.set(updated, { merge: true });
+    return updated;
   }
 
   async createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<Order> {
@@ -488,6 +539,7 @@ class LocalDBAdapter implements DatabaseAdapter {
 
   async getAgentsByUser(ownerUid: string) { return localDb.getAgentsByUser(ownerUid); }
   async getAllAgentsByUser(ownerUid: string) { return localDb.getAllAgentsByUser(ownerUid); }
+  async getAllAgents() { return localDb.getAllAgents(); }
   async getAgent(id: string) { return localDb.getAgent(id); }
   async createAgent(agent: Omit<Agent, 'id' | 'createdAt' | 'updatedAt'>) { return localDb.createAgent(agent); }
   async updateAgent(id: string, updates: Partial<Agent>) { return localDb.updateAgent(id, updates); }
@@ -531,6 +583,7 @@ class LocalDBAdapter implements DatabaseAdapter {
 
   async getPlans() { return localDb.getPlans(); }
   async getPlan(id: string) { return localDb.getPlan(id); }
+  async updatePlan(id: string, updates: Partial<Plan>) { return localDb.updatePlan(id, updates); }
 
   async createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) { return localDb.createOrder(order); }
   async getOrder(id: string) { return localDb.getOrder(id); }

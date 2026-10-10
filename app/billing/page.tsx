@@ -14,6 +14,7 @@ export default function BillingPage() {
   const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [dynamicPlans, setDynamicPlans] = useState<any[]>([]);
 
   // OTP & FAM Gateway Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,11 +26,18 @@ export default function BillingPage() {
 
   const fetchSession = async () => {
     try {
-      const res = await fetch('/api/auth/session');
-      if (res.ok) {
-        const data = await res.json();
+      const [sessRes, plansRes] = await Promise.all([
+        fetch('/api/auth/session'),
+        fetch('/api/billing/plans'),
+      ]);
+      if (sessRes.ok) {
+        const data = await sessRes.json();
         setUser(data.user);
         setEntitlements(data.entitlements);
+      }
+      if (plansRes.ok) {
+        const pData = await plansRes.json();
+        setDynamicPlans(pData.plans || []);
       }
     } catch (e) {
       console.error('Billing load error:', e);
@@ -120,11 +128,12 @@ export default function BillingPage() {
     }
   };
 
-  const plans = [
+  const basePlans = [
     {
       id: 'normal',
       name: 'Normal (Free)',
-      price: '$0',
+      price: 0,
+      priceFormatted: '$0',
       period: 'forever free',
       maxAgents: 2,
       description: 'Ideal for testing autonomous workflows.',
@@ -134,7 +143,8 @@ export default function BillingPage() {
     {
       id: 'lite',
       name: 'Lite Coworker',
-      price: '$9',
+      price: 9,
+      priceFormatted: '$9 / mo',
       period: 'per month',
       maxAgents: 4,
       description: 'For growing individual creators and freelancers.',
@@ -144,7 +154,8 @@ export default function BillingPage() {
     {
       id: 'pro',
       name: 'Pro Coworker',
-      price: '$29',
+      price: 29,
+      priceFormatted: '$29 / mo',
       period: 'per month',
       maxAgents: 9,
       description: 'For teams requiring deep research and routines.',
@@ -154,7 +165,8 @@ export default function BillingPage() {
     {
       id: 'ultra',
       name: 'Ultra Business',
-      price: '$79',
+      price: 79,
+      priceFormatted: '$79 / mo',
       period: 'per month',
       maxAgents: 15,
       description: 'Maximum capacity and dedicated enterprise throughput.',
@@ -162,6 +174,22 @@ export default function BillingPage() {
       highlighted: false,
     },
   ];
+
+  const plans = basePlans.map((bp) => {
+    const live = dynamicPlans.find((dp) => dp.id === bp.id);
+    if (!live) return bp;
+    return {
+      ...bp,
+      name: live.name || bp.name,
+      price: live.price !== undefined ? live.price : bp.price,
+      priceFormatted: live.price !== undefined ? (live.price === 0 ? '$0' : `$${live.price}`) : bp.priceFormatted,
+      maxAgents: live.maxAgents || bp.maxAgents,
+      description: live.description || bp.description,
+      features: live.features && live.features.length > 0 ? live.features : bp.features,
+    };
+  });
+
+  const selectedPlanObj = plans.find((p) => p.id === selectedPlanId) || plans[1];
 
   return (
     <AppShell>
@@ -226,7 +254,7 @@ export default function BillingPage() {
                   <p className="text-[11px] text-ink-muted mb-4">{p.description}</p>
 
                   <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-2xl font-extrabold text-ink">{p.price}</span>
+                    <span className="text-2xl font-extrabold text-ink">{typeof p.priceFormatted === 'string' && p.priceFormatted.startsWith('$') ? p.priceFormatted.split(' ')[0] : `$${p.price}`}</span>
                     <span className="text-xs text-ink-muted">/ {p.period}</span>
                   </div>
 
@@ -265,9 +293,7 @@ export default function BillingPage() {
           title={modalStep === 'request' ? 'Confirm Subscription Purchase' : 'Verify One-Time Password'}
           description={
             modalStep === 'request'
-              ? `You are upgrading to the ${selectedPlanId.toUpperCase()} Plan (${
-                  selectedPlanId === 'ultra' ? '15' : selectedPlanId === 'pro' ? '9' : '4'
-                } agents). We will send an OTP confirmation to your email.`
+              ? `You are upgrading to the ${selectedPlanId.toUpperCase()} Plan (${selectedPlanObj.maxAgents} agents). We will send an OTP confirmation to your email.`
               : `Enter the 6-digit verification code sent to ${user?.email} to proceed to FAM Gateway payment.`
           }
         >
@@ -283,18 +309,18 @@ export default function BillingPage() {
               <div className="bg-[#F8F6F1] p-4 rounded-card border border-border space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-ink-muted">Target Plan:</span>
-                  <span className="font-bold text-ink uppercase">{selectedPlanId}</span>
+                  <span className="font-bold text-ink uppercase">{selectedPlanObj.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-ink-muted">New Agent Allowance:</span>
                   <span className="font-bold text-primary">
-                    {selectedPlanId === 'ultra' ? '15' : selectedPlanId === 'pro' ? '9' : '4'} Agents
+                    {selectedPlanObj.maxAgents} Agents
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-ink-muted">Amount Due:</span>
                   <span className="font-bold text-ink">
-                    {selectedPlanId === 'ultra' ? '$79.00' : selectedPlanId === 'pro' ? '$29.00' : '$9.00'} / mo
+                    ${selectedPlanObj.price}.00 / mo
                   </span>
                 </div>
                 <div className="flex justify-between">

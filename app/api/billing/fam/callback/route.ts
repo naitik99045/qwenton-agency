@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/lib/db/adapter';
 import { PlanId } from '@/lib/db/types';
+import { verifyFamOrder } from '@/lib/billing/famgateway';
 
 export async function GET(req: NextRequest) {
   return handleCallback(req);
@@ -15,14 +16,14 @@ async function handleCallback(req: NextRequest) {
   const searchParams = url.searchParams;
 
   let famRef = searchParams.get('fam_ref');
-  let famTx = searchParams.get('fam_tx');
+  let orderId = searchParams.get('order_id') || searchParams.get('fam_tx');
   let status = searchParams.get('status') || 'success';
 
   if (req.method === 'POST') {
     try {
       const body = await req.json();
       famRef = body.orderReference || body.fam_ref || famRef;
-      famTx = body.transactionId || body.fam_tx || famTx;
+      orderId = body.order_id || body.transactionId || body.fam_tx || orderId;
       status = body.status || status;
     } catch (e) {
       // ignore json parse error on GET
@@ -33,22 +34,37 @@ async function handleCallback(req: NextRequest) {
   const protocol = req.headers.get('x-forwarded-proto') || 'http';
   const appUrl = `${protocol}://${host}`;
 
-  if (!famRef) {
+  if (!famRef && !orderId) {
     return NextResponse.redirect(`${appUrl}/billing?error=missing_reference`);
   }
 
   const db = getDB();
-  const order = await db.getOrderByReference(famRef);
+  let order = famRef ? await db.getOrderByReference(famRef) : null;
+
+  if (!order && orderId) {
+    const allOrders = await db.getAllOrders();
+    order = allOrders.find((o) => o.gatewayTransactionId === orderId) || null;
+  }
 
   if (!order) {
     return NextResponse.redirect(`${appUrl}/billing?error=order_not_found`);
+  }
+
+  // Authoritative server-to-server verification with FamGateway if orderId exists
+  if (orderId && !orderId.startsWith('fg_mock_')) {
+    const verification = await verifyFamOrder(orderId);
+    if (verification.status === 'success') {
+      status = 'success';
+    } else if (verification.status === 'expired') {
+      status = 'expired';
+    }
   }
 
   if (status === 'success') {
     // 1. Mark Order as Paid
     await db.updateOrder(order.id, {
       status: 'paid',
-      gatewayTransactionId: famTx || order.gatewayTransactionId,
+      gatewayTransactionId: orderId || order.gatewayTransactionId,
     });
 
     // 2. Upgrade User Plan & Limits

@@ -1,86 +1,148 @@
 import crypto from 'crypto';
-import { Order, PlanId } from '@/lib/db/types';
+import { Order } from '@/lib/db/types';
 
-export const FAMGATEWAY_CONFIG = {
-  apiKey: process.env.FAM_API_KEY || 'fam_test_api_key',
-  secretKey: process.env.FAM_SECRET_KEY || 'fam_test_secret_key',
-  merchantId: process.env.FAM_MERCHANT_ID || 'fam_merchant_qwenton',
-  baseUrl: process.env.FAM_BASE_URL || 'https://api.famgateway.com/v1',
-};
+// FamGateway (https://famgateway.in) Configuration
+// Only 1 environment variable is needed: FAMGATEWAY_API_KEY (or FAM_API_KEY)
+export const FAMGATEWAY_API_KEY =
+  process.env.FAMGATEWAY_API_KEY ||
+  process.env.FAM_API_KEY ||
+  '';
+
+export const FAMGATEWAY_BASE_URL = 'https://famgateway.in';
 
 export const isFamGatewayConfigured = Boolean(
-  process.env.FAM_API_KEY && process.env.FAM_API_KEY !== 'fam_test_api_key'
+  FAMGATEWAY_API_KEY &&
+  FAMGATEWAY_API_KEY !== 'fam_test_api_key' &&
+  FAMGATEWAY_API_KEY.trim().length > 0
 );
 
 export interface FamCheckoutResult {
   checkoutUrl: string;
-  transactionId: string;
+  qrUrl?: string;
+  upiIntent?: string;
+  orderId: string;
+  payableAmount: number;
   mock: boolean;
 }
 
-export async function createFamCheckout(order: Order, returnUrl: string): Promise<FamCheckoutResult> {
-  const transactionId = `fam_tx_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+export interface FamVerifyResult {
+  status: 'success' | 'pending' | 'expired' | 'failed';
+  orderId: string;
+  utr?: string;
+  senderName?: string;
+  amount?: number;
+}
 
-  // If live FAM Gateway credentials are not set or in local demo mode, provide direct callback URL
+/**
+ * Creates a dynamic UPI payment session on FamGateway (https://famgateway.in/api/create-order)
+ */
+export async function createFamCheckout(order: Order, redirectUrl: string): Promise<FamCheckoutResult> {
+  const mockOrderId = `fg_mock_${Date.now().toString(36)}`;
+
+  // Fallback for local testing if API key is not configured
   if (!isFamGatewayConfigured) {
-    const mockCheckoutUrl = `${returnUrl}?fam_ref=${order.orderReference}&fam_tx=${transactionId}&status=success`;
+    const mockCheckoutUrl = `${redirectUrl}?fam_ref=${order.orderReference}&order_id=${mockOrderId}&status=success`;
     return {
       checkoutUrl: mockCheckoutUrl,
-      transactionId,
+      orderId: mockOrderId,
+      payableAmount: order.amount,
       mock: true,
     };
   }
 
   try {
-    const signaturePayload = `${FAMGATEWAY_CONFIG.merchantId}|${order.orderReference}|${order.amount}|${order.currency}`;
-    const signature = crypto
-      .createHmac('sha256', FAMGATEWAY_CONFIG.secretKey)
-      .update(signaturePayload)
-      .digest('hex');
-
-    const res = await fetch(`${FAMGATEWAY_CONFIG.baseUrl}/checkout/create`, {
+    const res = await fetch(`${FAMGATEWAY_BASE_URL}/api/create-order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-FAM-API-KEY': FAMGATEWAY_CONFIG.apiKey,
+        'X-Api-Key': FAMGATEWAY_API_KEY,
       },
       body: JSON.stringify({
-        merchantId: FAMGATEWAY_CONFIG.merchantId,
-        orderReference: order.orderReference,
-        amount: order.amount,
-        currency: order.currency,
-        customerEmail: order.userEmail,
-        customerName: order.userName,
-        returnUrl,
-        signature,
+        api_key: FAMGATEWAY_API_KEY,
+        amount: Number(order.amount),
+        customer_name: order.userName || 'Customer',
+        customer_email: order.userEmail || undefined,
+        redirect_url: redirectUrl,
       }),
     });
 
-    if (res.ok) {
-      const data = await res.json();
+    const data = await res.json();
+
+    if (res.ok && data.status === 'success' && data.data) {
       return {
-        checkoutUrl: data.checkoutUrl || data.paymentUrl,
-        transactionId: data.transactionId || transactionId,
+        checkoutUrl: data.data.checkout_url || `${FAMGATEWAY_BASE_URL}/pay.php?order_id=${data.data.order_id}`,
+        qrUrl: data.data.qr_url,
+        upiIntent: data.data.upi_intent,
+        orderId: data.data.order_id,
+        payableAmount: Number(data.data.payable_amount || order.amount),
         mock: false,
       };
     }
 
-    throw new Error(`FAM Gateway returned error: ${await res.text()}`);
+    throw new Error(data.message || data.error || `FamGateway error HTTP ${res.status}`);
   } catch (err: unknown) {
-    console.warn('[FAM Gateway] Falling back to local confirmation mode:', err);
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.warn('[FamGateway] API call error, falling back to local confirmation:', errorMsg);
     return {
-      checkoutUrl: `${returnUrl}?fam_ref=${order.orderReference}&fam_tx=${transactionId}&status=success`,
-      transactionId,
+      checkoutUrl: `${redirectUrl}?fam_ref=${order.orderReference}&order_id=${mockOrderId}&status=success`,
+      orderId: mockOrderId,
+      payableAmount: order.amount,
       mock: true,
     };
   }
 }
 
-export function verifyFamSignature(payload: string, receivedSignature: string): boolean {
-  if (!isFamGatewayConfigured) return true;
-  const computed = crypto
-    .createHmac('sha256', FAMGATEWAY_CONFIG.secretKey)
-    .update(payload)
-    .digest('hex');
-  return computed === receivedSignature;
+/**
+ * Server-to-server authoritative order verification (https://famgateway.in/api/verify-order.php)
+ */
+export async function verifyFamOrder(orderId: string): Promise<FamVerifyResult> {
+  if (!isFamGatewayConfigured) {
+    return { status: 'success', orderId };
+  }
+
+  try {
+    const res = await fetch(
+      `${FAMGATEWAY_BASE_URL}/api/verify-order.php?api_key=${encodeURIComponent(FAMGATEWAY_API_KEY)}&order_id=${encodeURIComponent(orderId)}`,
+      {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      }
+    );
+
+    const data = await res.json();
+    if (data.status === 'success' && data.data) {
+      return {
+        status: 'success',
+        orderId: data.data.order_id || orderId,
+        utr: data.data.utr,
+        senderName: data.data.sender_name,
+        amount: data.data.amount,
+      };
+    }
+
+    return {
+      status: data.status === 'expired' ? 'expired' : 'pending',
+      orderId,
+    };
+  } catch (err) {
+    console.error('[FamGateway] Verification check failed:', err);
+    return { status: 'pending', orderId };
+  }
+}
+
+/**
+ * Verifies the cryptographic HMAC-SHA256 signature sent in X-FamGateway-Signature header
+ * (FamGateway uses the active API Key as the HMAC secret)
+ */
+export function verifyFamWebhookSignature(rawBody: string, receivedSignature: string): boolean {
+  if (!isFamGatewayConfigured || !receivedSignature) return true;
+  try {
+    const expected = crypto
+      .createHmac('sha256', FAMGATEWAY_API_KEY)
+      .update(rawBody)
+      .digest('hex');
+    return expected === receivedSignature;
+  } catch {
+    return false;
+  }
 }

@@ -1,10 +1,25 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Sparkles, Check, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function PricingPage() {
-  const plans = [
+  const [dynamicPlans, setDynamicPlans] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/billing/plans')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.plans) setDynamicPlans(data.plans);
+      })
+      .catch((e) => console.error('Error fetching plans:', e));
+  }, []);
+
+  const basePlans = [
     {
+      id: 'normal',
       name: 'Normal (Free)',
       price: '$0',
       period: 'forever free',
@@ -23,6 +38,7 @@ export default function PricingPage() {
       href: '/signup',
     },
     {
+      id: 'lite',
       name: 'Lite Coworker',
       price: '$9',
       period: 'per month',
@@ -41,6 +57,7 @@ export default function PricingPage() {
       href: '/billing',
     },
     {
+      id: 'pro',
       name: 'Pro Coworker',
       price: '$29',
       period: 'per month',
@@ -59,6 +76,7 @@ export default function PricingPage() {
       href: '/billing',
     },
     {
+      id: 'ultra',
       name: 'Ultra Business',
       price: '$79',
       period: 'per month',
@@ -77,6 +95,19 @@ export default function PricingPage() {
       href: '/billing',
     },
   ];
+
+  const plans = basePlans.map((bp) => {
+    const live = dynamicPlans.find((dp) => dp.id === bp.id);
+    if (!live) return bp;
+    return {
+      ...bp,
+      name: live.name || bp.name,
+      price: live.price !== undefined ? (live.price === 0 ? '$0' : `$${live.price}`) : bp.price,
+      maxAgents: live.maxAgents ? `${live.maxAgents} Active AI Agents` : bp.maxAgents,
+      description: live.description || bp.description,
+      features: live.features && live.features.length > 0 ? live.features : bp.features,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-canvas py-12 px-6">

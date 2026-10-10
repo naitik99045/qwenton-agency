@@ -27,7 +27,7 @@ export function middleware(req: NextRequest) {
     hostname.includes('-admin-') ||
     hostname.includes('qwenton-admin');
 
-  // 2. Admin Portal Logic
+  // 2. Admin Portal Logic (adm.qwenton.shop)
   if (isAdmPortal) {
     // If browsing root of admin deployment, rewrite directly to /admin
     if (pathname === '/') {
@@ -35,19 +35,8 @@ export function middleware(req: NextRequest) {
       return NextResponse.rewrite(url);
     }
 
-    // Allow auth, API, and admin routes
-    if (
-      pathname.startsWith('/api') ||
-      pathname.startsWith('/login') ||
-      pathname.startsWith('/signup') ||
-      pathname.startsWith('/admin')
-    ) {
-      return NextResponse.next();
-    }
-
-    // Default rewrite other paths on adm subdomain to /admin
-    url.pathname = '/admin';
-    return NextResponse.rewrite(url);
+    // Allow full navigation across all routes (/admin, /dashboard, /agents, /billing, /settings, etc.)
+    return NextResponse.next();
   }
 
   // 3. User Subdomain (agents.qwenton.shop) & Default Platform Routing
