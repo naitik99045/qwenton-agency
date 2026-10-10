@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
 
     const orderId = payload.order_id || payload.orderId || payload.fam_tx;
     const famRef = payload.fam_ref || payload.order_ref || payload.orderReference;
-    const status = (payload.status || '').toLowerCase();
+    const utr = payload.utr || payload.UTR || payload.bank_ref_num;
+    const status = (payload.status || payload.event || '').toLowerCase();
 
     if (!orderId && !famRef) {
       return NextResponse.json({ error: 'Missing order identifiers' }, { status: 400 });
@@ -45,7 +46,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Double check with FamGateway authoritative endpoint
-    let isSuccess = status === 'success' || status === 'paid' || status === 'completed';
+    let isSuccess =
+      status === 'success' ||
+      status === 'paid' ||
+      status === 'completed' ||
+      status === 'payment.success' ||
+      payload.event === 'payment.success';
+
     if (orderId && !orderId.startsWith('fg_mock_')) {
       const verified = await verifyFamOrder(orderId);
       if (verified.status === 'success') {

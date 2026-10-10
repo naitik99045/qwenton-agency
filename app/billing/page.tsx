@@ -16,6 +16,13 @@ export default function BillingPage() {
   const [error, setError] = useState<string | null>(null);
   const [dynamicPlans, setDynamicPlans] = useState<any[]>([]);
 
+  // Manual UTR & Verification States
+  const [manualUtr, setManualUtr] = useState<string>('');
+  const [manualRef, setManualRef] = useState<string>('');
+  const [isVerifyingUtr, setIsVerifyingUtr] = useState<boolean>(false);
+  const [utrSuccessMsg, setUtrSuccessMsg] = useState<string | null>(null);
+  const [utrErrorMsg, setUtrErrorMsg] = useState<string | null>(null);
+
   // OTP & FAM Gateway Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState<PlanId>('lite');
@@ -74,10 +81,52 @@ export default function BillingPage() {
   useEffect(() => {
     fetchSession();
     const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+    if (ref) setManualRef(ref);
+
     if (urlParams.get('success') === 'true') {
       setNotice(`Payment successful! Your ${urlParams.get('plan') || ''} subscription is now active.`);
+    } else if (urlParams.get('pending') === 'true') {
+      setNotice('Payment received by gateway! If your plan has not updated yet, verify below with your UPI UTR.');
+    } else if (urlParams.get('error')) {
+      const errType = urlParams.get('error');
+      if (errType === 'payment_failed') {
+        setError('Payment verification is pending from the bank. If you completed the UPI payment, enter your 12-digit UTR below to activate immediately.');
+      }
     }
   }, []);
+
+  const handleManualVerifyPayment = async () => {
+    setIsVerifyingUtr(true);
+    setUtrErrorMsg(null);
+    setUtrSuccessMsg(null);
+    try {
+      const res = await fetch('/api/billing/fam/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderReference: manualRef || orderRef || undefined,
+          utr: manualUtr.trim() || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Verification check failed');
+
+      if (data.success) {
+        setUtrSuccessMsg(data.message || 'Payment verified! Plan activated.');
+        setNotice(`Plan upgraded to ${data.planId?.toUpperCase() || 'new tier'} successfully!`);
+        await fetchSession();
+      } else {
+        setUtrErrorMsg(data.message || 'Verification is still pending from the bank. Please try again in 10 seconds or enter your 12-digit UPI UTR number.');
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setUtrErrorMsg(msg);
+    } finally {
+      setIsVerifyingUtr(false);
+    }
+  };
 
   const handleStartUpgrade = (planId: PlanId) => {
     setSelectedPlanId(planId);
@@ -262,6 +311,84 @@ export default function BillingPage() {
             <Badge variant="success" className="text-xs py-1 px-3">
               ● Status: Active
             </Badge>
+          </div>
+        </div>
+
+        {/* UPI / FamGateway Instant Verification Box */}
+        <div className="clay-surface p-5 sm:p-6 border-2 border-primary/20 bg-white">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-[12px] bg-primary text-white flex items-center justify-center shadow-clay-button shrink-0 border border-primary-deep/30">
+                <CreditCard className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-ink">
+                  Paid via UPI / FAM Gateway? Instant Activation
+                </h3>
+                <p className="text-xs text-ink-muted mt-0.5">
+                  If you transferred money and the plan didn&apos;t switch automatically, enter your 12-digit UPI UTR or check order status.
+                </p>
+              </div>
+            </div>
+            <Badge variant="outline" className="shrink-0 self-start sm:self-auto">
+              Live Gateway Sync
+            </Badge>
+          </div>
+
+          {utrSuccessMsg ? (
+            <div className="mt-4 p-3.5 bg-[#E5F4EC] border border-[#C8E8D7] rounded-control text-xs text-success font-bold flex items-center gap-2">
+              <Check className="w-4 h-4 shrink-0" />
+              <span>{utrSuccessMsg}</span>
+            </div>
+          ) : null}
+
+          {utrErrorMsg ? (
+            <div className="mt-4 p-3.5 bg-[#FDECEC] border border-[#F8D2D2] rounded-control text-xs text-danger font-semibold flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{utrErrorMsg}</span>
+            </div>
+          ) : null}
+
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mt-4">
+            <div className="sm:col-span-4">
+              <label className="text-[11px] font-bold text-ink-muted uppercase tracking-wider block mb-1">
+                Order Reference (optional)
+              </label>
+              <Input
+                placeholder="e.g. QW-2026-XXXXX"
+                value={manualRef}
+                onChange={(e) => setManualRef(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+            <div className="sm:col-span-5">
+              <label className="text-[11px] font-bold text-ink-muted uppercase tracking-wider block mb-1">
+                12-Digit UPI UTR / Transaction No.
+              </label>
+              <Input
+                placeholder="e.g. 420987654321 (from PhonePe / GPay / Paytm)"
+                value={manualUtr}
+                onChange={(e) => setManualUtr(e.target.value)}
+                className="text-xs font-mono"
+              />
+            </div>
+            <div className="sm:col-span-3 flex items-end">
+              <Button
+                size="md"
+                className="w-full text-xs font-bold shadow-clay-button"
+                onClick={handleManualVerifyPayment}
+                disabled={isVerifyingUtr}
+              >
+                {isVerifyingUtr ? (
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Verifying...</span>
+                  </span>
+                ) : (
+                  <span>Verify & Activate</span>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 

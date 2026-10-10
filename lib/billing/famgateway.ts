@@ -2,7 +2,6 @@ import crypto from 'crypto';
 import { Order } from '@/lib/db/types';
 
 // FamGateway (https://famgateway.in) Configuration
-// Only 1 environment variable is needed: FAMGATEWAY_API_KEY (or FAM_API_KEY)
 export const FAMGATEWAY_API_KEY =
   process.env.FAMGATEWAY_API_KEY ||
   process.env.FAM_API_KEY ||
@@ -31,17 +30,22 @@ export interface FamVerifyResult {
   utr?: string;
   senderName?: string;
   amount?: number;
+  rawResponse?: any;
 }
 
 /**
  * Creates a dynamic UPI payment session on FamGateway (https://famgateway.in/api/create-order)
  */
-export async function createFamCheckout(order: Order, redirectUrl: string): Promise<FamCheckoutResult> {
+export async function createFamCheckout(
+  order: Order,
+  redirectUrl: string,
+  webhookUrl?: string
+): Promise<FamCheckoutResult> {
   const mockOrderId = `fg_mock_${Date.now().toString(36)}`;
 
   // Fallback for local testing if API key is not configured
   if (!isFamGatewayConfigured) {
-    const mockCheckoutUrl = `${redirectUrl}?fam_ref=${order.orderReference}&order_id=${mockOrderId}&status=success`;
+    const mockCheckoutUrl = `${redirectUrl}&order_id=${mockOrderId}&status=success`;
     return {
       checkoutUrl: mockCheckoutUrl,
       orderId: mockOrderId,
@@ -51,30 +55,38 @@ export async function createFamCheckout(order: Order, redirectUrl: string): Prom
   }
 
   try {
+    const payload: Record<string, any> = {
+      api_key: FAMGATEWAY_API_KEY,
+      amount: Number(order.amount),
+      customer_name: order.userName || 'Customer',
+      customer_email: order.userEmail || undefined,
+      redirect_url: redirectUrl,
+    };
+
+    if (webhookUrl) {
+      payload.webhook_url = webhookUrl;
+    }
+
     const res = await fetch(`${FAMGATEWAY_BASE_URL}/api/create-order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Api-Key': FAMGATEWAY_API_KEY,
+        'Authorization': `Bearer ${FAMGATEWAY_API_KEY}`,
       },
-      body: JSON.stringify({
-        api_key: FAMGATEWAY_API_KEY,
-        amount: Number(order.amount),
-        customer_name: order.userName || 'Customer',
-        customer_email: order.userEmail || undefined,
-        redirect_url: redirectUrl,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
 
-    if (res.ok && data.status === 'success' && data.data) {
+    if (res.ok && (data.status === 'success' || data.success === true) && (data.data || data.order_id)) {
+      const orderData = data.data || data;
       return {
-        checkoutUrl: data.data.checkout_url || `${FAMGATEWAY_BASE_URL}/pay.php?order_id=${data.data.order_id}`,
-        qrUrl: data.data.qr_url,
-        upiIntent: data.data.upi_intent,
-        orderId: data.data.order_id,
-        payableAmount: Number(data.data.payable_amount || order.amount),
+        checkoutUrl: orderData.checkout_url || `${FAMGATEWAY_BASE_URL}/pay.php?order_id=${orderData.order_id}`,
+        qrUrl: orderData.qr_url,
+        upiIntent: orderData.upi_intent,
+        orderId: orderData.order_id,
+        payableAmount: Number(orderData.payable_amount || order.amount),
         mock: false,
       };
     }
@@ -84,7 +96,7 @@ export async function createFamCheckout(order: Order, redirectUrl: string): Prom
     const errorMsg = err instanceof Error ? err.message : String(err);
     console.warn('[FamGateway] API call error, falling back to local confirmation:', errorMsg);
     return {
-      checkoutUrl: `${redirectUrl}?fam_ref=${order.orderReference}&order_id=${mockOrderId}&status=success`,
+      checkoutUrl: `${redirectUrl}&order_id=${mockOrderId}&status=success`,
       orderId: mockOrderId,
       payableAmount: order.amount,
       mock: true,
@@ -94,45 +106,99 @@ export async function createFamCheckout(order: Order, redirectUrl: string): Prom
 
 /**
  * Server-to-server authoritative order verification (https://famgateway.in/api/verify-order.php)
+ * Handles both root-level fields and nested data objects, with case-insensitive status matching.
  */
 export async function verifyFamOrder(orderId: string): Promise<FamVerifyResult> {
   if (!isFamGatewayConfigured) {
     return { status: 'success', orderId };
   }
 
-  try {
-    const res = await fetch(
-      `${FAMGATEWAY_BASE_URL}/api/verify-order.php?api_key=${encodeURIComponent(FAMGATEWAY_API_KEY)}&order_id=${encodeURIComponent(orderId)}`,
-      {
+  const endpoints = [
+    `${FAMGATEWAY_BASE_URL}/api/verify-order.php?api_key=${encodeURIComponent(FAMGATEWAY_API_KEY)}&order_id=${encodeURIComponent(orderId)}`,
+    `${FAMGATEWAY_BASE_URL}/api/verify-order?api_key=${encodeURIComponent(FAMGATEWAY_API_KEY)}&order_id=${encodeURIComponent(orderId)}`,
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint, {
         method: 'GET',
-        headers: { 'Accept': 'application/json' },
+        headers: {
+          'Accept': 'application/json',
+          'X-Api-Key': FAMGATEWAY_API_KEY,
+          'Authorization': `Bearer ${FAMGATEWAY_API_KEY}`,
+        },
+      });
+
+      if (!res.ok && res.status !== 200) {
+        continue; // try next endpoint
       }
-    );
 
-    const data = await res.json();
-    if (data.status === 'success' && data.data) {
-      return {
-        status: 'success',
-        orderId: data.data.order_id || orderId,
-        utr: data.data.utr,
-        senderName: data.data.sender_name,
-        amount: data.data.amount,
-      };
+      const data = await res.json();
+      const statusRaw = String(
+        data.status ||
+        data.data?.status ||
+        data.order_status ||
+        (data.success ? 'success' : '')
+      ).toLowerCase();
+
+      // Check for success indicators
+      if (
+        statusRaw === 'success' ||
+        statusRaw === 'completed' ||
+        statusRaw === 'paid' ||
+        statusRaw === 'true' ||
+        data.event === 'payment.success'
+      ) {
+        return {
+          status: 'success',
+          orderId: data.data?.order_id || data.order_id || orderId,
+          utr: data.data?.utr || data.utr || data.data?.bank_ref_num || undefined,
+          senderName: data.data?.sender_name || data.sender_name || undefined,
+          amount: Number(data.data?.amount || data.amount || 0),
+          rawResponse: data,
+        };
+      }
+
+      if (statusRaw === 'expired') {
+        return { status: 'expired', orderId, rawResponse: data };
+      }
+
+      if (statusRaw === 'failed') {
+        return { status: 'failed', orderId, rawResponse: data };
+      }
+
+      // If pending or processing, return pending
+      return { status: 'pending', orderId, rawResponse: data };
+    } catch (err) {
+      console.warn(`[FamGateway] Verification check failed for ${endpoint}:`, err);
     }
-
-    return {
-      status: data.status === 'expired' ? 'expired' : 'pending',
-      orderId,
-    };
-  } catch (err) {
-    console.error('[FamGateway] Verification check failed:', err);
-    return { status: 'pending', orderId };
   }
+
+  return { status: 'pending', orderId };
+}
+
+/**
+ * Polls verification with small delays to accommodate Gmail IMAP bank email latency (2 to 6 seconds)
+ */
+export async function pollVerifyFamOrder(
+  orderId: string,
+  maxAttempts = 3,
+  delayMs = 1800
+): Promise<FamVerifyResult> {
+  for (let i = 0; i < maxAttempts; i++) {
+    const result = await verifyFamOrder(orderId);
+    if (result.status === 'success' || result.status === 'failed' || result.status === 'expired') {
+      return result;
+    }
+    if (i < maxAttempts - 1) {
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+  return { status: 'pending', orderId };
 }
 
 /**
  * Verifies the cryptographic HMAC-SHA256 signature sent in X-FamGateway-Signature header
- * (FamGateway uses the active API Key as the HMAC secret)
  */
 export function verifyFamWebhookSignature(rawBody: string, receivedSignature: string): boolean {
   if (!isFamGatewayConfigured) return true;
@@ -142,7 +208,7 @@ export function verifyFamWebhookSignature(rawBody: string, receivedSignature: st
       .createHmac('sha256', FAMGATEWAY_API_KEY)
       .update(rawBody)
       .digest('hex');
-    
+
     const expectedBuf = Buffer.from(expected, 'hex');
     const receivedBuf = Buffer.from(receivedSignature, 'hex');
     if (expectedBuf.length !== receivedBuf.length) return false;

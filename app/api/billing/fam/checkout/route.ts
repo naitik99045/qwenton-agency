@@ -29,9 +29,10 @@ export async function POST(req: NextRequest) {
     const host = req.headers.get('host') || 'localhost:3000';
     const protocol = req.headers.get('x-forwarded-proto') || 'http';
     const appUrl = `${protocol}://${host}`;
-    const returnUrl = `${appUrl}/api/billing/fam/callback`;
+    const returnUrl = `${appUrl}/api/billing/fam/callback?fam_ref=${encodeURIComponent(order.orderReference)}&order_ref=${encodeURIComponent(order.orderReference)}`;
+    const webhookUrl = `${appUrl}/api/billing/fam/webhook`;
 
-    const checkoutResult = await createFamCheckout(order, returnUrl);
+    const checkoutResult = await createFamCheckout(order, returnUrl, webhookUrl);
 
     await db.updateOrder(order.id, {
       gatewayTransactionId: checkoutResult.orderId,
