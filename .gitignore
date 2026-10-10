@@ -20,6 +20,9 @@
 # Allow env.example
 !.env.example
 
+# Local Database & Cache
+.local_db.json
+
 # Vercel & Turbopack
 .vercel
 .turbo
@@ -30,13 +33,20 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-logs.txt
+logs*.txt
 *.log
 
 # Firebase & Database Logs
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+
+# Sensitive Local Scratch / Credential Notes
+fiirebase.txt
+email.txt
+prompt.txt
+prd.txt
+design.txt
 
 # TypeScript
 *.tsbuildinfo

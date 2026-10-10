@@ -161,9 +161,27 @@ export interface Routine {
 export interface Integration {
   id: string;
   ownerUid: string;
-  provider: 'telegram' | 'slack' | 'google_drive' | 'gmail' | 'notion' | 'github' | 'rest_api';
+  provider:
+    | 'telegram'
+    | 'instagram'
+    | 'facebook'
+    | 'gmail'
+    | 'google_calendar'
+    | 'google_maps'
+    | 'google_drive'
+    | 'notion'
+    | 'canva'
+    | 'figma'
+    | 'openai'
+    | 'anthropic'
+    | 'gemini'
+    | 'groq'
+    | 'fal_ai'
+    | 'elevenlabs'
+    | 'slack'
+    | 'rest_api';
   displayName: string;
-  authType: 'api_key' | 'oauth' | 'bot_token';
+  authType: 'api_key' | 'oauth' | 'bot_token' | 'webhook';
   status: 'connected' | 'needs_attention' | 'not_connected' | 'revoked';
   scopes: string[];
   lastTestedAt?: string;

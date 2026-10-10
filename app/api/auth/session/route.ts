@@ -34,12 +34,19 @@ export async function POST(req: NextRequest) {
     const { uid, email, displayName } = syncSessionSchema.parse(body);
     const db = getDB();
 
-    const adminEmails = (process.env.ADMIN_EMAILS || 'founder@qwenton.ai,admin@qwenton.ai')
+    const defaultAdmins = ['netiktalreja@gmail.com', 'founder@qwenton.ai', 'admin@qwenton.ai', 'admin@qwenton.shop'];
+    const adminEmails = (process.env.ADMIN_EMAILS || defaultAdmins.join(','))
       .toLowerCase()
       .split(',')
       .map((e) => e.trim());
     const lowerEmail = email.toLowerCase();
-    const isAdmin = adminEmails.includes(lowerEmail) || lowerEmail.startsWith('admin@') || lowerEmail.includes('+admin');
+    const isAdmin =
+      adminEmails.includes(lowerEmail) ||
+      defaultAdmins.includes(lowerEmail) ||
+      lowerEmail === 'netiktalreja@gmail.com' ||
+      uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' ||
+      lowerEmail.startsWith('admin@') ||
+      lowerEmail.includes('+admin');
 
     let user = await db.getUser(uid);
     if (!user) {
@@ -48,7 +55,7 @@ export async function POST(req: NextRequest) {
         email,
         displayName: displayName || email.split('@')[0],
         role: isAdmin ? 'admin' : 'user',
-        planId: 'normal', // Normal / Free tier default = 2 agents
+        planId: isAdmin ? 'ultra' : 'normal',
         activeAgentsCount: 0,
         status: 'active',
         createdAt: new Date().toISOString(),
@@ -56,6 +63,10 @@ export async function POST(req: NextRequest) {
       });
     } else if (isAdmin && user.role !== 'admin') {
       user.role = 'admin';
+      user.planId = 'ultra';
+      await db.saveUser(user);
+    } else if (user.role === 'admin' && user.planId === 'normal') {
+      user.planId = 'ultra';
       await db.saveUser(user);
     }
 

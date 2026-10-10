@@ -219,4 +219,186 @@ export const TOOL_CATALOG: Record<string, ToolMeta> = {
       },
     },
   },
+  publish_instagram_post: {
+    name: 'publish_instagram_post',
+    displayName: 'Publish Instagram Post / Carousel',
+    description: 'Publishes a carousel or image post to connected Instagram account. Requires Approval.',
+    category: 'communication',
+    requiresApproval: true,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'publish_instagram_post',
+        description: 'Publish visual content and marketing copy to connected Instagram Business profile. Requires human approval.',
+        parameters: {
+          type: 'object',
+          properties: {
+            caption: { type: 'string', description: 'Post caption with hooks and emojis' },
+            hashtags: { type: 'array', items: { type: 'string' }, description: 'Target hashtags' },
+            mediaUrls: { type: 'array', items: { type: 'string' }, description: 'Image asset URLs or FLUX generated IDs' },
+          },
+          required: ['caption', 'hashtags'],
+        },
+      },
+    },
+  },
+  send_gmail_message: {
+    name: 'send_gmail_message',
+    displayName: 'Send Business Email',
+    description: 'Dispatches customer inquiry responses, newsletters, or proposals via Gmail. Requires Approval.',
+    category: 'communication',
+    requiresApproval: true,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'send_gmail_message',
+        description: 'Send an email to a client or subscriber list. Requires human approval.',
+        parameters: {
+          type: 'object',
+          properties: {
+            to: { type: 'string', description: 'Recipient email address' },
+            subject: { type: 'string', description: 'Email subject line' },
+            body: { type: 'string', description: 'Full HTML/text email content' },
+          },
+          required: ['to', 'subject', 'body'],
+        },
+      },
+    },
+  },
+  schedule_calendar_event: {
+    name: 'schedule_calendar_event',
+    displayName: 'Google Calendar Scheduler',
+    description: 'Creates client appointments, routine schedules, and marketing calendar events. Requires Approval.',
+    category: 'utility',
+    requiresApproval: true,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'schedule_calendar_event',
+        description: 'Schedule a new event on connected Google Calendar. Requires human approval.',
+        parameters: {
+          type: 'object',
+          properties: {
+            title: { type: 'string', description: 'Event title' },
+            startTime: { type: 'string', description: 'ISO start date-time string' },
+            durationMinutes: { type: 'number', description: 'Duration in minutes' },
+            attendees: { type: 'array', items: { type: 'string' }, description: 'Attendee email addresses' },
+          },
+          required: ['title', 'startTime'],
+        },
+      },
+    },
+  },
+  search_google_maps_businesses: {
+    name: 'search_google_maps_businesses',
+    displayName: 'Google Maps Local SEO & Competitors',
+    description: 'Audits local competitors, reviews, and Google Maps search visibility.',
+    category: 'research',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'search_google_maps_businesses',
+        description: 'Search local businesses, competitor ratings, and address locations via Google Maps.',
+        parameters: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: 'Search term e.g. "coffee shops in Brooklyn" or "real estate agencies in Austin"' },
+            location: { type: 'string', description: 'City or coordinates' },
+          },
+          required: ['query'],
+        },
+      },
+    },
+  },
+  search_google_drive: {
+    name: 'search_google_drive',
+    displayName: 'Google Drive & Docs Search',
+    description: 'Searches spreadsheets, presentations, and docs across connected Google Drive.',
+    category: 'knowledge',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'search_google_drive',
+        description: 'Search files, sheets, and presentations across connected Google Drive.',
+        parameters: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: 'Filename or document topic' },
+          },
+          required: ['query'],
+        },
+      },
+    },
+  },
+  sync_notion_workspace: {
+    name: 'sync_notion_workspace',
+    displayName: 'Notion Workspace Sync',
+    description: 'Reads tasks, client databases, and wikis from connected Notion workspace.',
+    category: 'knowledge',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'sync_notion_workspace',
+        description: 'Read or append structured notes to connected Notion databases.',
+        parameters: {
+          type: 'object',
+          properties: {
+            databaseName: { type: 'string', description: 'Target Notion database or page title' },
+            action: { type: 'string', enum: ['read', 'create_page', 'append_note'], description: 'Action to perform' },
+            content: { type: 'string', description: 'Content payload if creating or appending' },
+          },
+          required: ['databaseName', 'action'],
+        },
+      },
+    },
+  },
+  generate_canva_asset: {
+    name: 'generate_canva_asset',
+    displayName: 'Canva Design Generator',
+    description: 'Generates branded social banner specs and creative design briefs for Canva.',
+    category: 'utility',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'generate_canva_asset',
+        description: 'Create standardized design specifications, dimensions, and typography briefs for Canva.',
+        parameters: {
+          type: 'object',
+          properties: {
+            format: { type: 'string', enum: ['instagram_post', 'instagram_story', 'youtube_thumbnail', 'facebook_banner'], description: 'Target asset format' },
+            headline: { type: 'string', description: 'Main hero headline' },
+            subhead: { type: 'string', description: 'Supporting tagline' },
+            colorPalette: { type: 'array', items: { type: 'string' }, description: 'Hex color codes' },
+          },
+          required: ['format', 'headline'],
+        },
+      },
+    },
+  },
+  generate_flux_image: {
+    name: 'generate_flux_image',
+    displayName: 'FLUX & Midjourney AI Image Generator',
+    description: 'Generates photorealistic or clay 3D visual assets from prompts.',
+    category: 'research',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'generate_flux_image',
+        description: 'Generate high-resolution marketing visuals and 3D assets using FLUX/fal.ai API.',
+        parameters: {
+          type: 'object',
+          properties: {
+            prompt: { type: 'string', description: 'Visual prompt description' },
+            aspectRatio: { type: 'string', enum: ['1:1', '16:9', '9:16', '4:5'], description: 'Image aspect ratio' },
+          },
+          required: ['prompt'],
+        },
+      },
+    },
+  },
 };

@@ -12,12 +12,13 @@ export class AuthError extends Error {
 }
 
 function isEmailAdmin(email: string): boolean {
-  const adminEmails = (process.env.ADMIN_EMAILS || 'founder@qwenton.ai,admin@qwenton.ai')
+  const defaultAdmins = ['netiktalreja@gmail.com', 'founder@qwenton.ai', 'admin@qwenton.ai', 'admin@qwenton.shop'];
+  const adminEmails = (process.env.ADMIN_EMAILS || defaultAdmins.join(','))
     .toLowerCase()
     .split(',')
     .map((e) => e.trim());
   const em = (email || '').toLowerCase();
-  return adminEmails.includes(em) || em.startsWith('admin@') || em.includes('+admin');
+  return adminEmails.includes(em) || defaultAdmins.includes(em) || em.startsWith('admin@') || em.includes('+admin');
 }
 
 export async function getCurrentUser(req: NextRequest): Promise<User | null> {
@@ -33,7 +34,7 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       const decoded = await adminAuth.verifyIdToken(token);
       let user = await db.getUser(decoded.uid);
       const email = decoded.email || 'user@example.com';
-      const role = isEmailAdmin(email) ? 'admin' : 'user';
+      const isKnownAdmin = isEmailAdmin(email) || decoded.uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1';
 
       if (!user) {
         user = await db.saveUser({
@@ -41,14 +42,14 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
           email,
           displayName: decoded.name || email.split('@')[0],
           photoURL: decoded.picture,
-          role,
-          planId: 'normal',
+          role: isKnownAdmin ? 'admin' : 'user',
+          planId: isKnownAdmin ? 'ultra' : 'normal',
           activeAgentsCount: 0,
           status: 'active',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
-      } else if (isEmailAdmin(user.email) && user.role !== 'admin') {
+      } else if (isKnownAdmin && user.role !== 'admin') {
         user.role = 'admin';
         await db.saveUser(user);
       }
@@ -71,7 +72,8 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       if (user.status === 'suspended') {
         throw new AuthError('Account is suspended. Please contact support.', 403);
       }
-      if (isEmailAdmin(user.email) && user.role !== 'admin') {
+      const isKnownAdmin = isEmailAdmin(user.email) || user.role === 'admin' || user.uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' || user.email === 'netiktalreja@gmail.com';
+      if (isKnownAdmin && user.role !== 'admin') {
         user.role = 'admin';
         await db.saveUser(user);
       }

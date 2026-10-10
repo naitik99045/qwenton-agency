@@ -482,6 +482,31 @@ class LocalDB {
     return newR;
   }
 
+  // Integrations
+  getIntegrationsByUser(ownerUid: string): Integration[] {
+    return Object.values(this.data.integrations || {}).filter((i) => i.ownerUid === ownerUid);
+  }
+
+  getIntegration(ownerUid: string, provider: string): Integration | null {
+    return Object.values(this.data.integrations || {}).find((i) => i.ownerUid === ownerUid && i.provider === provider) || null;
+  }
+
+  saveIntegration(integration: Integration): Integration {
+    if (!this.data.integrations) this.data.integrations = {};
+    this.data.integrations[integration.id] = integration;
+    this.save();
+    return integration;
+  }
+
+  deleteIntegration(ownerUid: string, provider: string) {
+    if (!this.data.integrations) return;
+    const found = Object.values(this.data.integrations).find((i) => i.ownerUid === ownerUid && i.provider === provider);
+    if (found) {
+      delete this.data.integrations[found.id];
+      this.save();
+    }
+  }
+
   // Telegram
   getTelegramConnection(ownerUid: string): TelegramConnection | null {
     return Object.values(this.data.telegramConnections).find((t) => t.ownerUid === ownerUid) || null;

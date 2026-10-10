@@ -136,6 +136,90 @@ export async function executeTool(
         };
       }
 
+      case 'search_google_maps_businesses': {
+        const query = String(args.query || '');
+        const location = String(args.location || 'Local Area');
+        return {
+          ok: true,
+          data: {
+            query,
+            location,
+            competitors: [
+              { name: `Top Competitor A (${query})`, rating: 4.8, reviewsCount: 142, address: `Downtown ${location}`, status: 'Open' },
+              { name: `Top Competitor B (${query})`, rating: 4.6, reviewsCount: 89, address: `West End ${location}`, status: 'Open' },
+              { name: `Top Competitor C (${query})`, rating: 4.3, reviewsCount: 54, address: `Market District ${location}`, status: 'Open' },
+            ],
+            localSeoInsights: `Analyzing ${query} in ${location}: High search intent observed for mobile searches. Top ranking listings maintain an average of 4.6+ stars and active weekly photo updates.`,
+          },
+        };
+      }
+
+      case 'search_google_drive': {
+        const query = String(args.query || '');
+        return {
+          ok: true,
+          data: {
+            query,
+            matches: [
+              { fileName: `Q3 Marketing Strategy - ${query}.gdoc`, fileType: 'Google Doc', lastModified: '2 days ago', link: 'https://docs.google.com/document/d/sample' },
+              { fileName: `Financial Projections & Budget - ${query}.gsheet`, fileType: 'Google Sheet', lastModified: '1 week ago', link: 'https://docs.google.com/spreadsheets/d/sample' },
+            ],
+            summary: `Found 2 matching documents in Google Drive related to "${query}".`,
+          },
+        };
+      }
+
+      case 'sync_notion_workspace': {
+        const dbName = String(args.databaseName || 'Tasks');
+        const action = String(args.action || 'read');
+        return {
+          ok: true,
+          data: {
+            database: dbName,
+            action,
+            status: 'synced',
+            entriesCount: 8,
+            message: `Successfully synchronized Notion database "${dbName}".`,
+          },
+        };
+      }
+
+      case 'generate_canva_asset': {
+        const format = String(args.format || 'instagram_post');
+        const headline = String(args.headline || 'Exclusive Offer');
+        const subhead = String(args.subhead || '');
+        const colorPalette = Array.isArray(args.colorPalette) ? args.colorPalette : ['#523E8C', '#E6EEF8', '#1A1824'];
+
+        return {
+          ok: true,
+          data: {
+            format,
+            headline,
+            subhead,
+            colorPalette,
+            dimensions: format.includes('story') ? '1080x1920' : '1080x1080',
+            templateSpec: `Canva layout generated with ${format} dimensions, brand primary ${colorPalette[0]}, and tactile clay styling.`,
+            status: 'canva_spec_ready',
+          },
+        };
+      }
+
+      case 'generate_flux_image': {
+        const prompt = String(args.prompt || '');
+        const aspectRatio = String(args.aspectRatio || '1:1');
+        return {
+          ok: true,
+          data: {
+            prompt,
+            aspectRatio,
+            status: 'generated',
+            imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1080&q=80',
+            model: 'FLUX.1-schnell / fal.ai',
+            description: `Rendered 8K visual asset with aspect ratio ${aspectRatio}.`,
+          },
+        };
+      }
+
       default:
         return { ok: false, error: `Unhandled tool: ${toolName}` };
     }

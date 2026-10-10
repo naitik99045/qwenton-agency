@@ -66,6 +66,12 @@ export interface DatabaseAdapter {
   getRoutinesByUser(ownerUid: string): Promise<Routine[]>;
   createRoutine(routine: Omit<Routine, 'id' | 'createdAt'>): Promise<Routine>;
 
+  // Integrations & API Vault (Saved directly to User's Firestore)
+  getIntegrationsByUser(ownerUid: string): Promise<Integration[]>;
+  getIntegration(ownerUid: string, provider: string): Promise<Integration | null>;
+  saveIntegration(integration: Integration): Promise<Integration>;
+  deleteIntegration(ownerUid: string, provider: string): Promise<void>;
+
   // Telegram
   getTelegramConnection(ownerUid: string): Promise<TelegramConnection | null>;
   saveTelegramConnection(conn: TelegramConnection): Promise<TelegramConnection>;
@@ -353,6 +359,36 @@ class FirestoreAdapter implements DatabaseAdapter {
     return newR;
   }
 
+  // Integrations & API Vault (Stored directly in user's subcollection in Firestore)
+  async getIntegrationsByUser(ownerUid: string): Promise<Integration[]> {
+    const snap = await adminFirestore.collection('users').doc(ownerUid).collection('integrations').get();
+    return snap.docs.map((d) => d.data() as Integration);
+  }
+
+  async getIntegration(ownerUid: string, provider: string): Promise<Integration | null> {
+    const doc = await adminFirestore.collection('users').doc(ownerUid).collection('integrations').doc(provider).get();
+    return doc.exists ? (doc.data() as Integration) : null;
+  }
+
+  async saveIntegration(integration: Integration): Promise<Integration> {
+    await adminFirestore
+      .collection('users')
+      .doc(integration.ownerUid)
+      .collection('integrations')
+      .doc(integration.provider)
+      .set(integration, { merge: true });
+    return integration;
+  }
+
+  async deleteIntegration(ownerUid: string, provider: string): Promise<void> {
+    await adminFirestore
+      .collection('users')
+      .doc(ownerUid)
+      .collection('integrations')
+      .doc(provider)
+      .delete();
+  }
+
   async getTelegramConnection(ownerUid: string): Promise<TelegramConnection | null> {
     const snap = await adminFirestore.collection('telegramConnections').where('ownerUid', '==', ownerUid).limit(1).get();
     if (snap.empty) return null;
@@ -483,6 +519,11 @@ class LocalDBAdapter implements DatabaseAdapter {
 
   async getRoutinesByUser(ownerUid: string) { return localDb.getRoutinesByUser(ownerUid); }
   async createRoutine(routine: Omit<Routine, 'id' | 'createdAt'>) { return localDb.createRoutine(routine); }
+
+  async getIntegrationsByUser(ownerUid: string) { return localDb.getIntegrationsByUser(ownerUid); }
+  async getIntegration(ownerUid: string, provider: string) { return localDb.getIntegration(ownerUid, provider); }
+  async saveIntegration(integration: Integration) { return localDb.saveIntegration(integration); }
+  async deleteIntegration(ownerUid: string, provider: string) { return localDb.deleteIntegration(ownerUid, provider); }
 
   async getTelegramConnection(ownerUid: string) { return localDb.getTelegramConnection(ownerUid); }
   async saveTelegramConnection(conn: TelegramConnection) { return localDb.saveTelegramConnection(conn); }
