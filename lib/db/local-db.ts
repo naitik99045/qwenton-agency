@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import {
   User,
   Agent,
@@ -97,7 +98,8 @@ class LocalDB {
   private filePath: string;
 
   constructor() {
-    this.filePath = path.join(process.cwd(), '.local_db.json');
+    const basePath = process.env.VERCEL ? os.tmpdir() : process.cwd();
+    this.filePath = path.join(basePath, '.local_db.json');
     this.data = this.loadInitialData();
   }
 
@@ -599,4 +601,4 @@ class LocalDB {
 
 const globalForDb = globalThis as unknown as { localDbInstance: LocalDB };
 export const localDb = globalForDb.localDbInstance || new LocalDB();
-if (process.env.NODE_ENV !== 'production') globalForDb.localDbInstance = localDb;
+globalForDb.localDbInstance = localDb;

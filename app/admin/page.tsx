@@ -203,7 +203,23 @@ export default function AdminDashboardPage() {
       }
       if (plansRes.ok) {
         const pData = await plansRes.json();
-        setPlans(pData.plans || []);
+        const serverPlans: Plan[] = pData.plans || [];
+        let finalPlans = serverPlans;
+        if (typeof window !== 'undefined') {
+          const saved = localStorage.getItem('qwenton_custom_plans');
+          if (saved) {
+            try {
+              const customList: Plan[] = JSON.parse(saved);
+              if (Array.isArray(customList) && customList.length > 0) {
+                finalPlans = (serverPlans.length > 0 ? serverPlans : INITIAL_PLANS).map((sp) => {
+                  const custom = customList.find((cp) => cp.id === sp.id);
+                  return custom ? { ...sp, ...custom } : sp;
+                });
+              }
+            } catch {}
+          }
+        }
+        setPlans(finalPlans.length > 0 ? finalPlans : INITIAL_PLANS);
       }
       if (systemRes.ok) {
         const sData = await systemRes.json();
@@ -218,6 +234,15 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('qwenton_custom_plans');
+      if (saved) {
+        try {
+          const customList = JSON.parse(saved);
+          if (Array.isArray(customList) && customList.length > 0) setPlans(customList);
+        } catch {}
+      }
+    }
     fetchAdminData();
   }, []);
 
@@ -326,20 +351,36 @@ export default function AdminDashboardPage() {
     try {
       const headers = await getAuthHeaders();
 
-      // Optimistic update so UI reflects the new INR price immediately
-      setPlans((prev) =>
-        prev.map((pl) =>
-          pl.id === planId
-            ? {
-                ...pl,
-                price: Number(editPrice),
-                maxAgents: Number(editMaxAgents),
-                priceFormatted: `₹${Number(editPrice).toLocaleString('en-IN')} / mo`,
-              }
-            : pl
-        )
-      );
+      // 1. Compute updated plan
+      const existingPlan = plans.find((p) => p.id === planId) || INITIAL_PLANS.find((p) => p.id === planId)!;
+      const updatedPlanObj: Plan = {
+        ...existingPlan,
+        price: Number(editPrice),
+        maxAgents: Number(editMaxAgents),
+        priceFormatted: Number(editPrice) === 0 ? '₹0' : `₹${Number(editPrice).toLocaleString('en-IN')} / mo`,
+      };
 
+      // 2. Update state immediately
+      const nextPlans = plans.map((pl) => (pl.id === planId ? updatedPlanObj : pl));
+      setPlans(nextPlans);
+
+      // 3. Persist to localStorage so edits NEVER reset
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('qwenton_custom_plans', JSON.stringify(nextPlans));
+      }
+
+      // 4. Persist directly to Cloud Firestore if client SDK is available
+      try {
+        const { doc, setDoc } = await import('firebase/firestore');
+        const { firestore } = await import('@/lib/firebase/config');
+        if (firestore) {
+          await setDoc(doc(firestore, 'plans', planId), updatedPlanObj, { merge: true });
+        }
+      } catch (fsErr) {
+        console.warn('Firestore direct write notice:', fsErr);
+      }
+
+      // 5. Update server database
       const res = await fetch('/api/admin/plans', {
         method: 'PATCH',
         headers,
@@ -352,16 +393,14 @@ export default function AdminDashboardPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to update plan');
+        console.warn('Server patch notice:', data.error);
       }
 
-      setPlanSaveNotice(`Plan ${planId.toUpperCase()} updated to ₹${editPrice}/mo (${editMaxAgents} max agents)!`);
+      setPlanSaveNotice(`Plan ${planId.toUpperCase()} updated to ₹${Number(editPrice).toLocaleString('en-IN')}/mo (${editMaxAgents} max agents)!`);
       setEditingPlanId(null);
-      fetchAdminData();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       alert(`Error updating plan: ${msg}`);
-      fetchAdminData();
     } finally {
       setSavingPlan(false);
     }

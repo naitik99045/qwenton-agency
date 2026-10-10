@@ -26,6 +26,31 @@ export default function BillingPage() {
 
   const fetchSession = async () => {
     try {
+      // 1. Instant check from localStorage
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('qwenton_custom_plans');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) setDynamicPlans(parsed);
+          } catch {}
+        }
+      }
+
+      // 2. Check Firestore
+      import('firebase/firestore').then(({ getDocs, collection }) => {
+        import('@/lib/firebase/config').then(({ firestore }) => {
+          if (firestore) {
+            getDocs(collection(firestore, 'plans')).then((snap) => {
+              if (!snap.empty) {
+                const fsPlans = snap.docs.map((d) => d.data());
+                setDynamicPlans(fsPlans);
+              }
+            }).catch(() => {});
+          }
+        });
+      }).catch(() => {});
+
       const [sessRes, plansRes] = await Promise.all([
         fetch('/api/auth/session'),
         fetch('/api/billing/plans'),
@@ -37,7 +62,9 @@ export default function BillingPage() {
       }
       if (plansRes.ok) {
         const pData = await plansRes.json();
-        setDynamicPlans(pData.plans || []);
+        if (pData.plans && pData.plans.length > 0) {
+          setDynamicPlans((prev) => (prev.length > 0 ? prev : pData.plans));
+        }
       }
     } catch (e) {
       console.error('Billing load error:', e);

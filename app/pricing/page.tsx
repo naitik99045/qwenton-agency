@@ -9,10 +9,38 @@ export default function PricingPage() {
   const [dynamicPlans, setDynamicPlans] = useState<any[]>([]);
 
   useEffect(() => {
+    // 1. Instant cache from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('qwenton_custom_plans');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) setDynamicPlans(parsed);
+        } catch {}
+      }
+    }
+
+    // 2. Fetch from Cloud Firestore if available
+    import('firebase/firestore').then(({ getDocs, collection }) => {
+      import('@/lib/firebase/config').then(({ firestore }) => {
+        if (firestore) {
+          getDocs(collection(firestore, 'plans')).then((snap) => {
+            if (!snap.empty) {
+              const fsPlans = snap.docs.map((d) => d.data());
+              setDynamicPlans(fsPlans);
+            }
+          }).catch(() => {});
+        }
+      });
+    }).catch(() => {});
+
+    // 3. Fetch from server API
     fetch('/api/billing/plans')
       .then((res) => res.json())
       .then((data) => {
-        if (data.plans) setDynamicPlans(data.plans);
+        if (data.plans && data.plans.length > 0) {
+          setDynamicPlans((prev) => (prev.length > 0 ? prev : data.plans));
+        }
       })
       .catch((e) => console.error('Error fetching plans:', e));
   }, []);
