@@ -22,7 +22,7 @@ import {
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
-import { logoutUser } from '@/lib/auth/firebase-client-auth';
+import { logoutUser, subscribeToAuthState, syncSessionToken } from '@/lib/auth/firebase-client-auth';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -32,42 +32,60 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [pendingApprovalsCount, setPendingApprovalsCount] = useState(0);
   const [llmStatus, setLlmStatus] = useState<{ ok: boolean; message: string; provider?: string } | null>(null);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const [sessionRes, healthRes, approvalsRes] = await Promise.all([
-          fetch('/api/auth/session'),
-          fetch('/api/health'),
-          fetch('/api/approvals'),
-        ]);
+  const fetchSessionAndTelemetry = async () => {
+    try {
+      const [sessionRes, healthRes, approvalsRes] = await Promise.all([
+        fetch('/api/auth/session'),
+        fetch('/api/health'),
+        fetch('/api/approvals'),
+      ]);
 
-        if (sessionRes.ok) {
-          const data = await sessionRes.json();
-          if (!data.user) {
-            router.push('/login');
-            return;
-          }
+      if (sessionRes.ok) {
+        const data = await sessionRes.json();
+        if (data.user) {
           setUser(data.user);
           setEntitlements(data.entitlements);
-        } else {
-          router.push('/login');
-          return;
         }
-        if (healthRes.ok) {
-          const healthData = await healthRes.json();
-          setLlmStatus(healthData.services.llm);
-        }
-        if (approvalsRes.ok) {
-          const apprData = await approvalsRes.json();
-          const pending = (apprData.approvals || []).filter((a: { status: string }) => a.status === 'pending');
-          setPendingApprovalsCount(pending.length);
-        }
-      } catch (e) {
-        // Silently handle in dev
       }
+
+      if (healthRes.ok) {
+        const healthData = await healthRes.json();
+        setLlmStatus(healthData.services?.llm);
+      }
+      if (approvalsRes.ok) {
+        const apprData = await approvalsRes.json();
+        const pending = (apprData.approvals || []).filter((a: { status: string }) => a.status === 'pending');
+        setPendingApprovalsCount(pending.length);
+      }
+    } catch (e) {
+      console.warn('Telemetry fetch error:', e);
     }
-    loadData();
-  }, [pathname]);
+  };
+
+  useEffect(() => {
+    // 1. Subscribe to live Firebase Client Auth state
+    const unsubscribe = subscribeToAuthState(async (fbUser) => {
+      if (fbUser) {
+        const token = await fbUser.getIdToken();
+        await syncSessionToken(token, fbUser.uid, fbUser.email || '', fbUser.displayName || undefined);
+        await fetchSessionAndTelemetry();
+      } else {
+        // Double check session from cookies before redirecting
+        const res = await fetch('/api/auth/session');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setUser(data.user);
+            setEntitlements(data.entitlements);
+            return;
+          }
+        }
+        router.push('/login');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [pathname, router]);
 
   const handleLogout = async () => {
     await logoutUser();

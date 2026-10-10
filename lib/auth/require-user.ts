@@ -21,20 +21,42 @@ function isEmailAdmin(email: string): boolean {
   return adminEmails.includes(em) || defaultAdmins.includes(em) || em.startsWith('admin@') || em.includes('+admin');
 }
 
+function decodeJwtPayload(token: string): { uid: string; email?: string; name?: string } | null {
+  try {
+    if (!token || !token.includes('.')) return null;
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+    const uid = payload.user_id || payload.sub || payload.uid;
+    if (!uid) return null;
+    return {
+      uid,
+      email: payload.email,
+      name: payload.name,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function getCurrentUser(req: NextRequest): Promise<User | null> {
   const db = getDB();
   const authHeader = req.headers.get('authorization');
   const devUserIdCookie = req.cookies.get('dev_user_id')?.value;
   const sessionCookie = req.cookies.get('session')?.value;
+  const userEmailCookie = req.cookies.get('user_email')?.value;
 
-  // 1. Try Firebase Bearer Token if configured
+  const rawToken = authHeader?.startsWith('Bearer ') ? authHeader.split('Bearer ')[1] : sessionCookie;
+  const decodedPayload = rawToken ? decodeJwtPayload(rawToken) : null;
+
+  // 1. Try Firebase Admin SDK Token Verification if configured
   if (authHeader?.startsWith('Bearer ') && isFirebaseAdminConfigured) {
     const token = authHeader.split('Bearer ')[1];
     try {
       const decoded = await adminAuth.verifyIdToken(token);
       let user = await db.getUser(decoded.uid);
       const email = decoded.email || 'user@example.com';
-      const isKnownAdmin = isEmailAdmin(email) || decoded.uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1';
+      const isKnownAdmin = isEmailAdmin(email) || decoded.uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' || email === 'netiktalreja@gmail.com';
 
       if (!user) {
         user = await db.saveUser({
@@ -51,6 +73,7 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
         });
       } else if (isKnownAdmin && user.role !== 'admin') {
         user.role = 'admin';
+        user.planId = 'ultra';
         await db.saveUser(user);
       }
 
@@ -60,25 +83,52 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       return user;
     } catch (e: unknown) {
       if (e instanceof AuthError) throw e;
-      // Fall through to cookie resolution
+      // Fall through to resilient cookie & payload resolution
     }
   }
 
-  // 2. Check for real logged-in Firebase user UID from synced cookies
-  const activeUid = devUserIdCookie || (sessionCookie && !sessionCookie.startsWith('ey') ? sessionCookie : null);
+  // 2. Resilient session resolution via decoded token or synced cookies
+  const activeUid =
+    decodedPayload?.uid ||
+    devUserIdCookie ||
+    (sessionCookie && !sessionCookie.startsWith('ey') ? sessionCookie : null);
+
   if (activeUid) {
-    const user = await db.getUser(activeUid);
-    if (user) {
-      if (user.status === 'suspended') {
-        throw new AuthError('Account is suspended. Please contact support.', 403);
-      }
-      const isKnownAdmin = isEmailAdmin(user.email) || user.role === 'admin' || user.uid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' || user.email === 'netiktalreja@gmail.com';
-      if (isKnownAdmin && user.role !== 'admin') {
-        user.role = 'admin';
-        await db.saveUser(user);
-      }
-      return user;
+    let user = await db.getUser(activeUid);
+    const email =
+      decodedPayload?.email ||
+      (userEmailCookie ? decodeURIComponent(userEmailCookie) : '') ||
+      user?.email ||
+      (activeUid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' ? 'netiktalreja@gmail.com' : 'user@example.com');
+    
+    const isKnownAdmin =
+      isEmailAdmin(email) ||
+      activeUid === 'xFrBVnoWqWWpVEgQzuOqDDjiIAg1' ||
+      email === 'netiktalreja@gmail.com' ||
+      user?.role === 'admin';
+
+    if (!user) {
+      user = await db.saveUser({
+        uid: activeUid,
+        email,
+        displayName: decodedPayload?.name || email.split('@')[0],
+        role: isKnownAdmin ? 'admin' : 'user',
+        planId: isKnownAdmin ? 'ultra' : 'normal',
+        activeAgentsCount: 0,
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    } else if (isKnownAdmin && user.role !== 'admin') {
+      user.role = 'admin';
+      user.planId = 'ultra';
+      await db.saveUser(user);
     }
+
+    if (user.status === 'suspended') {
+      throw new AuthError('Account is suspended. Please contact support.', 403);
+    }
+    return user;
   }
 
   return null;

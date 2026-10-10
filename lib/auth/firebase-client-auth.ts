@@ -52,9 +52,13 @@ function getCookieDomain(): string {
 export async function logoutUser() {
   await signOut(auth);
   const domainAttr = getCookieDomain();
-  // Clear session cookie across subdomains
+  // Clear session cookie across subdomains and local
   document.cookie = `session=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT${domainAttr};`;
   document.cookie = `dev_user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT${domainAttr};`;
+  document.cookie = `user_email=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT${domainAttr};`;
+  document.cookie = `session=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+  document.cookie = `dev_user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+  document.cookie = `user_email=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 }
 
 export async function resetPassword(email: string) {
@@ -65,11 +69,18 @@ export function subscribeToAuthState(callback: (user: FirebaseUser | null) => vo
   return onAuthStateChanged(auth, callback);
 }
 
-async function syncSessionToken(token: string, uid: string, email: string, displayName?: string) {
+export async function syncSessionToken(token: string, uid: string, email: string, displayName?: string) {
   // Store in cookie for Next.js SSR and server route handlers (shared across .qwenton.shop)
   const domainAttr = getCookieDomain();
-  document.cookie = `session=${token}; path=/; max-age=604800; SameSite=Lax${domainAttr}`;
-  document.cookie = `dev_user_id=${uid}; path=/; max-age=604800; SameSite=Lax${domainAttr}`;
+  const maxAge = 2592000; // 30 days in seconds
+  document.cookie = `session=${token}; path=/; max-age=${maxAge}; SameSite=Lax${domainAttr}`;
+  document.cookie = `dev_user_id=${uid}; path=/; max-age=${maxAge}; SameSite=Lax${domainAttr}`;
+  document.cookie = `user_email=${encodeURIComponent(email)}; path=/; max-age=${maxAge}; SameSite=Lax${domainAttr}`;
+
+  // Also set local path cookies as fallback
+  document.cookie = `session=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  document.cookie = `dev_user_id=${uid}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  document.cookie = `user_email=${encodeURIComponent(email)}; path=/; max-age=${maxAge}; SameSite=Lax`;
 
   try {
     await fetch('/api/auth/session', {
