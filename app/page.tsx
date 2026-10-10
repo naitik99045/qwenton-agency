@@ -259,7 +259,7 @@ export default function LandingPage() {
     },
     {
       q: 'What are the 4 subscription tiers and agent capacities in INR?',
-      a: 'We offer 4 transparent tiers: Normal (Free forever, 2 active agents, ₹0), Lite (4 active agents, ₹499/mo), Pro (9 active agents with scheduled routines and priority streaming, ₹1,999/mo), and Ultra (15 dedicated agents with custom enterprise routing, ₹4,999/mo).',
+      a: 'We offer 4 transparent tiers: Normal (Free forever, 2 active agents, ₹0), Lite (4 active agents, ₹99/mo), Pro (9 active agents with scheduled routines and priority streaming, ₹299/mo), and Ultra (15 dedicated agents with custom enterprise routing, ₹599/mo).',
     },
   ];
 
@@ -375,7 +375,7 @@ export default function LandingPage() {
             </Link>
             <Link href="/pricing">
               <Button size="lg" variant="outline" className="w-full sm:w-auto font-bold text-base border-border">
-                <span>Explore 4 Scalable Plans (₹0 to ₹4,999)</span>
+                <span>Explore 4 Scalable Plans (₹0 to ₹599)</span>
               </Button>
             </Link>
           </div>
@@ -906,7 +906,7 @@ export default function LandingPage() {
                             qwenton-agents
                           </td>
                           <td className="py-2.5">Up to 15 Coworkers</td>
-                          <td className="py-2.5">From ₹0 to ₹4,999</td>
+                          <td className="py-2.5">From ₹0 to ₹599</td>
                           <td className="py-2.5 text-success font-bold">✓ 1-Click Gate (Instant)</td>
                         </tr>
                       </tbody>
@@ -1425,7 +1425,7 @@ export default function LandingPage() {
               <div className="text-xs font-bold text-primary uppercase tracking-wider mb-2">Growth Tier</div>
               <h3 className="text-xl font-bold text-ink mb-1">Lite</h3>
               <div className="my-4">
-                <span className="text-3xl font-extrabold text-ink">₹499</span>
+                <span className="text-3xl font-extrabold text-ink">₹99</span>
                 <span className="text-xs text-ink-muted font-medium"> / month</span>
               </div>
               <p className="text-xs text-ink-muted mb-6">
@@ -1466,7 +1466,7 @@ export default function LandingPage() {
               <div className="text-xs font-bold text-primary uppercase tracking-wider mb-2">Power User</div>
               <h3 className="text-xl font-bold text-ink mb-1">Pro</h3>
               <div className="my-4">
-                <span className="text-3xl font-extrabold text-ink">₹1,999</span>
+                <span className="text-3xl font-extrabold text-ink">₹299</span>
                 <span className="text-xs text-ink-muted font-medium"> / month</span>
               </div>
               <p className="text-xs text-ink-muted mb-6">
@@ -1504,7 +1504,7 @@ export default function LandingPage() {
               <div className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-2">Enterprise Fleet</div>
               <h3 className="text-xl font-bold text-ink mb-1">Ultra</h3>
               <div className="my-4">
-                <span className="text-3xl font-extrabold text-ink">₹4,999</span>
+                <span className="text-3xl font-extrabold text-ink">₹599</span>
                 <span className="text-xs text-ink-muted font-medium"> / month</span>
               </div>
               <p className="text-xs text-ink-muted mb-6">

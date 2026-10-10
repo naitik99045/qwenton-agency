@@ -68,7 +68,7 @@ export default function PricingPage() {
     {
       id: 'lite',
       name: 'Lite Coworker',
-      price: '₹499',
+      price: '₹99',
       period: 'per month',
       description: 'For growing individual creators and freelancers.',
       maxAgents: '4 Active AI Agents',
@@ -87,7 +87,7 @@ export default function PricingPage() {
     {
       id: 'pro',
       name: 'Pro Coworker',
-      price: '₹1,499',
+      price: '₹299',
       period: 'per month',
       description: 'For teams requiring priority LLM streaming and automation routines.',
       maxAgents: '9 Active AI Agents',
@@ -106,7 +106,7 @@ export default function PricingPage() {
     {
       id: 'ultra',
       name: 'Ultra Business',
-      price: '₹3,999',
+      price: '₹599',
       period: 'per month',
       description: 'Maximum capacity and dedicated enterprise throughput.',
       maxAgents: '15 Active AI Agents',

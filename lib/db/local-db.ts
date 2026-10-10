@@ -58,8 +58,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   lite: {
     id: 'lite',
     name: 'Lite Coworker',
-    price: 499,
-    priceFormatted: '₹499 / mo',
+    price: 99,
+    priceFormatted: '₹99 / mo',
     maxAgents: 4,
     maxRunsPerMonth: 300,
     maxFileStorageBytes: 100 * 1024 * 1024, // 100MB
@@ -70,8 +70,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   pro: {
     id: 'pro',
     name: 'Pro Coworker',
-    price: 1499,
-    priceFormatted: '₹1,499 / mo',
+    price: 299,
+    priceFormatted: '₹299 / mo',
     maxAgents: 9,
     maxRunsPerMonth: 1000,
     maxFileStorageBytes: 500 * 1024 * 1024, // 500MB
@@ -82,8 +82,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   ultra: {
     id: 'ultra',
     name: 'Ultra Business',
-    price: 3999,
-    priceFormatted: '₹3,999 / mo',
+    price: 599,
+    priceFormatted: '₹599 / mo',
     maxAgents: 15,
     maxRunsPerMonth: 5000,
     maxFileStorageBytes: 2 * 1024 * 1024 * 1024, // 2GB

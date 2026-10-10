@@ -170,8 +170,8 @@ export default function BillingPage() {
     {
       id: 'lite',
       name: 'Lite Coworker',
-      price: 499,
-      priceFormatted: '₹499 / mo',
+      price: 99,
+      priceFormatted: '₹99 / mo',
       period: 'per month',
       maxAgents: 4,
       description: 'For growing individual creators and freelancers.',
@@ -181,8 +181,8 @@ export default function BillingPage() {
     {
       id: 'pro',
       name: 'Pro Coworker',
-      price: 1499,
-      priceFormatted: '₹1,499 / mo',
+      price: 299,
+      priceFormatted: '₹299 / mo',
       period: 'per month',
       maxAgents: 9,
       description: 'For teams requiring deep research and routines.',
@@ -192,8 +192,8 @@ export default function BillingPage() {
     {
       id: 'ultra',
       name: 'Ultra Business',
-      price: 3999,
-      priceFormatted: '₹3,999 / mo',
+      price: 599,
+      priceFormatted: '₹599 / mo',
       period: 'per month',
       maxAgents: 15,
       description: 'Maximum capacity and dedicated enterprise throughput.',
