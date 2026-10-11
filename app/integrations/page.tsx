@@ -27,8 +27,13 @@ import {
   Cpu,
   Bot,
   Zap,
+  Trash2,
+  Check,
+  ExternalLink,
+  ShieldAlert,
 } from 'lucide-react';
 import { Agent } from '@/lib/db/types';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 interface IntegrationItem {
   category: 'marketing' | 'design' | 'productivity' | 'ai_vault';
@@ -36,6 +41,8 @@ interface IntegrationItem {
   displayName: string;
   description: string;
   status: string;
+  maskedKey?: string;
+  config?: Record<string, any>;
   botUsername?: string;
   authType: string;
   requiresApproval: boolean;
@@ -46,17 +53,26 @@ export default function IntegrationsPage() {
   const [integrations, setIntegrations] = useState<IntegrationItem[]>([]);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [activeModalItem, setActiveModalItem] = useState<IntegrationItem | null>(null);
+
+  // Form inputs
   const [apiKeyInput, setApiKeyInput] = useState('');
+  const [secondaryInput, setSecondaryInput] = useState('');
   const [selectedAgentId, setSelectedAgentId] = useState('');
+
   const [loading, setLoading] = useState(false);
+  const [disconnecting, setDisconnecting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchIntegrations = async () => {
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const [intRes, agentsRes] = await Promise.all([
-        fetch('/api/integrations'),
-        fetch('/api/agents'),
+        fetch('/api/integrations', { headers }),
+        fetch('/api/agents', { headers }),
       ]);
       if (intRes.ok) {
         const data = await intRes.json();
@@ -77,7 +93,33 @@ export default function IntegrationsPage() {
 
   useEffect(() => {
     fetchIntegrations();
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) fetchIntegrations();
+    });
+    return () => unsubscribe();
   }, []);
+
+  const openIntegrationModal = (item: IntegrationItem) => {
+    setActiveModalItem(item);
+    setError(null);
+    setSaveSuccess(null);
+    setApiKeyInput('');
+    
+    // Preload secondary config if existing
+    if (item.provider === 'instagram') {
+      setSecondaryInput(item.config?.accountId || '');
+    } else if (item.provider === 'google_calendar') {
+      setSecondaryInput(item.config?.calendarId || 'primary');
+    } else if (item.provider === 'google_drive') {
+      setSecondaryInput(item.config?.folderId || '');
+    } else if (item.provider === 'gmail') {
+      setSecondaryInput(item.config?.userEmail || '');
+    } else if (item.provider === 'slack') {
+      setSecondaryInput(item.config?.channel || '#general');
+    } else {
+      setSecondaryInput('');
+    }
+  };
 
   const handleSaveConnection = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,25 +129,43 @@ export default function IntegrationsPage() {
     setSaveSuccess(null);
 
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       if (activeModalItem.provider === 'telegram') {
         const res = await fetch('/api/telegram/connect', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({
             botToken: apiKeyInput,
             agentId: selectedAgentId,
           }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to connect bot');
+        if (!res.ok) throw new Error(data.error || 'Failed to connect Telegram bot');
       } else {
+        const configData: Record<string, any> = {};
+        if (activeModalItem.provider === 'instagram') {
+          configData.accountId = secondaryInput.trim();
+        } else if (activeModalItem.provider === 'google_calendar') {
+          configData.calendarId = secondaryInput.trim() || 'primary';
+        } else if (activeModalItem.provider === 'google_drive') {
+          configData.folderId = secondaryInput.trim();
+        } else if (activeModalItem.provider === 'gmail') {
+          configData.userEmail = secondaryInput.trim();
+        } else if (activeModalItem.provider === 'slack') {
+          configData.channel = secondaryInput.trim() || '#general';
+        }
+
         const res = await fetch('/api/integrations', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({
             provider: activeModalItem.provider,
             apiKey: apiKeyInput,
             agentId: selectedAgentId,
+            config: configData,
           }),
         });
         const data = await res.json();
@@ -116,6 +176,7 @@ export default function IntegrationsPage() {
       setTimeout(() => {
         setActiveModalItem(null);
         setApiKeyInput('');
+        setSecondaryInput('');
         setSaveSuccess(null);
         fetchIntegrations();
       }, 1200);
@@ -124,6 +185,42 @@ export default function IntegrationsPage() {
       setError(msg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    if (!activeModalItem) return;
+    if (!confirm(`Are you sure you want to disconnect ${activeModalItem.displayName}?`)) return;
+
+    setDisconnecting(true);
+    setError(null);
+    setSaveSuccess(null);
+
+    try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch(`/api/integrations?provider=${activeModalItem.provider}`, {
+        method: 'DELETE',
+        headers,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to disconnect integration');
+
+      setSaveSuccess(`${activeModalItem.displayName} disconnected successfully.`);
+      setTimeout(() => {
+        setActiveModalItem(null);
+        setApiKeyInput('');
+        setSecondaryInput('');
+        setSaveSuccess(null);
+        fetchIntegrations();
+      }, 1000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg);
+    } finally {
+      setDisconnecting(false);
     }
   };
 
@@ -229,9 +326,16 @@ export default function IntegrationsPage() {
                 </div>
 
                 <h3 className="text-sm font-bold text-ink mb-1">{item.displayName}</h3>
-                <p className="text-xs text-ink-muted leading-relaxed mb-4 min-h-[36px]">
+                <p className="text-xs text-ink-muted leading-relaxed mb-3 min-h-[36px]">
                   {item.description}
                 </p>
+
+                {item.status === 'connected' && item.maskedKey && (
+                  <div className="mb-3 px-2.5 py-1.5 rounded-control bg-[#E5F4EC]/60 border border-[#C8E8D7] text-[11px] font-mono text-success flex items-center justify-between">
+                    <span>Key: {item.maskedKey}</span>
+                    <Check className="w-3.5 h-3.5" />
+                  </div>
+                )}
               </div>
 
               <div className="pt-3 border-t border-border/50 flex items-center justify-between">
@@ -242,7 +346,7 @@ export default function IntegrationsPage() {
                 <Button
                   size="sm"
                   variant={item.status === 'connected' ? 'outline' : 'primary'}
-                  onClick={() => setActiveModalItem(item)}
+                  onClick={() => openIntegrationModal(item)}
                   className="text-xs py-1 px-3 gap-1.5"
                 >
                   <Key className="w-3 h-3" />
@@ -262,19 +366,40 @@ export default function IntegrationsPage() {
               setError(null);
               setSaveSuccess(null);
             }}
-            title={`Connect ${activeModalItem.displayName}`}
-            description="Configure credentials and tool permissions for this integration."
+            title={`Configure ${activeModalItem.displayName}`}
+            description="Securely link your credentials and assign which AI agent can utilize this integration."
           >
             <div className="space-y-4 pt-2">
               <div className="bg-[#F8F6F1] p-3.5 rounded-card text-xs text-ink space-y-1.5 border border-border">
                 <p className="font-bold flex items-center gap-1.5 text-primary">
                   <Zap className="w-3.5 h-3.5" />
-                  <span>Secure Credential Storage</span>
+                  <span>Security & Approval Safeguard</span>
                 </p>
                 <p className="text-ink-muted leading-relaxed">
-                  Keys are isolated per tenant. All external write actions (e.g. publishing posts, sending emails, booking appointments) require explicit human approval in your Safety Firewall.
+                  Keys are stored encrypted and isolated to your workspace. All external write actions (publishing Instagram posts, sending client emails, scheduling meetings) automatically pause for your Human Approval in your inbox before executing.
                 </p>
               </div>
+
+              {activeModalItem.status === 'connected' && activeModalItem.maskedKey && (
+                <div className="p-3 bg-white border border-border rounded-control flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-ink-muted block text-[11px]">Current Status</span>
+                    <span className="font-bold text-success flex items-center gap-1">
+                      ● Active & Verified ({activeModalItem.maskedKey})
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    isLoading={disconnecting}
+                    onClick={handleDisconnect}
+                    className="text-danger hover:text-danger hover:bg-danger/10 text-xs py-1 px-2.5 gap-1 border-danger/30"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Disconnect</span>
+                  </Button>
+                </div>
+              )}
 
               {saveSuccess ? (
                 <div className="bg-[#EBF7F0] border border-[#BDE5CE] p-3 rounded-control text-xs text-success font-bold flex items-center gap-2">
@@ -291,29 +416,128 @@ export default function IntegrationsPage() {
               ) : null}
 
               <form onSubmit={handleSaveConnection} className="space-y-4">
+                {/* Primary Credential Input */}
                 <div>
                   <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
                     {activeModalItem.provider === 'telegram'
                       ? 'Telegram Bot Token (from @BotFather)'
-                      : activeModalItem.authType === 'oauth'
-                      ? 'Access Token / App Key'
-                      : 'API Key / Secret Token'}
+                      : activeModalItem.provider === 'instagram'
+                      ? 'Meta / Instagram Graph API Access Token'
+                      : activeModalItem.provider === 'google_drive'
+                      ? 'Google API Key / Service Account Key / OAuth Token'
+                      : activeModalItem.provider === 'google_calendar'
+                      ? 'Google Calendar API Key / OAuth Token'
+                      : activeModalItem.provider === 'gmail'
+                      ? 'Gmail App Password / OAuth Token'
+                      : activeModalItem.provider === 'slack'
+                      ? 'Slack Bot User OAuth Token (xoxb-...)'
+                      : activeModalItem.provider === 'notion'
+                      ? 'Notion Internal Integration Secret (secret_...)'
+                      : `${activeModalItem.displayName} API Key`}
                   </label>
                   <Input
                     type="password"
-                    placeholder="Paste secret key or token here..."
+                    placeholder={
+                      activeModalItem.provider === 'instagram'
+                        ? 'Paste Meta Graph API token (e.g. EAABw...)'
+                        : activeModalItem.provider === 'telegram'
+                        ? 'e.g. 7123456789:AAH...'
+                        : 'Paste API key or secret token here...'
+                    }
                     value={apiKeyInput}
                     onChange={(e) => setApiKeyInput(e.target.value)}
                     required
                   />
+                  {activeModalItem.provider === 'instagram' && (
+                    <p className="text-[11px] text-ink-muted mt-1 ml-1">
+                      Tip: Obtain this from Meta for Developers with <code>instagram_basic</code> and <code>instagram_content_publish</code> permissions.
+                    </p>
+                  )}
                 </div>
 
+                {/* Secondary Provider Specific Fields */}
+                {activeModalItem.provider === 'instagram' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+                      Instagram Business Account ID (Optional)
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="e.g. 17841400012345678"
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                    />
+                    <p className="text-[11px] text-ink-muted mt-1 ml-1">
+                      Your numeric Instagram Page/Account ID for direct container publishing.
+                    </p>
+                  </div>
+                )}
+
+                {activeModalItem.provider === 'google_calendar' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+                      Calendar ID
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="primary or your-email@gmail.com"
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {activeModalItem.provider === 'google_drive' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+                      Root Folder ID / Drive Name (Optional)
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdB..."
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {activeModalItem.provider === 'gmail' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+                      Sender Email Address
+                    </label>
+                    <Input
+                      type="email"
+                      placeholder="your-business@domain.com"
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {activeModalItem.provider === 'slack' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+                      Default Slack Channel
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="#general or #announcements"
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {/* Assigned AI Coworker Agent */}
                 <div>
-                  <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">Assign Primary AI Agent</label>
+                  <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+                    Assign Primary AI Agent
+                  </label>
                   <select
                     value={selectedAgentId}
                     onChange={(e) => setSelectedAgentId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-white border border-border text-ink rounded-control text-sm shadow-clay-button-subtle"
+                    className="w-full px-3.5 py-2.5 bg-white border border-border text-ink rounded-control text-sm shadow-clay-button-subtle focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     {agents.map((a) => (
                       <option key={a.id} value={a.id}>

@@ -83,7 +83,7 @@ export async function syncSessionToken(token: string, uid: string, email: string
   document.cookie = `user_email=${encodeURIComponent(email)}; path=/; max-age=${maxAge}; SameSite=Lax`;
 
   try {
-    await fetch('/api/auth/session', {
+    const res = await fetch('/api/auth/session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +91,57 @@ export async function syncSessionToken(token: string, uid: string, email: string
       },
       body: JSON.stringify({ uid, email, displayName }),
     });
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof window !== 'undefined') {
+        if (data.user) {
+          localStorage.setItem('qwenton_cached_user', JSON.stringify(data.user));
+        }
+        if (data.entitlements) {
+          localStorage.setItem('qwenton_cached_entitlements', JSON.stringify(data.entitlements));
+        }
+      }
+    }
   } catch (e) {
     console.warn('Session sync warning:', e);
   }
+}
+
+export async function getAuthToken(): Promise<string | null> {
+  if (typeof window === 'undefined') return null;
+  if (auth.currentUser) {
+    try {
+      return await auth.currentUser.getIdToken();
+    } catch {
+      return null;
+    }
+  }
+
+  // If currentUser is still restoring from IndexedDB on page load, wait for onAuthStateChanged
+  return new Promise((resolve) => {
+    let resolved = false;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (resolved) return;
+      resolved = true;
+      unsubscribe();
+      if (user) {
+        try {
+          const token = await user.getIdToken();
+          resolve(token);
+        } catch {
+          resolve(null);
+        }
+      } else {
+        resolve(null);
+      }
+    });
+
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        unsubscribe();
+        resolve(null);
+      }
+    }, 1500);
+  });
 }

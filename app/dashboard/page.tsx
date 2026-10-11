@@ -16,25 +16,48 @@ import {
   Plus,
 } from 'lucide-react';
 import { Agent, Approval } from '@/lib/db/types';
+import { subscribeToAuthState, getAuthToken } from '@/lib/auth/firebase-client-auth';
 
 export default function DashboardPage() {
-  const [agents, setAgents] = useState<Agent[]>([]);
+  const [agents, setAgents] = useState<Agent[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_agents');
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return [];
+  });
   const [approvals, setApprovals] = useState<Approval[]>([]);
-  const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_entitlements');
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(fbToken?: string) {
       try {
+        const token = fbToken || (await getAuthToken());
+        const headers: Record<string, string> = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+
         const [agentsRes, apprRes, sessionRes] = await Promise.all([
-          fetch('/api/agents'),
-          fetch('/api/approvals'),
-          fetch('/api/auth/session'),
+          fetch('/api/agents', { headers }),
+          fetch('/api/approvals', { headers }),
+          fetch('/api/auth/session', { headers }),
         ]);
 
         if (agentsRes.ok) {
           const data = await agentsRes.json();
-          setAgents(data.agents || []);
+          const loaded = data.agents || [];
+          setAgents(loaded);
+          localStorage.setItem('qwenton_cached_agents', JSON.stringify(loaded));
         }
         if (apprRes.ok) {
           const data = await apprRes.json();
@@ -42,7 +65,10 @@ export default function DashboardPage() {
         }
         if (sessionRes.ok) {
           const data = await sessionRes.json();
-          setEntitlements(data.entitlements);
+          if (data.entitlements) {
+            setEntitlements(data.entitlements);
+            localStorage.setItem('qwenton_cached_entitlements', JSON.stringify(data.entitlements));
+          }
         }
       } catch (e) {
         console.error('Error loading dashboard:', e);
@@ -50,7 +76,23 @@ export default function DashboardPage() {
         setLoading(false);
       }
     }
+
     fetchData();
+
+    const handleAgentsChanged = () => fetchData();
+    window.addEventListener('qwenton-agents-changed', handleAgentsChanged);
+
+    const unsubscribe = subscribeToAuthState(async (fbUser) => {
+      if (fbUser) {
+        const token = await fbUser.getIdToken();
+        fetchData(token);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('qwenton-agents-changed', handleAgentsChanged);
+    };
   }, []);
 
   const pendingApprovals = approvals.filter((a) => a.status === 'pending');

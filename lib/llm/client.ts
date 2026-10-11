@@ -190,11 +190,15 @@ export async function* streamChatCompletion(
     clearTimeout(timeout);
 
     if (!res.ok) {
-      const errText = await res.text();
-      // Provide fallback mock response for demo / local review
+      let guidance = '';
+      if (res.status === 401 || res.status === 403) {
+        guidance = `*(Notice: Model endpoint authentication failed [Status ${res.status}]. Please verify your API key in "AI Settings" or "Integrations")*\n\n`;
+      } else {
+        guidance = `*(Notice: Model endpoint at ${config.baseUrl} returned ${res.status}. Falling back to local coworker analysis)*\n\n`;
+      }
       yield {
         type: 'token',
-        token: `*(Notice: Model endpoint at ${config.baseUrl} [${config.model}] returned ${res.status}. Falling back to local offline analysis)*\n\nI have analyzed your prompt and knowledge context and prepared the response.`,
+        token: `${guidance}I am ready to assist you. To enable direct high-speed reasoning from Google Gemini, OpenAI, or Groq, configure your active API key in **AI Settings** or the **Integrations** vault.`,
       };
       yield { type: 'done' };
       return;
@@ -280,7 +284,7 @@ export async function* streamChatCompletion(
     const msg = err instanceof Error ? err.message : String(err);
     yield {
       type: 'token',
-      token: `\n\n*(Notice: Model endpoint at ${config.baseUrl} could not be reached: ${msg})*`,
+      token: `\n\n*(Notice: Could not connect to model endpoint at ${config.baseUrl}: ${msg}. Operating in local coworker mode)*\n\nI have received your prompt. To enable cloud streaming with Google Gemini, OpenAI, or Groq, please set your API key in **AI Settings** or **Integrations**.`,
     };
     yield { type: 'done' };
   }

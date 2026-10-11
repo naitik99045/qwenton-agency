@@ -532,68 +532,68 @@ class FirestoreAdapter implements DatabaseAdapter {
 }
 
 class LocalDBAdapter implements DatabaseAdapter {
-  async getUser(uid: string) { return localDb.getUser(uid); }
-  async getUserByEmail(email: string) { return localDb.getUserByEmail(email); }
-  async saveUser(user: User) { return localDb.saveUser(user); }
-  async getAllUsers() { return localDb.getAllUsers(); }
+  async getUser(uid: string) { await localDb.ensureCloudSync(); return localDb.getUser(uid); }
+  async getUserByEmail(email: string) { await localDb.ensureCloudSync(); return localDb.getUserByEmail(email); }
+  async saveUser(user: User) { return await localDb.saveUser(user); }
+  async getAllUsers() { await localDb.ensureCloudSync(); return localDb.getAllUsers(); }
 
-  async getAgentsByUser(ownerUid: string) { return localDb.getAgentsByUser(ownerUid); }
-  async getAllAgentsByUser(ownerUid: string) { return localDb.getAllAgentsByUser(ownerUid); }
-  async getAllAgents() { return localDb.getAllAgents(); }
-  async getAgent(id: string) { return localDb.getAgent(id); }
-  async createAgent(agent: Omit<Agent, 'id' | 'createdAt' | 'updatedAt'>) { return localDb.createAgent(agent); }
-  async updateAgent(id: string, updates: Partial<Agent>) { return localDb.updateAgent(id, updates); }
-  async deleteAgent(id: string) { return localDb.deleteAgent(id); }
+  async getAgentsByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getAgentsByUser(ownerUid); }
+  async getAllAgentsByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getAllAgentsByUser(ownerUid); }
+  async getAllAgents() { await localDb.ensureCloudSync(); return localDb.getAllAgents(); }
+  async getAgent(id: string) { await localDb.ensureCloudSync(); return localDb.getAgent(id); }
+  async createAgent(agent: Omit<Agent, 'id' | 'createdAt' | 'updatedAt'>) { await localDb.ensureCloudSync(); return await localDb.createAgent(agent); }
+  async updateAgent(id: string, updates: Partial<Agent>) { return await localDb.updateAgent(id, updates); }
+  async deleteAgent(id: string) { return await localDb.deleteAgent(id); }
 
-  async getConversationsByUser(ownerUid: string) { return localDb.getConversationsByUser(ownerUid); }
-  async getConversation(id: string) { return localDb.getConversation(id); }
-  async createConversation(ownerUid: string, agentId: string, title?: string) { return localDb.createConversation(ownerUid, agentId, title); }
-  async getMessages(conversationId: string) { return localDb.getMessages(conversationId); }
-  async createMessage(msg: Omit<Message, 'id' | 'createdAt'>) { return localDb.createMessage(msg); }
+  async getConversationsByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getConversationsByUser(ownerUid); }
+  async getConversation(id: string) { await localDb.ensureCloudSync(); return localDb.getConversation(id); }
+  async createConversation(ownerUid: string, agentId: string, title?: string) { return await localDb.createConversation(ownerUid, agentId, title); }
+  async getMessages(conversationId: string) { await localDb.ensureCloudSync(); return localDb.getMessages(conversationId); }
+  async createMessage(msg: Omit<Message, 'id' | 'createdAt'>) { return await localDb.createMessage(msg); }
 
   async createRun(run: Omit<Run, 'id' | 'startedAt'>) { return localDb.createRun(run); }
-  async getRun(id: string) { return localDb.getRun(id); }
+  async getRun(id: string) { await localDb.ensureCloudSync(); return localDb.getRun(id); }
   async updateRun(id: string, updates: Partial<Run>) { return localDb.updateRun(id, updates); }
   async createRunEvent(event: Omit<RunEvent, 'id' | 'timestamp'>) { return localDb.createRunEvent(event); }
   async getRunEvents(runId: string) { return localDb.getRunEvents(runId); }
 
-  async createApproval(approval: Omit<Approval, 'id' | 'createdAt' | 'status'>) { return localDb.createApproval(approval); }
-  async getApprovalsByUser(ownerUid: string) { return localDb.getApprovalsByUser(ownerUid); }
-  async getApproval(id: string) { return localDb.getApproval(id); }
-  async updateApproval(id: string, status: 'approved' | 'rejected', decidedBy: string) { return localDb.updateApproval(id, status, decidedBy); }
+  async createApproval(approval: Omit<Approval, 'id' | 'createdAt' | 'status'>) { return await localDb.createApproval(approval); }
+  async getApprovalsByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getApprovalsByUser(ownerUid); }
+  async getApproval(id: string) { await localDb.ensureCloudSync(); return localDb.getApproval(id); }
+  async updateApproval(id: string, status: 'approved' | 'rejected', decidedBy: string) { return await localDb.updateApproval(id, status, decidedBy); }
 
   async createFile(file: Omit<FileRecord, 'id' | 'createdAt'>) { return localDb.createFile(file); }
-  async getFilesByUser(ownerUid: string) { return localDb.getFilesByUser(ownerUid); }
-  async getFile(id: string) { return localDb.getFile(id); }
+  async getFilesByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getFilesByUser(ownerUid); }
+  async getFile(id: string) { await localDb.ensureCloudSync(); return localDb.getFile(id); }
   async deleteFile(id: string) { return localDb.deleteFile(id); }
   async saveChunks(chunks: Array<Omit<DocumentChunk, 'id'>>) { return localDb.saveChunks(chunks); }
   async searchChunks(ownerUid: string, query: string, limit = 5) { return localDb.searchChunks(ownerUid, query, limit); }
 
-  async getRoutinesByUser(ownerUid: string) { return localDb.getRoutinesByUser(ownerUid); }
+  async getRoutinesByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getRoutinesByUser(ownerUid); }
   async createRoutine(routine: Omit<Routine, 'id' | 'createdAt'>) { return localDb.createRoutine(routine); }
 
-  async getIntegrationsByUser(ownerUid: string) { return localDb.getIntegrationsByUser(ownerUid); }
-  async getIntegration(ownerUid: string, provider: string) { return localDb.getIntegration(ownerUid, provider); }
-  async saveIntegration(integration: Integration) { return localDb.saveIntegration(integration); }
-  async deleteIntegration(ownerUid: string, provider: string) { return localDb.deleteIntegration(ownerUid, provider); }
+  async getIntegrationsByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getIntegrationsByUser(ownerUid); }
+  async getIntegration(ownerUid: string, provider: string) { await localDb.ensureCloudSync(); return localDb.getIntegration(ownerUid, provider); }
+  async saveIntegration(integration: Integration) { return await localDb.saveIntegration(integration); }
+  async deleteIntegration(ownerUid: string, provider: string) { return await localDb.deleteIntegration(ownerUid, provider); }
 
-  async getTelegramConnection(ownerUid: string) { return localDb.getTelegramConnection(ownerUid); }
+  async getTelegramConnection(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getTelegramConnection(ownerUid); }
   async saveTelegramConnection(conn: TelegramConnection) { return localDb.saveTelegramConnection(conn); }
   async deleteTelegramConnection(id: string) { return localDb.deleteTelegramConnection(id); }
 
-  async getPlans() { return localDb.getPlans(); }
-  async getPlan(id: string) { return localDb.getPlan(id); }
+  async getPlans() { await localDb.ensureCloudSync(); return localDb.getPlans(); }
+  async getPlan(id: string) { await localDb.ensureCloudSync(); return localDb.getPlan(id); }
   async updatePlan(id: string, updates: Partial<Plan>) { return localDb.updatePlan(id, updates); }
 
-  async createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) { return localDb.createOrder(order); }
-  async getOrder(id: string) { return localDb.getOrder(id); }
-  async getOrderByReference(reference: string) { return localDb.getOrderByReference(reference); }
-  async updateOrder(id: string, updates: Partial<Order>) { return localDb.updateOrder(id, updates); }
-  async getOrdersByUser(userId: string) { return localDb.getOrdersByUser(userId); }
-  async getAllOrders() { return localDb.getAllOrders(); }
+  async createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) { return await localDb.createOrder(order); }
+  async getOrder(id: string) { await localDb.ensureCloudSync(); return localDb.getOrder(id); }
+  async getOrderByReference(reference: string) { await localDb.ensureCloudSync(); return localDb.getOrderByReference(reference); }
+  async updateOrder(id: string, updates: Partial<Order>) { return await localDb.updateOrder(id, updates); }
+  async getOrdersByUser(userId: string) { await localDb.ensureCloudSync(); return localDb.getOrdersByUser(userId); }
+  async getAllOrders() { await localDb.ensureCloudSync(); return localDb.getAllOrders(); }
 
-  async getSubscriptionByUser(userId: string) { return localDb.getSubscriptionByUser(userId); }
-  async saveSubscription(sub: Subscription) { return localDb.saveSubscription(sub); }
+  async getSubscriptionByUser(userId: string) { await localDb.ensureCloudSync(); return localDb.getSubscriptionByUser(userId); }
+  async saveSubscription(sub: Subscription) { return await localDb.saveSubscription(sub); }
 
   async createAuditEvent(event: Omit<AuditEvent, 'id' | 'createdAt'>) { return localDb.createAuditEvent(event); }
   async getAuditEvents(limit = 100) { return localDb.getAuditEvents(limit); }

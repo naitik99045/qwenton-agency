@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/Input';
 import { Dialog } from '@/components/ui/Dialog';
 import { CreditCard, Check, Sparkles, ShieldCheck, Mail, ArrowRight, AlertCircle, Lock } from 'lucide-react';
 import { User, PlanId } from '@/lib/db/types';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 export default function BillingPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -58,9 +59,13 @@ export default function BillingPage() {
         });
       }).catch(() => {});
 
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const [sessRes, plansRes] = await Promise.all([
-        fetch('/api/auth/session'),
-        fetch('/api/billing/plans'),
+        fetch('/api/auth/session', { headers }),
+        fetch('/api/billing/plans', { headers }),
       ]);
       if (sessRes.ok) {
         const data = await sessRes.json();
@@ -80,6 +85,11 @@ export default function BillingPage() {
 
   useEffect(() => {
     fetchSession();
+
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) fetchSession();
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const ref = urlParams.get('ref');
     if (ref) setManualRef(ref);
@@ -94,6 +104,8 @@ export default function BillingPage() {
         setError('Payment verification is pending from the bank. If you completed the UPI payment, enter your 12-digit UTR below to activate immediately.');
       }
     }
+
+    return () => unsubscribe();
   }, []);
 
   const handleManualVerifyPayment = async () => {
@@ -101,9 +113,13 @@ export default function BillingPage() {
     setUtrErrorMsg(null);
     setUtrSuccessMsg(null);
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/billing/fam/verify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           orderReference: manualRef || orderRef || undefined,
           utr: manualUtr.trim() || undefined,
@@ -116,6 +132,7 @@ export default function BillingPage() {
       if (data.success) {
         setUtrSuccessMsg(data.message || 'Payment verified! Plan activated.');
         setNotice(`Plan upgraded to ${data.planId?.toUpperCase() || 'new tier'} successfully!`);
+        window.dispatchEvent(new CustomEvent('qwenton-agents-changed'));
         await fetchSession();
       } else {
         setUtrErrorMsg(data.message || 'Verification is still pending from the bank. Please try again in 10 seconds or enter your 12-digit UPI UTR number.');
@@ -140,9 +157,13 @@ export default function BillingPage() {
     setLoading(true);
     setError(null);
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/billing/otp/request', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ planId: selectedPlanId }),
       });
 
@@ -170,10 +191,14 @@ export default function BillingPage() {
     setError(null);
 
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       // 1. Verify OTP with Server
       const verifyRes = await fetch('/api/billing/otp/verify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           orderReference: orderRef,
           otpCode,
@@ -186,7 +211,7 @@ export default function BillingPage() {
       // 2. Initiate FAM Gateway Checkout
       const checkoutRes = await fetch('/api/billing/fam/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ orderReference: orderRef }),
       });
 

@@ -28,11 +28,24 @@ import {
   Layers,
 } from 'lucide-react';
 import { Agent, Conversation, Message, Approval, RunEvent } from '@/lib/db/types';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 export default function AgentWorkspacePage() {
   const routeParams = useParams();
   const agentId = (routeParams?.agentId as string) || '';
-  const [agent, setAgent] = useState<Agent | null>(null);
+  const [agent, setAgent] = useState<Agent | null>(() => {
+    if (typeof window !== 'undefined' && agentId) {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_agents');
+        if (cached) {
+          const list: Agent[] = JSON.parse(cached);
+          const found = list.find((a) => a.id === agentId);
+          if (found) return found;
+        }
+      } catch {}
+    }
+    return null;
+  });
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputPrompt, setInputPrompt] = useState('');
@@ -41,7 +54,7 @@ export default function AgentWorkspacePage() {
   const [activityEvents, setActivityEvents] = useState<RunEvent[]>([]);
   const [pendingApproval, setPendingApproval] = useState<Approval | null>(null);
   const [mobileActivityOpen, setMobileActivityOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -49,11 +62,15 @@ export default function AgentWorkspacePage() {
   };
 
   useEffect(() => {
-    async function loadWorkspace() {
+    async function loadWorkspace(tokenOverride?: string) {
       try {
+        const token = tokenOverride || (await getAuthToken());
+        const headers: Record<string, string> = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+
         const [agentRes, convsRes] = await Promise.all([
-          fetch(`/api/agents/${agentId}`),
-          fetch('/api/conversations'),
+          fetch(`/api/agents/${agentId}`, { headers }),
+          fetch('/api/conversations', { headers }),
         ]);
 
         if (agentRes.ok) {
@@ -69,7 +86,10 @@ export default function AgentWorkspacePage() {
           if (!currentConv) {
             const newConvRes = await fetch('/api/conversations', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              },
               body: JSON.stringify({ agentId }),
             });
             if (newConvRes.ok) {
@@ -80,7 +100,7 @@ export default function AgentWorkspacePage() {
 
           if (currentConv) {
             setConversation(currentConv);
-            const msgsRes = await fetch(`/api/conversations/${currentConv.id}/messages`);
+            const msgsRes = await fetch(`/api/conversations/${currentConv.id}/messages`, { headers });
             if (msgsRes.ok) {
               const mData = await msgsRes.json();
               setMessages(mData.messages || []);
@@ -93,7 +113,16 @@ export default function AgentWorkspacePage() {
         setLoading(false);
       }
     }
+
     loadWorkspace();
+
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) {
+        fbUser.getIdToken().then((t) => loadWorkspace(t));
+      }
+    });
+
+    return () => unsubscribe();
   }, [agentId]);
 
   useEffect(() => {
@@ -119,18 +148,23 @@ export default function AgentWorkspacePage() {
     setMessages((prev) => [...prev, tempUserMsg]);
 
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const response = await fetch(`/api/conversations/${conversation.id}/messages`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ prompt: promptToSend }),
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`Server returned ${response.status}: ${errorText || 'Unknown error'}`);
       }
 
       const reader = response.body?.getReader();
-      if (!reader) throw new Error('No stream body');
+      if (!reader) throw new Error('No stream body received from agent engine');
 
       const decoder = new TextDecoder();
       let buffer = '';
@@ -200,11 +234,41 @@ export default function AgentWorkspacePage() {
                     timestamp: new Date().toISOString(),
                   },
                 ]);
+              } else if (event.type === 'error') {
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: `err_${Date.now()}`,
+                    conversationId: conversation.id,
+                    agentId,
+                    ownerUid: 'me',
+                    sender: 'agent',
+                    content: `⚠️ Error from agent runtime: ${event.error}`,
+                    createdAt: new Date().toISOString(),
+                  },
+                ]);
               } else if (event.type === 'completed') {
-                const freshMsgs = await fetch(`/api/conversations/${conversation.id}/messages`);
+                const freshToken = await getAuthToken();
+                const freshHeaders: Record<string, string> = {};
+                if (freshToken) freshHeaders.Authorization = `Bearer ${freshToken}`;
+
+                const freshMsgs = await fetch(`/api/conversations/${conversation.id}/messages`, { headers: freshHeaders });
                 if (freshMsgs.ok) {
                   const mData = await freshMsgs.json();
                   setMessages(mData.messages || []);
+                } else if (event.finalContent) {
+                  setMessages((prev) => [
+                    ...prev,
+                    {
+                      id: `comp_${Date.now()}`,
+                      conversationId: conversation.id,
+                      agentId,
+                      ownerUid: 'me',
+                      sender: 'agent',
+                      content: event.finalContent,
+                      createdAt: new Date().toISOString(),
+                    },
+                  ]);
                 }
               }
             } catch (jsonErr) {
@@ -215,6 +279,19 @@ export default function AgentWorkspacePage() {
       }
     } catch (err) {
       console.error('Streaming error:', err);
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `catch_${Date.now()}`,
+          conversationId: conversation.id,
+          agentId,
+          ownerUid: 'me',
+          sender: 'agent',
+          content: `⚠️ Could not complete request: ${errMsg}. Please verify your AI Model / API key settings in "AI Settings" or "Integrations".`,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
     } finally {
       setIsStreaming(false);
       setStreamingContent('');
@@ -223,7 +300,11 @@ export default function AgentWorkspacePage() {
 
   const handleApprovalDecision = async (approvalId: string, decision: 'approve' | 'reject') => {
     try {
-      const res = await fetch(`/api/approvals/${approvalId}/${decision}`, { method: 'POST' });
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch(`/api/approvals/${approvalId}/${decision}`, { method: 'POST', headers });
       if (res.ok) {
         setPendingApproval(null);
         setActivityEvents((prev) => [

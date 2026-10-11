@@ -24,6 +24,7 @@ import {
   Check,
 } from 'lucide-react';
 import { Agent } from '@/lib/db/types';
+import { subscribeToAuthState, getAuthToken } from '@/lib/auth/firebase-client-auth';
 
 const PREBUILT_AGENTS = [
   {
@@ -90,24 +91,49 @@ const PREBUILT_AGENTS = [
 
 export default function AgentsListPage() {
   const router = useRouter();
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [agents, setAgents] = useState<Agent[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_agents');
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(false);
   const [deployingId, setDeployingId] = useState<string | null>(null);
-  const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(null);
+  const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_entitlements');
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
 
-  const fetchAgents = async () => {
+  const fetchAgents = async (tokenOverride?: string) => {
     try {
+      const token = tokenOverride || (await getAuthToken());
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const [agentsRes, sessionRes] = await Promise.all([
-        fetch('/api/agents'),
-        fetch('/api/auth/session'),
+        fetch('/api/agents', { headers }),
+        fetch('/api/auth/session', { headers }),
       ]);
       if (agentsRes.ok) {
         const data = await agentsRes.json();
-        setAgents(data.agents || []);
+        const loaded = data.agents || [];
+        setAgents(loaded);
+        localStorage.setItem('qwenton_cached_agents', JSON.stringify(loaded));
       }
       if (sessionRes.ok) {
         const sess = await sessionRes.json();
-        setEntitlements(sess.entitlements);
+        if (sess.entitlements) {
+          setEntitlements(sess.entitlements);
+          localStorage.setItem('qwenton_cached_entitlements', JSON.stringify(sess.entitlements));
+        }
       }
     } catch (e) {
       console.error('Error fetching agents:', e);
@@ -118,6 +144,21 @@ export default function AgentsListPage() {
 
   useEffect(() => {
     fetchAgents();
+
+    const unsubscribe = subscribeToAuthState(async (fbUser) => {
+      if (fbUser) {
+        const token = await fbUser.getIdToken();
+        fetchAgents(token);
+      }
+    });
+
+    const handleAgentsChanged = () => fetchAgents();
+    window.addEventListener('qwenton-agents-changed', handleAgentsChanged);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('qwenton-agents-changed', handleAgentsChanged);
+    };
   }, []);
 
   const handle1ClickDeploy = async (template: typeof PREBUILT_AGENTS[0]) => {
@@ -128,9 +169,13 @@ export default function AgentsListPage() {
 
     setDeployingId(template.id);
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/agents', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           name: template.name,
           role: template.role,
@@ -146,6 +191,12 @@ export default function AgentsListPage() {
       }
 
       const { agent } = await res.json();
+      setAgents((prev) => {
+        const updated = [agent, ...prev.filter((a) => a.id !== agent.id)];
+        localStorage.setItem('qwenton_cached_agents', JSON.stringify(updated));
+        return updated;
+      });
+      window.dispatchEvent(new CustomEvent('qwenton-agents-changed'));
       router.push(`/agents/${agent.id}`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -157,8 +208,18 @@ export default function AgentsListPage() {
   const handleArchive = async (agentId: string) => {
     if (!confirm('Archive this agent? Its active slot will be released.')) return;
     try {
-      const res = await fetch(`/api/agents/${agentId}/archive`, { method: 'POST' });
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch(`/api/agents/${agentId}/archive`, { method: 'POST', headers });
       if (res.ok) {
+        setAgents((prev) => {
+          const updated = prev.filter((a) => a.id !== agentId);
+          localStorage.setItem('qwenton_cached_agents', JSON.stringify(updated));
+          return updated;
+        });
+        window.dispatchEvent(new CustomEvent('qwenton-agents-changed'));
         fetchAgents();
       }
     } catch (e) {

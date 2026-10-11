@@ -8,6 +8,7 @@ import { Input, Textarea } from '@/components/ui/Input';
 import { Dialog } from '@/components/ui/Dialog';
 import { CalendarClock, Plus, Play, Clock, Bot, CheckCircle2 } from 'lucide-react';
 import { Routine, Agent } from '@/lib/db/types';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 export default function RoutinesPage() {
   const [routines, setRoutines] = useState<Routine[]>([]);
@@ -21,9 +22,13 @@ export default function RoutinesPage() {
 
   const fetchRoutines = async () => {
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const [rRes, aRes] = await Promise.all([
-        fetch('/api/routines'),
-        fetch('/api/agents'),
+        fetch('/api/routines', { headers }),
+        fetch('/api/agents', { headers }),
       ]);
       if (rRes.ok) {
         const data = await rRes.json();
@@ -44,6 +49,10 @@ export default function RoutinesPage() {
 
   useEffect(() => {
     fetchRoutines();
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) fetchRoutines();
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -51,9 +60,13 @@ export default function RoutinesPage() {
     if (!agentId) return;
     setLoading(true);
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/routines', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           agentId,
           name,

@@ -22,6 +22,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Instagram Business',
         description: 'Publish carousels, schedule grid posts, research hashtags, and analyze engagement.',
         status: intMap['instagram']?.status || 'not_connected',
+        maskedKey: intMap['instagram']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['instagram'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['instagram']?.config || {},
         authType: 'oauth',
         requiresApproval: true,
       },
@@ -31,6 +33,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Facebook Pages',
         description: 'Draft organic posts, promotional announcements, and sync customer inquiries.',
         status: intMap['facebook']?.status || 'not_connected',
+        maskedKey: intMap['facebook']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['facebook'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['facebook']?.config || {},
         authType: 'oauth',
         requiresApproval: true,
       },
@@ -40,6 +44,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Gmail & Business Email',
         description: 'Send client outreach, email marketing campaigns, and handle inbound inquiries.',
         status: intMap['gmail']?.status || 'not_connected',
+        maskedKey: intMap['gmail']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['gmail'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['gmail']?.config || {},
         authType: 'oauth',
         requiresApproval: true,
       },
@@ -49,6 +55,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Google Calendar',
         description: 'Check team availability, schedule consultations, and sync marketing deadlines.',
         status: intMap['google_calendar']?.status || 'not_connected',
+        maskedKey: intMap['google_calendar']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['google_calendar'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['google_calendar']?.config || {},
         authType: 'oauth',
         requiresApproval: true,
       },
@@ -58,6 +66,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Google Maps & Local SEO',
         description: 'Audit competitor rankings, analyze customer reviews, and enhance local search visibility.',
         status: intMap['google_maps']?.status || 'not_connected',
+        maskedKey: intMap['google_maps']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['google_maps'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['google_maps']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -69,6 +79,8 @@ export async function GET(req: NextRequest) {
         status: telegram?.status || intMap['telegram']?.status || 'not_connected',
         botUsername: telegram?.botUsername,
         lastTestedAt: telegram?.lastTestedAt,
+        maskedKey: (telegram?.botTokenEncrypted || intMap['telegram']?.config?.apiKeyEncrypted) ? `••••••••${String(telegram?.botTokenEncrypted || intMap['telegram']?.config?.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['telegram']?.config || {},
         authType: 'bot_token',
         requiresApproval: true,
       },
@@ -80,6 +92,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Canva Design Hub',
         description: 'Auto-generate branded banner specs, color palettes, and social design templates.',
         status: intMap['canva']?.status || 'not_connected',
+        maskedKey: intMap['canva']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['canva'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['canva']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -89,6 +103,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Figma Design Tokens',
         description: 'Inspect UI wireframes, extract design tokens, and audit brand style consistency.',
         status: intMap['figma']?.status || 'not_connected',
+        maskedKey: intMap['figma']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['figma'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['figma']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -98,6 +114,8 @@ export async function GET(req: NextRequest) {
         displayName: 'FLUX / Midjourney (fal.ai)',
         description: 'High-speed AI image generation for photo-realistic creatives and clay 3D assets.',
         status: intMap['fal_ai']?.status || 'not_connected',
+        maskedKey: intMap['fal_ai']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['fal_ai'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['fal_ai']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -109,6 +127,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Google Drive & Sheets',
         description: 'Index spreadsheets, PDF briefs, and presentations into agent knowledge base.',
         status: intMap['google_drive']?.status || 'not_connected',
+        maskedKey: intMap['google_drive']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['google_drive'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['google_drive']?.config || {},
         authType: 'oauth',
         requiresApproval: false,
       },
@@ -118,6 +138,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Notion Workspace',
         description: 'Sync company documentation, databases, and project tasks into live memory.',
         status: intMap['notion']?.status || 'not_connected',
+        maskedKey: intMap['notion']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['notion'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['notion']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -127,6 +149,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Slack Workspace',
         description: 'Post AI briefings, reports, and real-time team alerts directly to channels.',
         status: intMap['slack']?.status || 'not_connected',
+        maskedKey: intMap['slack']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['slack'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['slack']?.config || {},
         authType: 'oauth',
         requiresApproval: true,
       },
@@ -138,6 +162,8 @@ export async function GET(req: NextRequest) {
         displayName: 'OpenAI API (GPT-4o & o3-mini)',
         description: 'Direct BYOK (Bring Your Own Key) access for OpenAI reasoning models.',
         status: intMap['openai']?.status || 'not_connected',
+        maskedKey: intMap['openai']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['openai'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['openai']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -147,6 +173,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Anthropic Claude 3.5 Sonnet',
         description: 'Advanced nuance, creative copywriting, and structured data synthesis.',
         status: intMap['anthropic']?.status || 'not_connected',
+        maskedKey: intMap['anthropic']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['anthropic'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['anthropic']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -156,6 +184,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Google Gemini 1.5 Pro',
         description: 'Massive 1M+ token context window for large document and video analysis.',
         status: intMap['gemini']?.status || 'not_connected',
+        maskedKey: intMap['gemini']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['gemini'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['gemini']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -165,6 +195,8 @@ export async function GET(req: NextRequest) {
         displayName: 'Groq Ultra-Fast Llama 3.3',
         description: 'Sub-second real-time streaming inference for rapid agent response loops.',
         status: intMap['groq']?.status || 'not_connected',
+        maskedKey: intMap['groq']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['groq'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['groq']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -174,6 +206,8 @@ export async function GET(req: NextRequest) {
         displayName: 'ElevenLabs Voice & Speech',
         description: 'Generate high-fidelity AI audio narration and multilingual voiceovers.',
         status: intMap['elevenlabs']?.status || 'not_connected',
+        maskedKey: intMap['elevenlabs']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['elevenlabs'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['elevenlabs']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -197,7 +231,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Provider and API key/token are required.' }, { status: 400 });
     }
 
-    // Save directly to user's Firestore document
+    // Save directly to user's database / Firestore document
     const integrationRecord = {
       id: `${user.uid}_${provider}`,
       ownerUid: user.uid,
@@ -209,11 +243,47 @@ export async function POST(req: NextRequest) {
       lastTestedAt: new Date().toISOString(),
       config: {
         ...(config || {}),
-        apiKeyEncrypted: apiKey, // Securely saved in server-side Firestore
+        apiKeyEncrypted: apiKey, // Securely saved in server-side vault
       },
     };
 
     await db.saveIntegration(integrationRecord);
+
+    // If an AI provider was configured, sync directly with user's active LLM config
+    if (provider === 'gemini') {
+      const freshUser = await db.getUser(user.uid);
+      if (freshUser) {
+        freshUser.llmConfig = {
+          provider: 'gemini',
+          baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+          apiKey,
+          model: 'gemini-1.5-flash',
+        };
+        await db.saveUser(freshUser);
+      }
+    } else if (provider === 'openai') {
+      const freshUser = await db.getUser(user.uid);
+      if (freshUser) {
+        freshUser.llmConfig = {
+          provider: 'openai',
+          baseUrl: 'https://api.openai.com/v1',
+          apiKey,
+          model: 'gpt-4o-mini',
+        };
+        await db.saveUser(freshUser);
+      }
+    } else if (provider === 'groq') {
+      const freshUser = await db.getUser(user.uid);
+      if (freshUser) {
+        freshUser.llmConfig = {
+          provider: 'groq',
+          baseUrl: 'https://api.groq.com/openai/v1',
+          apiKey,
+          model: 'llama-3.3-70b-versatile',
+        };
+        await db.saveUser(freshUser);
+      }
+    }
 
     await db.createAuditEvent({
       actorUid: user.uid,
@@ -224,8 +294,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `${provider} credentials securely saved in your Firestore.`,
+      message: `${provider} credentials securely saved & active!`,
       status: 'connected',
+      maskedKey: `••••••••${String(apiKey).slice(-4)}`,
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
@@ -255,7 +326,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `${provider} integration disconnected and credentials removed from Firestore.`,
+      message: `${provider} integration disconnected and credentials removed from vault.`,
       status: 'not_connected',
     });
   } catch (err: unknown) {
@@ -263,4 +334,3 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
-

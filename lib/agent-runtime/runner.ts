@@ -77,6 +77,49 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
   const maxSteps = 10;
   let isPausedForApproval = false;
 
+  // Resolve Model Provider: Agent Override -> User Settings -> Connected AI Integration -> System Default
+  const user = await db.getUser(userId);
+  let effectiveOverride = agent.modelOverride;
+  if (!effectiveOverride?.apiKey && user?.llmConfig?.apiKey) {
+    effectiveOverride = {
+      provider: user.llmConfig.provider,
+      baseUrl: user.llmConfig.baseUrl,
+      apiKey: user.llmConfig.apiKey,
+      modelName: user.llmConfig.model,
+    };
+  } else if (!effectiveOverride?.apiKey) {
+    try {
+      const userIntegrations = await db.getIntegrationsByUser(userId);
+      const geminiInt = userIntegrations.find((i) => i.provider === 'gemini' && i.status === 'connected');
+      const openaiInt = userIntegrations.find((i) => i.provider === 'openai' && i.status === 'connected');
+      const groqInt = userIntegrations.find((i) => i.provider === 'groq' && i.status === 'connected');
+      if (geminiInt && geminiInt.config?.apiKeyEncrypted) {
+        effectiveOverride = {
+          provider: 'gemini',
+          baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+          apiKey: String(geminiInt.config.apiKeyEncrypted),
+          modelName: 'gemini-1.5-flash',
+        };
+      } else if (openaiInt && openaiInt.config?.apiKeyEncrypted) {
+        effectiveOverride = {
+          provider: 'openai',
+          baseUrl: 'https://api.openai.com/v1',
+          apiKey: String(openaiInt.config.apiKeyEncrypted),
+          modelName: 'gpt-4o-mini',
+        };
+      } else if (groqInt && groqInt.config?.apiKeyEncrypted) {
+        effectiveOverride = {
+          provider: 'groq',
+          baseUrl: 'https://api.groq.com/openai/v1',
+          apiKey: String(groqInt.config.apiKeyEncrypted),
+          modelName: 'llama-3.3-70b-versatile',
+        };
+      }
+    } catch {
+      // Fall through to system default
+    }
+  }
+
   while (step < maxSteps && !isPausedForApproval) {
     step++;
     await db.updateRun(run.id, { totalSteps: step });
@@ -84,7 +127,7 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
     let detectedToolCall: { name: string; args: Record<string, unknown> } | null = null;
     let turnContent = '';
 
-    const stream = streamChatCompletion(contextMessages, tools);
+    const stream = streamChatCompletion(contextMessages, tools, effectiveOverride);
 
     for await (const event of stream) {
       if (event.type === 'token' && event.token) {
@@ -118,7 +161,17 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
           agentId,
           ownerUid: userId,
           actionType: detectedToolCall.name,
-          targetService: detectedToolCall.name.includes('telegram') ? 'Telegram' : 'Slack',
+          targetService: detectedToolCall.name.includes('telegram')
+            ? 'Telegram'
+            : detectedToolCall.name.includes('instagram')
+            ? 'Instagram'
+            : detectedToolCall.name.includes('gmail')
+            ? 'Gmail'
+            : detectedToolCall.name.includes('calendar')
+            ? 'Google Calendar'
+            : detectedToolCall.name.includes('slack')
+            ? 'Slack'
+            : 'External Service',
           payload: detectedToolCall.args,
           riskLevel: 'medium',
         });

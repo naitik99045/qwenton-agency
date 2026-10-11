@@ -13,6 +13,12 @@ export interface User {
   activeAgentsCount: number;
   status: UserStatus;
   stripeCustomerId?: string;
+  llmConfig?: {
+    provider: string;
+    baseUrl: string;
+    apiKey: string;
+    model: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

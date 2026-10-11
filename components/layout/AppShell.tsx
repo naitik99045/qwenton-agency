@@ -25,13 +25,29 @@ import {
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
-import { logoutUser, subscribeToAuthState, syncSessionToken } from '@/lib/auth/firebase-client-auth';
+import { logoutUser, subscribeToAuthState, syncSessionToken, getAuthToken } from '@/lib/auth/firebase-client-auth';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{ displayName: string; email: string; role: string; planId: string } | null>(null);
-  const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(null);
+  const [user, setUser] = useState<{ displayName: string; email: string; role: string; planId: string } | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_user');
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
+  const [entitlements, setEntitlements] = useState<{ activeAgents: number; maxAgents: number; isAtLimit: boolean; planName: string } | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('qwenton_cached_entitlements');
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
   const [pendingApprovalsCount, setPendingApprovalsCount] = useState(0);
   const [llmStatus, setLlmStatus] = useState<{ ok: boolean; message: string; provider?: string } | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,19 +57,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  const fetchSessionAndTelemetry = async () => {
+  const fetchSessionAndTelemetry = async (tokenOverride?: string) => {
     try {
+      const token = tokenOverride || (await getAuthToken());
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const [sessionRes, healthRes, approvalsRes] = await Promise.all([
-        fetch('/api/auth/session'),
+        fetch('/api/auth/session', { headers }),
         fetch('/api/health'),
-        fetch('/api/approvals'),
+        fetch('/api/approvals', { headers }),
       ]);
 
       if (sessionRes.ok) {
         const data = await sessionRes.json();
         if (data.user) {
           setUser(data.user);
+          localStorage.setItem('qwenton_cached_user', JSON.stringify(data.user));
+        }
+        if (data.entitlements) {
           setEntitlements(data.entitlements);
+          localStorage.setItem('qwenton_cached_entitlements', JSON.stringify(data.entitlements));
         }
       }
 
@@ -72,11 +96,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    const handleAgentsChanged = () => {
+      fetchSessionAndTelemetry();
+    };
+    window.addEventListener('qwenton-agents-changed', handleAgentsChanged);
+
     const unsubscribe = subscribeToAuthState(async (fbUser) => {
       if (fbUser) {
         const token = await fbUser.getIdToken();
         await syncSessionToken(token, fbUser.uid, fbUser.email || '', fbUser.displayName || undefined);
-        await fetchSessionAndTelemetry();
+        await fetchSessionAndTelemetry(token);
       } else {
         const res = await fetch('/api/auth/session');
         if (res.ok) {
@@ -91,7 +120,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      window.removeEventListener('qwenton-agents-changed', handleAgentsChanged);
+    };
   }, [router]);
 
   const handleLogout = async () => {

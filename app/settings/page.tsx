@@ -5,7 +5,19 @@ import { AppShell } from '@/components/layout/AppShell';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
-import { Settings, Cpu, ShieldCheck, CheckCircle2, AlertTriangle, RefreshCw, Key, Globe, Sparkles } from 'lucide-react';
+import {
+  Settings,
+  Cpu,
+  ShieldCheck,
+  CheckCircle2,
+  AlertTriangle,
+  RefreshCw,
+  Key,
+  Globe,
+  Sparkles,
+  Save,
+} from 'lucide-react';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 const PROVIDER_PRESETS: Record<string, { baseUrl: string; model: string; defaultKey: string }> = {
   lmstudio: {
@@ -46,7 +58,39 @@ export default function SettingsPage() {
   const [apiKey, setApiKey] = useState('lm-studio-local');
   const [model, setModel] = useState('qwen2.5-7b-instruct');
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [testing, setTesting] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    async function loadSavedConfig() {
+      try {
+        const token = await getAuthToken();
+        const headers: Record<string, string> = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+
+        const res = await fetch('/api/settings/model', { headers });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.config) {
+            setProvider(data.config.provider || 'lmstudio');
+            setBaseUrl(data.config.baseUrl || 'http://127.0.0.1:1234/v1');
+            setApiKey(data.config.apiKey || '');
+            setModel(data.config.model || 'qwen2.5-7b-instruct');
+          }
+        }
+      } catch (e) {
+        console.warn('Could not load saved LLM config:', e);
+      }
+    }
+    loadSavedConfig();
+
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) loadSavedConfig();
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleProviderChange = (p: string) => {
     setProvider(p);
@@ -58,20 +102,25 @@ export default function SettingsPage() {
     }
   };
 
-  const handleTestConnection = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleTestConnection = async () => {
     setTesting(true);
     setTestResult(null);
+    setSaveSuccess(null);
 
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/settings/model', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           provider,
           baseUrl,
           apiKey: apiKey || 'none',
           model,
+          save: false,
         }),
       });
       const data = await res.json();
@@ -84,13 +133,52 @@ export default function SettingsPage() {
     }
   };
 
+  const handleSaveSettings = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSaving(true);
+    setTestResult(null);
+    setSaveSuccess(null);
+
+    try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch('/api/settings/model', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          provider,
+          baseUrl,
+          apiKey: apiKey || 'none',
+          model,
+          save: true,
+        }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setSaveSuccess(`LLM settings successfully verified & saved for ${provider.toUpperCase()} (${model})!`);
+      } else {
+        setTestResult(data);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setTestResult({ ok: false, message: `Save error: ${msg}` });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <AppShell>
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-ink">AI Model & Provider Settings</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-ink">AI Model & Provider Settings</h1>
+            <Badge variant="success">Saved to User Profile</Badge>
+          </div>
           <p className="text-xs text-ink-muted mt-1">
-            Connect your workspace directly to Google Gemini, OpenAI, Groq, local LM Studio, or any custom BaseURL.
+            Connect your workspace directly to Google Gemini, OpenAI, Groq, local LM Studio, or any custom BaseURL. Your AI agents will automatically execute using these credentials.
           </p>
         </div>
 
@@ -111,10 +199,10 @@ export default function SettingsPage() {
             <label className="block text-xs font-semibold text-ink mb-2">Select Provider</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
               {[
-                { id: 'lmstudio', label: 'LM Studio' },
                 { id: 'gemini', label: 'Gemini' },
                 { id: 'openai', label: 'OpenAI' },
                 { id: 'groq', label: 'Groq' },
+                { id: 'lmstudio', label: 'LM Studio' },
                 { id: 'ollama', label: 'Ollama' },
                 { id: 'custom', label: 'Custom' },
               ].map((item) => (
@@ -134,7 +222,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <form onSubmit={handleTestConnection} className="space-y-4 pt-2">
+          <form onSubmit={handleSaveSettings} className="space-y-4 pt-2">
             <div>
               <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
                 API Base URL (OpenAI-compatible)
@@ -173,6 +261,13 @@ export default function SettingsPage() {
               </div>
             </div>
 
+            {saveSuccess ? (
+              <div className="p-4 rounded-card text-xs flex items-center gap-2.5 bg-[#E5F4EC] border border-[#C8E8D7] text-success font-semibold">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{saveSuccess}</span>
+              </div>
+            ) : null}
+
             {testResult ? (
               <div
                 className={`p-4 rounded-card text-xs flex items-start gap-2.5 border ${
@@ -193,10 +288,20 @@ export default function SettingsPage() {
               </div>
             ) : null}
 
-            <div className="flex justify-end gap-3 pt-2">
-              <Button type="submit" isLoading={testing} className="gap-2">
+            <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                isLoading={testing}
+                onClick={handleTestConnection}
+                className="gap-2"
+              >
                 <RefreshCw className="w-4 h-4" />
-                <span>Test & Validate Connection</span>
+                <span>Test Connection Only</span>
+              </Button>
+              <Button type="submit" isLoading={saving} className="gap-2">
+                <Save className="w-4 h-4" />
+                <span>Save & Apply Configuration</span>
               </Button>
             </div>
           </form>

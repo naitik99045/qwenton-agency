@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { TOOL_CATALOG } from '@/lib/tools/catalog';
+import { getAuthToken } from '@/lib/auth/firebase-client-auth';
+import { Agent } from '@/lib/db/types';
 import {
   ArrowLeft,
   ArrowRight,
@@ -105,9 +107,13 @@ export default function NewAgentWizard() {
     setLoading(true);
     setError(null);
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/agents', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           name,
           role,
@@ -123,6 +129,22 @@ export default function NewAgentWizard() {
       }
 
       const { agent } = await res.json();
+      // Instantly prime client cache so user sees new agent with 0ms latency
+      try {
+        const cached = localStorage.getItem('qwenton_cached_agents');
+        const list: Agent[] = cached ? JSON.parse(cached) : [];
+        const updated = [agent, ...list.filter((a) => a.id !== agent.id)];
+        localStorage.setItem('qwenton_cached_agents', JSON.stringify(updated));
+
+        const cachedEnt = localStorage.getItem('qwenton_cached_entitlements');
+        if (cachedEnt) {
+          const ent = JSON.parse(cachedEnt);
+          ent.activeAgents = (ent.activeAgents || 0) + 1;
+          localStorage.setItem('qwenton_cached_entitlements', JSON.stringify(ent));
+        }
+      } catch {}
+
+      window.dispatchEvent(new CustomEvent('qwenton-agents-changed'));
       router.push(`/agents/${agent.id}`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);

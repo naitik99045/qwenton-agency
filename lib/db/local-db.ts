@@ -93,14 +93,71 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
   },
 };
 
+const RTDB_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || 'https://qwenton-c7e73-default-rtdb.firebaseio.com';
+
 class LocalDB {
   private data: DatabaseSchema;
   private filePath: string;
+  private lastCloudSync = 0;
 
   constructor() {
     const basePath = process.env.VERCEL ? os.tmpdir() : process.cwd();
     this.filePath = path.join(basePath, '.local_db.json');
     this.data = this.loadInitialData();
+  }
+
+  async syncToCloud(pathSuffix: string, data: unknown, method: 'PUT' | 'DELETE' = 'PUT'): Promise<void> {
+    try {
+      const url = `${RTDB_URL}/qwenton_db/${pathSuffix}.json`;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        ...(method === 'PUT' ? { body: JSON.stringify(data) } : {}),
+      });
+      clearTimeout(timer);
+      if (!res.ok) {
+        console.warn(`[RTDB Sync] ${method} to ${pathSuffix} returned status ${res.status}`);
+      }
+    } catch (e) {
+      console.warn(`[RTDB Sync] Network error syncing ${pathSuffix}:`, e);
+    }
+  }
+
+  async ensureCloudSync(): Promise<void> {
+    const now = Date.now();
+    if (now - this.lastCloudSync < 2500) return;
+    this.lastCloudSync = now;
+
+    try {
+      const url = `${RTDB_URL}/qwenton_db.json`;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3000);
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timer);
+
+      if (res.ok) {
+        const cloudData = await res.json();
+        if (cloudData && typeof cloudData === 'object') {
+          if (cloudData.users) this.data.users = { ...this.data.users, ...cloudData.users };
+          if (cloudData.agents) this.data.agents = { ...this.data.agents, ...cloudData.agents };
+          if (cloudData.conversations) this.data.conversations = { ...this.data.conversations, ...cloudData.conversations };
+          if (cloudData.messages) this.data.messages = { ...this.data.messages, ...cloudData.messages };
+          if (cloudData.integrations) this.data.integrations = { ...this.data.integrations, ...cloudData.integrations };
+          if (cloudData.plans) this.data.plans = { ...this.data.plans, ...cloudData.plans };
+          if (cloudData.orders) this.data.orders = { ...this.data.orders, ...cloudData.orders };
+          if (cloudData.subscriptions) this.data.subscriptions = { ...this.data.subscriptions, ...cloudData.subscriptions };
+          if (cloudData.approvals) this.data.approvals = { ...this.data.approvals, ...cloudData.approvals };
+          if (cloudData.routines) this.data.routines = { ...this.data.routines, ...cloudData.routines };
+          if (cloudData.telegramConnections) this.data.telegramConnections = { ...this.data.telegramConnections, ...cloudData.telegramConnections };
+          this.save();
+        }
+      }
+    } catch (e) {
+      console.warn('[RTDB Sync] Error during ensureCloudSync:', e);
+    }
   }
 
   private loadInitialData(): DatabaseSchema {
@@ -171,8 +228,9 @@ class LocalDB {
     return Object.values(this.data.users).find((u) => u.email.toLowerCase() === email.toLowerCase()) || null;
   }
 
-  saveUser(user: User): User {
+  async saveUser(user: User): Promise<User> {
     this.data.users[user.uid] = user;
+    await this.syncToCloud(`users/${user.uid}`, user);
     this.save();
     return user;
   }
@@ -198,7 +256,7 @@ class LocalDB {
     return this.data.agents[id] || null;
   }
 
-  createAgent(agent: Omit<Agent, 'id' | 'createdAt' | 'updatedAt'>): Agent {
+  async createAgent(agent: Omit<Agent, 'id' | 'createdAt' | 'updatedAt'>): Promise<Agent> {
     const user = this.getUser(agent.ownerUid);
     const planId = (user?.planId || 'normal') as PlanId;
     const plan = this.data.plans[planId] || DEFAULT_PLANS.normal;
@@ -218,15 +276,16 @@ class LocalDB {
     };
 
     this.data.agents[id] = newAgent;
+    await this.syncToCloud(`agents/${id}`, newAgent);
     if (user) {
       user.activeAgentsCount = activeAgents.length + 1;
-      this.saveUser(user);
+      await this.saveUser(user);
     }
     this.save();
     return newAgent;
   }
 
-  updateAgent(id: string, updates: Partial<Agent>): Agent {
+  async updateAgent(id: string, updates: Partial<Agent>): Promise<Agent> {
     const agent = this.getAgent(id);
     if (!agent) throw new Error('Agent not found');
 
@@ -237,12 +296,13 @@ class LocalDB {
     };
 
     this.data.agents[id] = updated;
+    await this.syncToCloud(`agents/${id}`, updated);
 
     if (updates.status && updates.status !== agent.status) {
       const user = this.getUser(agent.ownerUid);
       if (user) {
         user.activeAgentsCount = this.getAgentsByUser(agent.ownerUid).length;
-        this.saveUser(user);
+        await this.saveUser(user);
       }
     }
 
@@ -250,14 +310,15 @@ class LocalDB {
     return updated;
   }
 
-  deleteAgent(id: string): boolean {
+  async deleteAgent(id: string): Promise<boolean> {
     const agent = this.getAgent(id);
     if (!agent) return false;
     delete this.data.agents[id];
+    await this.syncToCloud(`agents/${id}`, null, 'DELETE');
     const user = this.getUser(agent.ownerUid);
     if (user) {
       user.activeAgentsCount = this.getAgentsByUser(agent.ownerUid).length;
-      this.saveUser(user);
+      await this.saveUser(user);
     }
     this.save();
     return true;
@@ -274,7 +335,7 @@ class LocalDB {
     return this.data.conversations[id] || null;
   }
 
-  createConversation(ownerUid: string, agentId: string, title?: string): Conversation {
+  async createConversation(ownerUid: string, agentId: string, title?: string): Promise<Conversation> {
     const id = `conv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const conversation: Conversation = {
       id,
@@ -285,6 +346,7 @@ class LocalDB {
       createdAt: new Date().toISOString(),
     };
     this.data.conversations[id] = conversation;
+    await this.syncToCloud(`conversations/${id}`, conversation);
     this.save();
     return conversation;
   }
@@ -295,7 +357,7 @@ class LocalDB {
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   }
 
-  createMessage(msg: Omit<Message, 'id' | 'createdAt'>): Message {
+  async createMessage(msg: Omit<Message, 'id' | 'createdAt'>): Promise<Message> {
     const id = `msg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const newMsg: Message = {
       ...msg,
@@ -308,8 +370,10 @@ class LocalDB {
     if (conv) {
       conv.lastMessageAt = newMsg.createdAt;
       this.data.conversations[conv.id] = conv;
+      await this.syncToCloud(`conversations/${conv.id}`, conv);
     }
 
+    await this.syncToCloud(`messages/${id}`, newMsg);
     this.save();
     return newMsg;
   }
@@ -359,7 +423,7 @@ class LocalDB {
   }
 
   // Approvals
-  createApproval(approval: Omit<Approval, 'id' | 'createdAt' | 'status'>): Approval {
+  async createApproval(approval: Omit<Approval, 'id' | 'createdAt' | 'status'>): Promise<Approval> {
     const id = `appr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const newAppr: Approval = {
       ...approval,
@@ -368,6 +432,7 @@ class LocalDB {
       createdAt: new Date().toISOString(),
     };
     this.data.approvals[id] = newAppr;
+    await this.syncToCloud(`approvals/${id}`, newAppr);
     this.save();
     return newAppr;
   }
@@ -382,13 +447,14 @@ class LocalDB {
     return this.data.approvals[id] || null;
   }
 
-  updateApproval(id: string, status: 'approved' | 'rejected', decidedBy: string): Approval {
+  async updateApproval(id: string, status: 'approved' | 'rejected', decidedBy: string): Promise<Approval> {
     const appr = this.getApproval(id);
     if (!appr) throw new Error('Approval not found');
     appr.status = status;
     appr.decidedAt = new Date().toISOString();
     appr.decidedBy = decidedBy;
     this.data.approvals[id] = appr;
+    await this.syncToCloud(`approvals/${id}`, appr);
     this.save();
     return appr;
   }
@@ -466,18 +532,20 @@ class LocalDB {
     return Object.values(this.data.integrations || {}).find((i) => i.ownerUid === ownerUid && i.provider === provider) || null;
   }
 
-  saveIntegration(integration: Integration): Integration {
+  async saveIntegration(integration: Integration): Promise<Integration> {
     if (!this.data.integrations) this.data.integrations = {};
     this.data.integrations[integration.id] = integration;
+    await this.syncToCloud(`integrations/${integration.id}`, integration);
     this.save();
     return integration;
   }
 
-  deleteIntegration(ownerUid: string, provider: string) {
+  async deleteIntegration(ownerUid: string, provider: string): Promise<void> {
     if (!this.data.integrations) return;
     const found = Object.values(this.data.integrations).find((i) => i.ownerUid === ownerUid && i.provider === provider);
     if (found) {
       delete this.data.integrations[found.id];
+      await this.syncToCloud(`integrations/${found.id}`, null, 'DELETE');
       this.save();
     }
   }
@@ -526,7 +594,7 @@ class LocalDB {
   }
 
   // Orders (FAM Gateway & EmailJS OTP)
-  createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Order {
+  async createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<Order> {
     const id = `order_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const newOrder: Order = {
       ...order,
@@ -535,6 +603,7 @@ class LocalDB {
       updatedAt: new Date().toISOString(),
     };
     this.data.orders[id] = newOrder;
+    await this.syncToCloud(`orders/${id}`, newOrder);
     this.save();
     return newOrder;
   }
@@ -547,7 +616,7 @@ class LocalDB {
     return Object.values(this.data.orders).find((o) => o.orderReference === reference) || null;
   }
 
-  updateOrder(id: string, updates: Partial<Order>): Order {
+  async updateOrder(id: string, updates: Partial<Order>): Promise<Order> {
     const order = this.getOrder(id);
     if (!order) throw new Error('Order not found');
     const updated = {
@@ -556,6 +625,7 @@ class LocalDB {
       updatedAt: new Date().toISOString(),
     };
     this.data.orders[id] = updated;
+    await this.syncToCloud(`orders/${id}`, updated);
     this.save();
     return updated;
   }
@@ -577,8 +647,9 @@ class LocalDB {
     return Object.values(this.data.subscriptions).find((s) => s.userId === userId) || null;
   }
 
-  saveSubscription(sub: Subscription): Subscription {
+  async saveSubscription(sub: Subscription): Promise<Subscription> {
     this.data.subscriptions[sub.id] = sub;
+    await this.syncToCloud(`subscriptions/${sub.id}`, sub);
     this.save();
     return sub;
   }

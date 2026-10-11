@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { ShieldAlert, Check, X, Clock, AlertTriangle } from 'lucide-react';
 import { Approval } from '@/lib/db/types';
 import { formatDate } from '@/lib/utils';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 export default function ApprovalsPage() {
   const [approvals, setApprovals] = useState<Approval[]>([]);
@@ -14,7 +15,11 @@ export default function ApprovalsPage() {
 
   const fetchApprovals = async () => {
     try {
-      const res = await fetch('/api/approvals');
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch('/api/approvals', { headers });
       if (res.ok) {
         const data = await res.json();
         setApprovals(data.approvals || []);
@@ -28,11 +33,19 @@ export default function ApprovalsPage() {
 
   useEffect(() => {
     fetchApprovals();
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) fetchApprovals();
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleAction = async (id: string, decision: 'approve' | 'reject') => {
     try {
-      const res = await fetch(`/api/approvals/${id}/${decision}`, { method: 'POST' });
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch(`/api/approvals/${id}/${decision}`, { method: 'POST', headers });
       if (res.ok) {
         fetchApprovals();
       }

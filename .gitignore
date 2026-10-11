@@ -6,6 +6,7 @@
 # 1. Dependencies & Package Managers
 # ------------------------------------------------------------------------------
 /node_modules
+node_modules/
 /.pnp
 .pnp.js
 .pnp.*
@@ -16,14 +17,19 @@
 !.yarn/sdks
 !.yarn/versions
 .yarn/install-state.gz
+package-lock.json.bak
 
 # ------------------------------------------------------------------------------
 # 2. Next.js & Build Artifacts
 # ------------------------------------------------------------------------------
 /.next/
+.next/
 /out/
+out/
 /build/
+build/
 /dist/
+dist/
 *.tsbuildinfo
 next-env.d.ts.bak
 
@@ -40,11 +46,12 @@ next-env.d.ts.bak
 .env.production
 .env.production.local
 *.env
+*.env.*
 
 # Whitelist safe documentation template
 !.env.example
 
-# Private Keys & Service Account Credentials
+# Private Keys, Certificates & Service Account Credentials
 *.pem
 *.key
 *.cert
@@ -57,10 +64,11 @@ next-env.d.ts.bak
 *credentials*.json
 
 # ------------------------------------------------------------------------------
-# 4. Sensitive Local Notes, Prompts & Credentials Files
+# 4. Sensitive Local Notes, Prompts, Credentials & Drafts
 # ------------------------------------------------------------------------------
 vercel_variables.txt
 fiirebase.txt
+firebase.txt
 email.txt
 prompt.txt
 prd.txt
@@ -68,9 +76,12 @@ design.txt
 secret*.txt
 token*.txt
 credentials*.txt
+password*.txt
+api_key*.txt
+*.txt.bak
 
 # ------------------------------------------------------------------------------
-# 5. Local Database, State & Temporary Storage
+# 5. Local Database, State & Ephemeral Storage
 # ------------------------------------------------------------------------------
 .local_db.json
 *.local_db.json
@@ -88,13 +99,19 @@ temp/
 .agent/
 .agent
 .cortex/
+.gemini/
+.claude/
+brain/
 
 # ------------------------------------------------------------------------------
-# 7. Vercel, Firebase & Deployment Tooling
+# 7. Vercel, Firebase & Cloud Deployment Tooling
 # ------------------------------------------------------------------------------
+.vercel/
 .vercel
+.turbo/
 .turbo
 .firebase/
+.firebase
 firebase-export*
 
 # ------------------------------------------------------------------------------
@@ -114,7 +131,7 @@ firestore-debug.log*
 ui-debug.log*
 
 # ------------------------------------------------------------------------------
-# 9. OS Generated Files & Metadata
+# 9. Operating System & Filesystem Artifacts
 # ------------------------------------------------------------------------------
 .DS_Store
 .DS_Store?
@@ -130,7 +147,7 @@ Thumbs.db:encryptable
 Desktop.ini
 
 # ------------------------------------------------------------------------------
-# 10. IDE & Editor Configuration
+# 10. IDE & Editor Artifacts
 # ------------------------------------------------------------------------------
 .vscode/*
 !.vscode/settings.json

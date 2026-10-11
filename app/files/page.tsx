@@ -9,6 +9,7 @@ import { Dialog } from '@/components/ui/Dialog';
 import { FolderLock, Upload, Trash2, FileText, Search, Plus, CheckCircle2 } from 'lucide-react';
 import { FileRecord } from '@/lib/db/types';
 import { formatBytes, formatDate } from '@/lib/utils';
+import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 export default function KnowledgeFilesPage() {
   const [files, setFiles] = useState<FileRecord[]>([]);
@@ -20,7 +21,11 @@ export default function KnowledgeFilesPage() {
 
   const fetchFiles = async () => {
     try {
-      const res = await fetch('/api/files');
+      const token = await getAuthToken();
+      const headers: Record<string, string> = {};
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch('/api/files', { headers });
       if (res.ok) {
         const data = await res.json();
         setFiles(data.files || []);
@@ -34,6 +39,10 @@ export default function KnowledgeFilesPage() {
 
   useEffect(() => {
     fetchFiles();
+    const unsubscribe = subscribeToAuthState((fbUser) => {
+      if (fbUser) fetchFiles();
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleUpload = async (e: React.FormEvent) => {
@@ -42,9 +51,13 @@ export default function KnowledgeFilesPage() {
     setUploading(true);
 
     try {
+      const token = await getAuthToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/files', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ fileName, content }),
       });
 
