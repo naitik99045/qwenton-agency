@@ -48,6 +48,79 @@ interface IntegrationItem {
   requiresApproval: boolean;
 }
 
+const PROVIDER_DOCS: Record<string, { label: string; url: string; hint: string }> = {
+  google_maps: {
+    label: 'Open Google Cloud Console (Maps & Places API)',
+    url: 'https://console.cloud.google.com/google/maps-apis/overview',
+    hint: 'Enable "Places API" and "Maps JavaScript API" in Google Cloud, create an API Key, and paste it here.',
+  },
+  google_drive: {
+    label: 'Open Google Cloud Console (Drive API)',
+    url: 'https://console.cloud.google.com/apis/library/drive.googleapis.com',
+    hint: 'Enable Google Drive API in your Google Cloud project and generate an API key or service credential.',
+  },
+  google_calendar: {
+    label: 'Open Google Cloud Console (Calendar API)',
+    url: 'https://console.cloud.google.com/apis/library/calendar-json.googleapis.com',
+    hint: 'Enable Google Calendar API in Google Cloud Console to sync deadlines and client meetings.',
+  },
+  gmail: {
+    label: 'Generate Google Account App Password',
+    url: 'https://myaccount.google.com/apppasswords',
+    hint: 'Turn on 2-Step Verification on your Google Account, generate a 16-character "App Password", and paste it here.',
+  },
+  instagram: {
+    label: 'Meta for Developers Portal',
+    url: 'https://developers.facebook.com/apps/',
+    hint: 'Requires a Meta App with instagram_basic and instagram_content_publish permissions.',
+  },
+  facebook: {
+    label: 'Meta for Developers (Page Access Token)',
+    url: 'https://developers.facebook.com/apps/',
+    hint: 'Generate a Page Access Token with pages_manage_posts and pages_read_engagement.',
+  },
+  telegram: {
+    label: 'Open @BotFather in Telegram',
+    url: 'https://t.me/BotFather',
+    hint: 'Send /newbot to @BotFather in Telegram, name your coworker bot, and paste the HTTP API Token.',
+  },
+  fal_ai: {
+    label: 'Get fal.ai API Key',
+    url: 'https://fal.ai/dashboard/keys',
+    hint: 'Generate an API key on the fal.ai dashboard for FLUX image synthesis.',
+  },
+  notion: {
+    label: 'Notion Developer Integrations',
+    url: 'https://www.notion.so/my-integrations',
+    hint: 'Create an internal integration in Notion and paste the "Internal Integration Secret".',
+  },
+  slack: {
+    label: 'Slack API Apps Dashboard',
+    url: 'https://api.slack.com/apps',
+    hint: 'Create a Slack App, install to workspace, and copy the "Bot User OAuth Token" (starts with xoxb-).',
+  },
+  groq: {
+    label: 'Groq Cloud Console',
+    url: 'https://console.groq.com/keys',
+    hint: 'Generate a free API key on Groq Console for ultra-fast LPU inference.',
+  },
+  openai: {
+    label: 'OpenAI API Keys',
+    url: 'https://platform.openai.com/api-keys',
+    hint: 'Generate an API key in the OpenAI developer portal.',
+  },
+  gemini: {
+    label: 'Google AI Studio',
+    url: 'https://aistudio.google.com/app/apikey',
+    hint: 'Create a Google Gemini API key in Google AI Studio.',
+  },
+  anthropic: {
+    label: 'Anthropic Console',
+    url: 'https://console.anthropic.com/settings/keys',
+    hint: 'Create an API key in the Anthropic console.',
+  },
+};
+
 export default function IntegrationsPage() {
   const [activeTab, setActiveTab] = useState<'marketing' | 'design' | 'productivity' | 'ai_vault'>('marketing');
   const [integrations, setIntegrations] = useState<IntegrationItem[]>([]);
@@ -448,10 +521,19 @@ export default function IntegrationsPage() {
                     onChange={(e) => setApiKeyInput(e.target.value)}
                     required
                   />
-                  {activeModalItem.provider === 'instagram' && (
-                    <p className="text-[11px] text-ink-muted mt-1 ml-1">
-                      Tip: Obtain this from Meta for Developers with <code>instagram_basic</code> and <code>instagram_content_publish</code> permissions.
-                    </p>
+                  {PROVIDER_DOCS[activeModalItem.provider] && (
+                    <div className="mt-2 p-2.5 rounded-control bg-[#F8F6F1] border border-border/80 text-[11px] space-y-1">
+                      <p className="text-ink-muted leading-relaxed">{PROVIDER_DOCS[activeModalItem.provider].hint}</p>
+                      <a
+                        href={PROVIDER_DOCS[activeModalItem.provider].url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-bold text-primary hover:text-primary-deep inline-flex items-center gap-1 hover:underline"
+                      >
+                        <span>{PROVIDER_DOCS[activeModalItem.provider].label}</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                   )}
                 </div>
 

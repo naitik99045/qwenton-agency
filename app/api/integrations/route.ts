@@ -192,7 +192,7 @@ export async function GET(req: NextRequest) {
       {
         category: 'ai_vault',
         provider: 'groq',
-        displayName: 'Groq Ultra-Fast Llama 3.3',
+        displayName: 'Groq Ultra-Fast (GPT-OSS 120B)',
         description: 'Sub-second real-time streaming inference for rapid agent response loops.',
         status: intMap['groq']?.status || 'not_connected',
         maskedKey: intMap['groq']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['groq'].config.apiKeyEncrypted).slice(-4)}` : undefined,
@@ -279,7 +279,7 @@ export async function POST(req: NextRequest) {
           provider: 'groq',
           baseUrl: 'https://api.groq.com/openai/v1',
           apiKey,
-          model: 'llama-3.3-70b-versatile',
+          model: 'openai/gpt-oss-120b',
         };
         await db.saveUser(freshUser);
       }

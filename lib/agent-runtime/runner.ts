@@ -55,7 +55,19 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
   const contextMessages: ChatMessage[] = [
     {
       role: 'system',
-      content: `${agent.systemPrompt}\n\nYou are operating as "${agent.name}" (${agent.role}). When asked to calculate, search files, or research, call the appropriate tools. If asked to perform an external communication action (like sending a Telegram or Slack message), call the appropriate tool which will request human approval before sending.`,
+      content: `${agent.systemPrompt}
+
+You are operating as "${agent.name}" (${agent.role}). When asked to calculate, search files, or research, call the appropriate tools. If asked to perform an external communication action (like sending a Telegram or Slack message), call the appropriate tool which will request human approval before sending.
+
+CRITICAL INSTRUCTIONS ON TOOLS, API KEYS & LINKS:
+1. MISSING API KEYS: If a tool output contains "apiKeyStatus": "NOT_CONFIGURED" or indicates that credentials for a service (Google Maps, Google Drive, Instagram, Gmail, Notion) are not added yet:
+   - You MUST explicitly inform the user that their API key/credentials are not configured yet in the web panel.
+   - You MUST ask the user to add them and provide the direct clickable link: [Connect in Integrations Vault](/integrations).
+   - If the tool provides a direct web link (e.g. to open Google Maps or Google Drive directly), you MUST provide that clickable link so the user can access it immediately on the web.
+2. CLICKABLE LINKS: ALWAYS format direct clickable markdown links [Link Text](URL) for every discovered business, map search, and file so the user can open them with 1 click:
+   - For each business/shop on Google Maps: [Open on Google Maps](https://www.google.com/maps/search/?api=1&query=...)
+   - For Google Drive files: [Open in Google Drive](https://drive.google.com/drive/...)
+   - For Integrations: [Connect in Integrations](/integrations)`,
     },
   ];
 
@@ -112,7 +124,7 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
           provider: 'groq',
           baseUrl: 'https://api.groq.com/openai/v1',
           apiKey: String(groqInt.config.apiKeyEncrypted),
-          modelName: 'llama-3.3-70b-versatile',
+          modelName: 'openai/gpt-oss-120b',
         };
       }
     } catch {
@@ -120,11 +132,18 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
     }
   }
 
+  // Ensure Groq always uses active production model
+  if (effectiveOverride && (effectiveOverride.provider === 'groq' || effectiveOverride.baseUrl?.includes('groq.com'))) {
+    if (!effectiveOverride.modelName || effectiveOverride.modelName.startsWith('llama')) {
+      effectiveOverride.modelName = 'openai/gpt-oss-120b';
+    }
+  }
+
   while (step < maxSteps && !isPausedForApproval) {
     step++;
     await db.updateRun(run.id, { totalSteps: step });
 
-    let detectedToolCall: { name: string; args: Record<string, unknown> } | null = null;
+    let detectedToolCall: { id?: string; name: string; args: Record<string, unknown> } | null = null;
     let turnContent = '';
 
     const stream = streamChatCompletion(contextMessages, tools, effectiveOverride);
@@ -211,14 +230,28 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
         });
 
         // Add tool output back into context for next turn
+        const callId = detectedToolCall.id || `call_${Date.now()}`;
         contextMessages.push({
           role: 'assistant',
-          content: turnContent || `Invoking tool ${detectedToolCall.name}`,
+          content: turnContent || null,
+          tool_calls: [
+            {
+              id: callId,
+              type: 'function',
+              function: {
+                name: detectedToolCall.name,
+                arguments: JSON.stringify(detectedToolCall.args),
+              },
+            },
+          ],
         });
         contextMessages.push({
           role: 'tool',
           name: detectedToolCall.name,
-          content: JSON.stringify(toolResult.data || toolResult.error),
+          tool_call_id: callId,
+          content: typeof (toolResult.data || toolResult.error) === 'string'
+            ? (toolResult.data || toolResult.error) as string
+            : JSON.stringify(toolResult.data || toolResult.error),
         });
       }
     } else {

@@ -21,7 +21,9 @@ import {
   Activity,
   Layers,
   ChevronRight,
+  Key,
 } from 'lucide-react';
+import { FormattedMessage } from '@/components/ui/FormattedMessage';
 import { Conversation, Agent, Message, Approval, RunEvent } from '@/lib/db/types';
 import { formatDate } from '@/lib/utils';
 import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
@@ -451,6 +453,13 @@ export default function ConversationsPage() {
               </div>
 
               <div className="flex items-center gap-2">
+                <Link href="/integrations">
+                  <Button size="sm" variant="outline" className="gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/5 shadow-xs py-1 px-2.5">
+                    <Key className="w-3.5 h-3.5 text-primary" />
+                    <span className="hidden sm:inline">Connect Tools & Keys</span>
+                    <span className="sm:hidden">Keys</span>
+                  </Button>
+                </Link>
                 <Badge variant={currentAgent.status === 'active' ? 'success' : 'amber'}>
                   ● {currentAgent.status}
                 </Badge>
@@ -471,6 +480,12 @@ export default function ConversationsPage() {
                   <p className="text-ink-muted mt-1 max-w-sm mx-auto">
                     Type your instruction below or select a suggested task.
                   </p>
+                  <div className="mt-3">
+                    <Link href="/integrations" className="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline">
+                      <Key className="w-3 h-3" />
+                      <span>Manage Connected Tools (Google Maps, Drive, Instagram)</span>
+                    </Link>
+                  </div>
                 </div>
               ) : null}
 
@@ -492,7 +507,7 @@ export default function ConversationsPage() {
                         : 'bg-white text-ink border border-border shadow-xs'
                     }`}
                   >
-                    <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                    <FormattedMessage content={msg.content} />
                   </div>
                 </div>
               ))}
@@ -502,7 +517,7 @@ export default function ConversationsPage() {
                 <div className="flex gap-3 max-w-2xl">
                   <Avatar name={currentAgent.name} size="sm" variant="agent" className="shrink-0 mt-0.5" />
                   <div className="p-3.5 sm:p-4 rounded-card text-xs sm:text-sm leading-relaxed bg-white text-ink border border-border shadow-xs animate-pulse max-w-[90%] sm:max-w-none">
-                    <div className="whitespace-pre-wrap break-words">{streamingContent}</div>
+                    <FormattedMessage content={streamingContent} />
                   </div>
                 </div>
               ) : null}

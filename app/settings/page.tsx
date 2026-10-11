@@ -20,10 +20,10 @@ import {
 import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
 const PROVIDER_PRESETS: Record<string, { baseUrl: string; model: string; defaultKey: string }> = {
-  lmstudio: {
-    baseUrl: 'http://127.0.0.1:1234/v1',
-    model: 'qwen2.5-7b-instruct',
-    defaultKey: 'lm-studio-local',
+  groq: {
+    baseUrl: 'https://api.groq.com/openai/v1',
+    model: 'openai/gpt-oss-120b',
+    defaultKey: '',
   },
   gemini: {
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai/',
@@ -35,16 +35,6 @@ const PROVIDER_PRESETS: Record<string, { baseUrl: string; model: string; default
     model: 'gpt-4o-mini',
     defaultKey: '',
   },
-  groq: {
-    baseUrl: 'https://api.groq.com/openai/v1',
-    model: 'llama-3.3-70b-versatile',
-    defaultKey: '',
-  },
-  ollama: {
-    baseUrl: 'http://localhost:11434/v1',
-    model: 'llama3',
-    defaultKey: 'ollama',
-  },
   custom: {
     baseUrl: 'https://api.together.xyz/v1',
     model: 'meta-llama/Llama-3-70b-chat-hf',
@@ -53,10 +43,10 @@ const PROVIDER_PRESETS: Record<string, { baseUrl: string; model: string; default
 };
 
 export default function SettingsPage() {
-  const [provider, setProvider] = useState<string>('lmstudio');
-  const [baseUrl, setBaseUrl] = useState('http://127.0.0.1:1234/v1');
-  const [apiKey, setApiKey] = useState('lm-studio-local');
-  const [model, setModel] = useState('qwen2.5-7b-instruct');
+  const [provider, setProvider] = useState<string>('groq');
+  const [baseUrl, setBaseUrl] = useState('https://api.groq.com/openai/v1');
+  const [apiKey, setApiKey] = useState('');
+  const [model, setModel] = useState('openai/gpt-oss-120b');
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [testing, setTesting] = useState(false);
@@ -73,10 +63,10 @@ export default function SettingsPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.config) {
-            setProvider(data.config.provider || 'lmstudio');
-            setBaseUrl(data.config.baseUrl || 'http://127.0.0.1:1234/v1');
+            setProvider(data.config.provider || 'groq');
+            setBaseUrl(data.config.baseUrl || 'https://api.groq.com/openai/v1');
             setApiKey(data.config.apiKey || '');
-            setModel(data.config.model || 'qwen2.5-7b-instruct');
+            setModel(data.config.model || 'openai/gpt-oss-120b');
           }
         }
       } catch (e) {
@@ -178,7 +168,7 @@ export default function SettingsPage() {
             <Badge variant="success">Saved to User Profile</Badge>
           </div>
           <p className="text-xs text-ink-muted mt-1">
-            Connect your workspace directly to Google Gemini, OpenAI, Groq, local LM Studio, or any custom BaseURL. Your AI agents will automatically execute using these credentials.
+            Connect your workspace directly to Groq, Google Gemini, OpenAI, or any custom cloud API endpoint. Your AI agents will automatically execute using these credentials.
           </p>
         </div>
 
@@ -196,15 +186,13 @@ export default function SettingsPage() {
 
           {/* Provider Preset Selector Pills */}
           <div>
-            <label className="block text-xs font-semibold text-ink mb-2">Select Provider</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+            <label className="block text-xs font-semibold text-ink mb-2">Select Cloud Provider</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
-                { id: 'gemini', label: 'Gemini' },
-                { id: 'openai', label: 'OpenAI' },
-                { id: 'groq', label: 'Groq' },
-                { id: 'lmstudio', label: 'LM Studio' },
-                { id: 'ollama', label: 'Ollama' },
-                { id: 'custom', label: 'Custom' },
+                { id: 'groq', label: 'Groq (Ultra-Fast Cloud)' },
+                { id: 'gemini', label: 'Google Gemini' },
+                { id: 'openai', label: 'OpenAI GPT' },
+                { id: 'custom', label: 'Custom Cloud API' },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -244,7 +232,7 @@ export default function SettingsPage() {
                   type="password"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="Enter API key or leave for local..."
+                  placeholder="Enter API key..."
                 />
               </div>
 

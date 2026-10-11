@@ -55,7 +55,7 @@ export default function PricingPage() {
       maxAgents: '2 Agents for Free Work',
       features: [
         '2 AI Agents for Free Work',
-        'Local LM Studio & Ollama Support',
+        'Cloud Groq & Gemini AI Models',
         'Safe Web Research Tool',
         'Human Approval Inbox',
         '1 Connected Telegram Bot',

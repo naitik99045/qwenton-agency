@@ -52,7 +52,7 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
     maxRunsPerMonth: 50,
     maxFileStorageBytes: 25 * 1024 * 1024, // 25MB
     maxTelegramBots: 1,
-    features: ['2 AI Agents for Free Work', 'Local LM Studio & Ollama', 'Safe Web Research', 'Human Approvals'],
+    features: ['2 AI Agents for Free Work', 'Cloud Groq & Gemini AI Models', 'Safe Web Research', 'Human Approvals'],
     active: true,
   },
   lite: {
@@ -140,8 +140,17 @@ class LocalDB {
 
       if (res.ok) {
         const cloudData = await res.json();
-        if (cloudData && typeof cloudData === 'object') {
-          if (cloudData.users) this.data.users = { ...this.data.users, ...cloudData.users };
+          if (cloudData.users) {
+            for (const uid in cloudData.users) {
+              const u = cloudData.users[uid];
+              if (u?.llmConfig && (u.llmConfig.provider === 'groq' || u.llmConfig.baseUrl?.includes('groq.com'))) {
+                if (!u.llmConfig.model || u.llmConfig.model.startsWith('llama')) {
+                  u.llmConfig.model = 'openai/gpt-oss-120b';
+                }
+              }
+            }
+            this.data.users = { ...this.data.users, ...cloudData.users };
+          }
           if (cloudData.agents) this.data.agents = { ...this.data.agents, ...cloudData.agents };
           if (cloudData.conversations) this.data.conversations = { ...this.data.conversations, ...cloudData.conversations };
           if (cloudData.messages) this.data.messages = { ...this.data.messages, ...cloudData.messages };
@@ -219,9 +228,14 @@ class LocalDB {
     }
   }
 
-  // Users
   getUser(uid: string): User | null {
-    return this.data.users[uid] || null;
+    const user = this.data.users[uid] || null;
+    if (user?.llmConfig && (user.llmConfig.provider === 'groq' || user.llmConfig.baseUrl?.includes('groq.com'))) {
+      if (!user.llmConfig.model || user.llmConfig.model.startsWith('llama')) {
+        user.llmConfig.model = 'openai/gpt-oss-120b';
+      }
+    }
+    return user;
   }
 
   getUserByEmail(email: string): User | null {

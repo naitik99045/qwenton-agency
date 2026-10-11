@@ -2,9 +2,17 @@ import { repairJsonString, safeJsonParse } from './json-repair';
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant' | 'tool';
-  content: string;
+  content: string | null;
   name?: string;
   tool_call_id?: string;
+  tool_calls?: Array<{
+    id: string;
+    type: 'function';
+    function: {
+      name: string;
+      arguments: string;
+    };
+  }>;
 }
 
 export interface ToolDefinition {
@@ -17,7 +25,7 @@ export interface ToolDefinition {
 }
 
 export interface LLMConfig {
-  provider: 'openai' | 'gemini' | 'groq' | 'lmstudio' | 'ollama' | 'custom';
+  provider: 'openai' | 'gemini' | 'groq' | 'custom';
   baseUrl: string;
   apiKey: string;
   model: string;
@@ -34,20 +42,26 @@ export interface ModelOverride {
 export function getLLMConfig(override?: ModelOverride): LLMConfig {
   // 1. If explicit agent override is provided
   if (override?.baseUrl && override?.modelName) {
+    let model = override.modelName;
+    const isGroq = override.provider === 'groq' || override.baseUrl.includes('groq.com');
+    const provider = isGroq ? 'groq' : ((override.provider as LLMConfig['provider']) || 'custom');
+    if (isGroq && (model.startsWith('llama') || !model)) {
+      model = 'openai/gpt-oss-120b';
+    }
     return {
-      provider: (override.provider as LLMConfig['provider']) || 'custom',
-      baseUrl: override.baseUrl,
+      provider,
+      baseUrl: override.baseUrl.replace(/\/+$/, ''),
       apiKey: override.apiKey || 'custom-key',
-      model: override.modelName,
+      model,
       timeoutSeconds: parseInt(process.env.MODEL_TIMEOUT_SECONDS || '120', 10),
     };
   }
 
   // 2. Global Provider from environment
-  const provider = (process.env.MODEL_PROVIDER || 'lmstudio').toLowerCase() as LLMConfig['provider'];
-  let baseUrl = process.env.MODEL_BASE_URL || 'http://127.0.0.1:1234/v1';
-  let apiKey = process.env.MODEL_API_KEY || 'lm-studio-local';
-  let model = process.env.MODEL_NAME || 'qwen2.5-7b-instruct';
+  const provider = (process.env.MODEL_PROVIDER || 'groq').toLowerCase() as LLMConfig['provider'];
+  let baseUrl = process.env.MODEL_BASE_URL || 'https://api.groq.com/openai/v1';
+  let apiKey = process.env.MODEL_API_KEY || '';
+  let model = process.env.MODEL_NAME || 'openai/gpt-oss-120b';
 
   switch (provider) {
     case 'gemini':
@@ -62,35 +76,23 @@ export function getLLMConfig(override?: ModelOverride): LLMConfig {
       model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
       break;
 
-    case 'groq':
-      baseUrl = process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1';
-      apiKey = process.env.GROQ_API_KEY || apiKey;
-      model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
-      break;
-
-    case 'ollama':
-      baseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434/v1';
-      apiKey = 'ollama';
-      model = process.env.OLLAMA_MODEL || 'llama3';
-      break;
-
     case 'custom':
       baseUrl = process.env.CUSTOM_MODEL_BASE_URL || baseUrl;
       apiKey = process.env.CUSTOM_MODEL_API_KEY || apiKey;
       model = process.env.CUSTOM_MODEL_NAME || model;
       break;
 
-    case 'lmstudio':
+    case 'groq':
     default:
-      baseUrl = process.env.MODEL_BASE_URL || 'http://127.0.0.1:1234/v1';
-      apiKey = process.env.MODEL_API_KEY || 'lm-studio-local';
-      model = process.env.MODEL_NAME || 'qwen2.5-7b-instruct';
+      baseUrl = process.env.GROQ_BASE_URL || baseUrl;
+      apiKey = process.env.GROQ_API_KEY || apiKey;
+      model = process.env.GROQ_MODEL || model;
       break;
   }
 
   return {
     provider,
-    baseUrl,
+    baseUrl: baseUrl.replace(/\/+$/, ''),
     apiKey,
     model,
     timeoutSeconds: parseInt(process.env.MODEL_TIMEOUT_SECONDS || '120', 10),
@@ -146,6 +148,7 @@ export interface StreamEvent {
   type: 'token' | 'tool_call' | 'error' | 'done';
   token?: string;
   toolCall?: {
+    id?: string;
     name: string;
     args: Record<string, unknown>;
   };
@@ -181,20 +184,54 @@ export async function* streamChatCompletion(
       headers.Authorization = `Bearer ${config.apiKey}`;
     }
 
-    const res = await fetch(`${config.baseUrl}/chat/completions`, {
+    let res = await fetch(`${config.baseUrl}/chat/completions`, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload),
       signal: controller.signal,
     });
+
+    // Auto-recovery 1: If Groq returns 404 (model decommissioned), automatically retry with active models
+    if (res.status === 404 && (config.provider === 'groq' || config.baseUrl.includes('groq.com'))) {
+      const fallback = payload.model === 'openai/gpt-oss-120b' ? 'openai/gpt-oss-20b' : 'openai/gpt-oss-120b';
+      console.warn(`[LLM] Groq 404 for model ${payload.model}. Automatically falling back to ${fallback}...`);
+      payload.model = fallback;
+      res = await fetch(`${config.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+    }
+
+    // Auto-recovery 2: If model server returns 400 (Bad Request with tools schema), retry without tools to guarantee user gets a valid answer
+    if (res.status === 400 && payload.tools) {
+      console.warn(`[LLM] Model endpoint returned 400 with tools schema. Retrying query without tools...`);
+      delete payload.tools;
+      delete payload.tool_choice;
+      res = await fetch(`${config.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+    }
+
     clearTimeout(timeout);
 
     if (!res.ok) {
+      let detailedMsg = '';
+      try {
+        const errText = await res.text();
+        const parsed = JSON.parse(errText);
+        detailedMsg = parsed.error?.message || parsed.message || errText;
+      } catch {}
+
       let guidance = '';
       if (res.status === 401 || res.status === 403) {
-        guidance = `*(Notice: Model endpoint authentication failed [Status ${res.status}]. Please verify your API key in "AI Settings" or "Integrations")*\n\n`;
+        guidance = `*(Notice: Model endpoint authentication failed [Status ${res.status}]. Please check your API key in "AI Settings" or "Integrations")*\n\n`;
       } else {
-        guidance = `*(Notice: Model endpoint at ${config.baseUrl} returned ${res.status}. Falling back to local coworker analysis)*\n\n`;
+        guidance = `*(Notice: Model endpoint at ${config.baseUrl} returned ${res.status}${detailedMsg ? `: ${detailedMsg}` : ''}. Falling back to local coworker analysis)*\n\n`;
       }
       yield {
         type: 'token',
@@ -210,7 +247,7 @@ export async function* streamChatCompletion(
     }
 
     const decoder = new TextDecoder();
-    let accumulatedToolCall: { name: string; arguments: string } | null = null;
+    let accumulatedToolCall: { id: string; name: string; arguments: string } | null = null;
     let buffer = '';
 
     while (true) {
@@ -230,6 +267,7 @@ export async function* streamChatCompletion(
             yield {
               type: 'tool_call',
               toolCall: {
+                id: accumulatedToolCall.id,
                 name: accumulatedToolCall.name,
                 args: parsedArgs,
               },
@@ -251,7 +289,14 @@ export async function* streamChatCompletion(
             if (delta?.tool_calls && delta.tool_calls.length > 0) {
               const tc = delta.tool_calls[0];
               if (!accumulatedToolCall) {
-                accumulatedToolCall = { name: tc.function?.name || '', arguments: '' };
+                accumulatedToolCall = {
+                  id: tc.id || `call_${Date.now()}`,
+                  name: tc.function?.name || '',
+                  arguments: '',
+                };
+              }
+              if (tc.id) {
+                accumulatedToolCall.id = tc.id;
               }
               if (tc.function?.name) {
                 accumulatedToolCall.name = tc.function.name;
@@ -272,6 +317,7 @@ export async function* streamChatCompletion(
       yield {
         type: 'tool_call',
         toolCall: {
+          id: accumulatedToolCall.id,
           name: accumulatedToolCall.name,
           args: parsedArgs,
         },

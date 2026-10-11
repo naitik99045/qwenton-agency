@@ -5,7 +5,7 @@ import { getDB } from '@/lib/db/adapter';
 import { z } from 'zod';
 
 const modelSchema = z.object({
-  provider: z.enum(['openai', 'gemini', 'groq', 'lmstudio', 'ollama', 'custom']),
+  provider: z.enum(['openai', 'gemini', 'groq', 'custom']),
   baseUrl: z.string().url(),
   apiKey: z.string(),
   model: z.string(),
@@ -17,7 +17,12 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     const db = getDB();
     const freshUser = await db.getUser(user.uid);
-    const llmConfig = freshUser?.llmConfig || null;
+    let llmConfig = freshUser?.llmConfig || null;
+    if (llmConfig && (llmConfig.provider === 'groq' || llmConfig.baseUrl?.includes('groq.com'))) {
+      if (!llmConfig.model || llmConfig.model.startsWith('llama')) {
+        llmConfig.model = 'openai/gpt-oss-120b';
+      }
+    }
 
     return NextResponse.json({
       success: true,
@@ -33,8 +38,14 @@ export async function POST(req: NextRequest) {
   try {
     const user = await requireUser(req);
     const body = await req.json();
-    const { provider, baseUrl, apiKey, model, save } = modelSchema.parse(body);
+    let { provider, baseUrl, apiKey, model, save } = modelSchema.parse(body);
     const db = getDB();
+
+    if (provider === 'groq' || baseUrl.includes('groq.com')) {
+      if (!model || model.startsWith('llama')) {
+        model = 'openai/gpt-oss-120b';
+      }
+    }
 
     const result = await testLLMConnection({
       provider,

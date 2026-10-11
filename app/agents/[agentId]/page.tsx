@@ -26,7 +26,9 @@ import {
   SlidersHorizontal,
   Activity,
   Layers,
+  Key,
 } from 'lucide-react';
+import { FormattedMessage } from '@/components/ui/FormattedMessage';
 import { Agent, Conversation, Message, Approval, RunEvent } from '@/lib/db/types';
 import { getAuthToken, subscribeToAuthState } from '@/lib/auth/firebase-client-auth';
 
@@ -376,6 +378,12 @@ export default function AgentWorkspacePage() {
                   </span>
                 ))}
               </div>
+              <div className="mt-2.5">
+                <Link href="/integrations" className="text-[11px] font-semibold text-primary hover:underline flex items-center gap-1.5 p-2 rounded-control bg-primary/5 border border-primary/20">
+                  <Key className="w-3.5 h-3.5 shrink-0" />
+                  <span>Configure API Keys & Vault →</span>
+                </Link>
+              </div>
             </div>
 
             <div className="bg-[#F8F6F1] p-3 rounded-control border border-border/80">
@@ -411,6 +419,14 @@ export default function AgentWorkspacePage() {
             </div>
 
             <div className="flex items-center gap-2">
+              <Link href="/integrations">
+                <Button size="sm" variant="outline" className="gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/5 shadow-xs py-1 px-2.5">
+                  <Key className="w-3.5 h-3.5 text-primary" />
+                  <span className="hidden sm:inline">Connect Tools & Keys</span>
+                  <span className="sm:hidden">Keys</span>
+                </Button>
+              </Link>
+
               <Badge variant="success" className="text-[10px] hidden sm:inline-flex">
                 ● Live Streaming
               </Badge>
@@ -435,6 +451,12 @@ export default function AgentWorkspacePage() {
                 <p className="text-[11px] text-ink-muted mt-1 max-w-sm mx-auto">
                   Send an instruction or tap one of the quick suggestions below to start your run.
                 </p>
+                <div className="mt-3">
+                  <Link href="/integrations" className="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline">
+                    <Key className="w-3 h-3" />
+                    <span>Manage Connected Tools (Google Maps, Drive, Instagram)</span>
+                  </Link>
+                </div>
               </div>
             )}
 
@@ -456,7 +478,7 @@ export default function AgentWorkspacePage() {
                       : 'bg-[#F8F6F1] text-ink border border-border shadow-xs'
                   }`}
                 >
-                  <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                  <FormattedMessage content={msg.content} />
                 </div>
               </div>
             ))}
@@ -466,7 +488,7 @@ export default function AgentWorkspacePage() {
               <div className="flex gap-2.5 sm:gap-3 max-w-2xl">
                 <Avatar name={agent.name} size="sm" variant="agent" className="shrink-0 mt-0.5" />
                 <div className="p-3 sm:p-4 rounded-card text-xs sm:text-sm leading-relaxed bg-[#F8F6F1] text-ink border border-border shadow-xs animate-pulse max-w-[88%] sm:max-w-none">
-                  <div className="whitespace-pre-wrap break-words">{streamingContent}</div>
+                  <FormattedMessage content={streamingContent} />
                 </div>
               </div>
             ) : null}

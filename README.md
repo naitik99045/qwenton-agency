@@ -8,16 +8,16 @@
 
 - **⚡ Zero-Lag Local First:** Starts instantly with `npm run dev`. Features an automatic local database and session fallback so you can develop and test without configuring external cloud services.
 - **🛡️ Hard 3-Agent Limit:** Atomic backend entitlement transactions prevent any user from exceeding 3 active agents across all API endpoints.
-- **🤖 Dual-Mode LLM Runtime:** Connects to local LM Studio (`http://127.0.0.1:1234/v1`) or Ollama out of the box, with automatic structured JSON tool call repair for 7B/8B models, and support for cloud providers (OpenAI, Groq, OpenRouter).
+- **🤖 Cloud AI LLM Runtime:** Connects directly to Groq (Ultra-Fast), Google Gemini, OpenAI, or custom cloud endpoints out of the box, with automatic structured JSON tool call repair and streaming responses.
 - **✋ Human-in-the-Loop Approvals:** External write actions (e.g. Telegram messages, Slack alerts) automatically pause execution until approved via the Web UI or Telegram inline buttons.
 - **💬 Telegram Bot Integration:** Native Telegram Bot API client with webhooks for production and a local polling runner (`npm run telegram:dev`) for local testing without ngrok.
-- **💳 Stripe-Ready Billing:** Complete Checkout session creation, customer portal links, and raw-body webhook handling with idempotency.
+- **💳 Stripe & FamGateway Billing:** Complete checkout flow, OTP verification, and webhook handling with idempotency.
 - **🎨 Tactile Claymorphism UI:** Warm light palette (`#F8F6F1`), soft 3D clay cards, friendly avatars, and an observable 3-panel workspace with live activity timeline.
-- **📦 Multi-Target Deployment:** One-click Vercel deployment (no Docker required) or VPS hosting via PM2 cluster (`deploy/ecosystem.config.js`) / standalone Dockerfile.
+- **📦 Multi-Target Deployment:** One-click Vercel deployment or VPS hosting.
 
 ---
 
-## Quick Start (Local Development)
+## Quick Start (Development)
 
 ### 1. Install Dependencies
 ```bash
@@ -28,12 +28,12 @@ npm install
 ```bash
 cp .env.example .env.local
 ```
-*Note: Even without filling out `.env.local`, the app will boot immediately into zero-lag local persistence mode.*
+*Note: The app boots immediately and connects to Cloud AI providers (Groq, Gemini, OpenAI).*
 
-### 3. Connect Local LLM (LM Studio / Ollama)
-- Open [LM Studio](https://lmstudio.ai/)
-- Load any model (e.g., `Qwen2.5-7B-Instruct` or `Meta-Llama-3-8B-Instruct`)
-- Start the Local Server on port `1234` with CORS enabled.
+### 3. Connect AI Provider
+- Open the web app at `/settings` or `/integrations`
+- Enter any cloud AI provider API key (e.g. Groq, Google Gemini, or OpenAI)
+- All agents immediately operate with your connected key!
 
 ### 4. Start Development Server
 ```bash
