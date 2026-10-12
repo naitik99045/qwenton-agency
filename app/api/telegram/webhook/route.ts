@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDB } from '@/lib/db/adapter';
 import { sendTelegramMessage } from '@/lib/telegram/bot';
 import { runAgentLoop } from '@/lib/agent-runtime/runner';
+import { executeTool } from '@/lib/tools/executor';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,14 +18,48 @@ export async function POST(req: NextRequest) {
       if (callbackData.startsWith('appr_ok:')) {
         const approvalId = callbackData.split(':')[1];
         const approval = await db.getApproval(approvalId);
-        if (approval) {
+        if (approval && approval.status === 'pending') {
+          // Dispatch real tool execution
+          const executionResult = await executeTool(
+            approval.actionType,
+            approval.payload || {},
+            approval.ownerUid,
+            { isApproved: true }
+          );
+
           await db.updateApproval(approvalId, 'approved', `telegram_${callback.from?.id}`);
           if (approval.runId) {
             await db.updateRun(approval.runId, { status: 'completed', completedAt: new Date().toISOString() });
+            await db.createRunEvent({
+              runId: approval.runId,
+              type: 'finish',
+              title: `Telegram approved and executed "${approval.actionType}"`,
+              details: { approvedBy: `telegram_${callback.from?.id}`, executionResult },
+            });
+
+            const run = await db.getRun(approval.runId);
+            if (run?.conversationId) {
+              const executionSummary = executionResult.ok
+                ? `✅ **Action Approved via Telegram:** \`${approval.actionType}\`\n\n${
+                    (executionResult.data as any)?.message || 'Action executed successfully.'
+                  }`
+                : `⚠️ **Action Approved via Telegram, execution notice:** ${executionResult.error || 'Execution issue'}`;
+
+              await db.createMessage({
+                conversationId: run.conversationId,
+                agentId: approval.agentId,
+                ownerUid: approval.ownerUid,
+                sender: 'agent',
+                content: executionSummary,
+              });
+            }
           }
           const conn = await db.getTelegramConnection(approval.ownerUid);
           if (conn && chatId) {
-            await sendTelegramMessage(conn.botTokenEncrypted, chatId, `✅ *Approved & Executed:* Action \`${approval.actionType}\``);
+            const detailMsg = executionResult.ok
+              ? `✅ *Approved & Executed:* Action \`${approval.actionType}\` completed successfully!`
+              : `⚠️ *Approved, execution notice:* ${executionResult.error || 'Action processed.'}`;
+            await sendTelegramMessage(conn.botTokenEncrypted, chatId, detailMsg);
           }
         }
       } else if (callbackData.startsWith('appr_no:')) {

@@ -50,12 +50,23 @@ export async function* runAgentLoop(options: RuntimeOptions): AsyncGenerator<Run
     content: userPrompt,
   });
 
-  // Load conversation history
+  // Load conversation history & persistent user memories
   const pastMessages = await db.getMessages(conversationId);
+  let memoryDirectives = '';
+  try {
+    const userMemories = await db.getMemoriesByUser(userId, agentId);
+    if (userMemories.length > 0) {
+      memoryDirectives = `\n\nLONG-TERM USER PREFERENCES & MEMORIES:\n` +
+        userMemories.map((m) => `• [${m.key}]: ${m.value}`).join('\n');
+    }
+  } catch {
+    // Continue gracefully if memory lookup is skipped
+  }
+
   const contextMessages: ChatMessage[] = [
     {
       role: 'system',
-      content: `${agent.systemPrompt}
+      content: `${agent.systemPrompt}${memoryDirectives}
 
 You are operating as "${agent.name}" (${agent.role}). When asked to calculate, search files, or research, call the appropriate tools. If asked to perform an external communication action (like sending a Telegram or Slack message), call the appropriate tool which will request human approval before sending.
 

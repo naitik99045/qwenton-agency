@@ -1,0 +1,1070 @@
+================================================================================
+QWENTON-AGENTS — IMPLEMENTATION ADDENDUM
+================================================================================
+Purpose: Paste this entire addendum below the existing master project plan and
+instruct the coding agent to implement it. This addendum resolves contradictions,
+adds missing production requirements, and defines the first reliable release.
+================================================================================
+
+IMPORTANT INSTRUCTION TO THE CODING AGENT
+--------------------------------------------------------------------------------
+Do not implement every brainstormed feature at once. First make the existing
+application secure, consistent, testable, and deployable. Do not invent mock
+success states for real integrations. If a feature is not connected to a real
+provider, label it as a demo or unavailable state.
+
+Before changing code:
+1. Audit the current repository and verify which files and features actually exist.
+2. Do not assume that a feature is complete because the plan says it is complete.
+3. Produce a short implementation checklist from this addendum.
+4. Implement in phases and keep the application building after every phase.
+5. Run lint, typecheck, tests, and production build after every major phase.
+6. Never expose API keys, tokens, service-account credentials, or private user data.
+7. Never weaken authentication or authorization to make a feature appear to work.
+8. Do not create fake production data, fake payment confirmations, or fake tool results.
+
+================================================================================
+1. CANONICAL PRODUCT RULES
+================================================================================
+
+1.1 Product positioning
+-----------------------
+qwenton-agents is a multi-tenant AI coworker workspace for business owners,
+marketing teams, startup founders, creators, and small companies.
+
+The product creates role-based agents for research, content, documents, and
+workflow support. It is not permitted to claim that agents replace a complete
+team, guarantee viral growth, or are 100% safe.
+
+Use these product phrases consistently:
+- AI coworker
+- focused AI agent
+- approved tools
+- human approval
+- business workflow
+- company knowledge
+- visible activity
+
+1.2 Canonical agent entitlement limits
+--------------------------------------
+Define one server-owned configuration in lib/limits/entitlements.ts. Every page,
+API route, test, admin screen, pricing card, and marketing message must read from
+this configuration or from a server-generated entitlement response.
+
+Use these initial limits unless the product owner changes them in one place:
+
+- Normal/free: 3 agents
+- Lite: 5 agents
+- Pro: 10 agents
+- Ultra: 25 agents
+
+Do not hardcode different numbers in frontend components.
+
+The backend must enforce:
+- Agent creation limit.
+- Concurrent active-run limit.
+- Monthly usage limit if configured.
+- File-storage limit if configured.
+- Tool-call limit if configured.
+- Subscription status and grace period.
+
+Agent creation must use a Firestore transaction. Two simultaneous requests must
+never allow a user to exceed the plan limit.
+
+1.3 Production database rule
+----------------------------
+Firestore is the only production source of truth.
+
+Use Firebase Emulator Suite or an in-memory fake adapter for local development
+and automated tests. Do not use LocalDB, local disk, or Realtime Database as a
+second production authority for users, plans, agents, approvals, or billing.
+
+Production architecture:
+
+Next.js server routes
+  -> Firebase Admin SDK
+  -> Firestore
+
+File uploads:
+
+Browser
+  -> signed Firebase Storage upload
+  -> Firestore file record
+  -> extraction/indexing job
+
+1.4 Workspace ownership
+-----------------------
+Every user-owned resource must contain:
+
+- workspaceId
+- ownerUid or createdByUid
+- createdAt
+- updatedAt
+
+Every query must be scoped by workspaceId and authenticated user membership.
+A client-provided userId, workspaceId, role, or plan must never be trusted.
+
+================================================================================
+2. REQUIRED DATA MODEL
+================================================================================
+
+Create typed TypeScript schemas in lib/db/types.ts. Use runtime validation with
+Zod at every API boundary.
+
+2.1 users/{uid}
+----------------
+Fields:
+- uid
+- email
+- displayName
+- photoURL
+- createdAt
+- updatedAt
+- status: active | suspended | deleted
+- globalRole: user | admin
+- currentWorkspaceId
+
+2.2 workspaces/{workspaceId}
+-----------------------------
+Fields:
+- workspaceId
+- name
+- ownerUid
+- createdAt
+- updatedAt
+- status: active | suspended | deleted
+
+2.3 workspaces/{workspaceId}/members/{uid}
+-------------------------------------------
+Fields:
+- uid
+- role: owner | admin | member
+- joinedAt
+- status: active | invited | removed
+
+2.4 workspaces/{workspaceId}/entitlement/current
+------------------------------------------------
+Fields:
+- planId
+- status: free | trialing | active | past_due | canceled | expired
+- maxAgents
+- activeAgentCount
+- currentPeriodStart
+- currentPeriodEnd
+- provider
+- providerCustomerId
+- providerSubscriptionId
+- updatedAt
+
+Never activate a paid entitlement from a browser response or OTP alone. Paid
+entitlements require a verified payment-provider webhook or an explicitly logged
+admin action.
+
+2.5 workspaces/{workspaceId}/agents/{agentId}
+---------------------------------------------
+Fields:
+- agentId
+- workspaceId
+- createdByUid
+- name
+- description
+- role
+- systemInstructions
+- status: active | paused | archived
+- toolIds
+- knowledgeScope
+- approvalPolicy
+- modelConfig
+- createdAt
+- updatedAt
+
+2.6 conversations/{conversationId}
+------------------------------------
+Fields:
+- conversationId
+- workspaceId
+- agentId
+- createdByUid
+- title
+- status
+- createdAt
+- updatedAt
+
+2.7 conversations/{conversationId}/messages/{messageId}
+----------------------------------------------------------
+Fields:
+- messageId
+- workspaceId
+- conversationId
+- agentId
+- role: user | assistant | tool | system
+- content
+- citations
+- runId
+- createdAt
+
+2.8 workspaces/{workspaceId}/runs/{runId}
+-----------------------------------------
+Fields:
+- runId
+- workspaceId
+- agentId
+- conversationId
+- createdByUid
+- status: queued | running | waiting_approval | completed | failed | canceled
+- provider
+- model
+- usage
+- costEstimate
+- startedAt
+- completedAt
+- errorCode
+- errorMessageSafe
+
+2.9 workspaces/{workspaceId}/approvals/{approvalId}
+----------------------------------------------------
+Fields:
+- approvalId
+- workspaceId
+- requestedByUid
+- agentId
+- runId
+- actionType
+- payloadHash
+- redactedSummary
+- encryptedPayloadReference
+- status: pending | approved | executing | completed | rejected | expired | failed
+- expiresAt
+- approvedByUid
+- idempotencyKey
+- createdAt
+- updatedAt
+
+Never store sensitive payloads in a client-readable document. Store only a
+redacted summary and a secure server-side reference.
+
+2.10 integrations/{integrationId}
+-----------------------------------
+Fields:
+- integrationId
+- workspaceId
+- provider
+- accountLabel
+- encryptedCredentialReference
+- scopes
+- status: connected | expired | revoked | error
+- lastValidatedAt
+- createdByUid
+- createdAt
+- updatedAt
+
+2.11 files/{fileId}
+--------------------
+Fields:
+- fileId
+- workspaceId
+- uploadedByUid
+- storagePath
+- originalName
+- detectedMimeType
+- sizeBytes
+- status: uploaded | extracting | indexed | failed | deleted
+- extractionErrorSafe
+- pageCount
+- characterCount
+- embeddingModel
+- createdAt
+- updatedAt
+
+2.12 routines/{routineId}
+-------------------------
+Fields:
+- routineId
+- workspaceId
+- agentId
+- createdByUid
+- cronExpression
+- timezone
+- nextRunAt
+- lastRunAt
+- status: active | paused | failed
+- leaseId
+- leaseExpiresAt
+- failureCount
+- createdAt
+- updatedAt
+
+2.13 billingEvents/{eventId}
+----------------------------
+Fields:
+- eventId
+- provider
+- providerEventId
+- workspaceId
+- eventType
+- amount
+- currency
+- verified
+- processedAt
+- rawPayloadReference
+
+Use providerEventId as a unique idempotency key. The same webhook must never
+activate a subscription twice.
+
+================================================================================
+3. AUTHENTICATION, AUTHORIZATION, AND TENANT ISOLATION
+================================================================================
+
+3.1 Authentication
+------------------
+Use Firebase Authentication for browser login and signup. On every protected
+server route:
+
+1. Read the Firebase ID token from a secure session mechanism.
+2. Verify the token with Firebase Admin SDK.
+3. Resolve the authenticated UID.
+4. Resolve the requested workspace membership from Firestore.
+5. Check the required role and resource ownership.
+6. Reject unauthorized requests with a generic 401 or 403 response.
+
+Do not trust:
+- userId from request JSON
+- workspaceId from request JSON without membership verification
+- isAdmin from the browser
+- planId from the browser
+- agentId without a workspace-scoped lookup
+
+3.2 Route protection
+--------------------
+Protect these pages on the server, not only in React:
+
+- /dashboard
+- /agents
+- /agents/[agentId]
+- /conversations
+- /files
+- /integrations
+- /approvals
+- /routines
+- /billing
+- /settings
+- /admin
+
+Admin routes require a server-verified admin role. The client may hide or show
+buttons, but server authorization is mandatory.
+
+3.3 Firestore security rules
+----------------------------
+Write rules for every collection. Rules must ensure:
+
+- User can read/write only their own workspace resources.
+- Workspace members can access only permitted resources.
+- Billing records cannot be edited by clients.
+- Audit logs cannot be edited by clients.
+- Entitlements cannot be edited by clients.
+- Integration credential references cannot be read by unauthorized members.
+- Admin actions are server-only unless explicitly designed otherwise.
+
+Add emulator tests for the rules.
+
+================================================================================
+4. AGENT RUNTIME AND TOOL SECURITY
+================================================================================
+
+4.1 Bounded agent loop
+----------------------
+The agent runtime must have hard limits:
+
+- Maximum run duration.
+- Maximum model turns.
+- Maximum tool calls.
+- Maximum output tokens.
+- Maximum retry count.
+- Maximum estimated cost.
+- Maximum retrieved document context.
+
+The run must stop safely when any limit is reached.
+
+4.2 Tool definition contract
+----------------------------
+Every tool in lib/tools/catalog.ts must define:
+
+- id
+- displayName
+- description
+- inputSchema
+- outputSchema
+- readOnly
+- requiresApproval
+- allowedDomains
+- timeoutMs
+- maxRetries
+- rateLimitKey
+- costClass
+
+Validate tool input with Zod before execution. Never pass arbitrary model-generated
+JSON directly to an external provider.
+
+4.3 Read and write separation
+-----------------------------
+Classify tools as:
+
+READ_ONLY:
+- Search approved sources.
+- Read company knowledge.
+- Inspect calendar availability.
+- Read analytics where permitted.
+
+MUTATING:
+- Send email.
+- Publish Instagram content.
+- Create calendar event.
+- Send Telegram message.
+- Modify a CRM record.
+- Delete or overwrite a file.
+
+All mutating tools require approval unless the workspace owner has explicitly
+configured a documented lower-risk exception. Destructive actions always require
+approval.
+
+4.4 Prompt injection defense
+----------------------------
+Treat webpages, uploaded files, emails, and tool outputs as untrusted data.
+
+The runtime must:
+- Keep system instructions separate from retrieved content.
+- Mark external content as untrusted.
+- Never follow instructions contained inside a document unless the user explicitly
+  asks for that content to be executed.
+- Never reveal secrets to a model or external page.
+- Require approval for external side effects.
+- Log the source of every tool call.
+
+4.5 SSRF and network safety
+---------------------------
+For URL-fetch tools:
+- Allow only approved HTTP and HTTPS protocols.
+- Block localhost, private IP ranges, link-local addresses, metadata endpoints,
+  file://, data://, and internal service names.
+- Resolve DNS safely and re-check redirects.
+- Limit response size and timeout.
+- Apply an allowlist where possible.
+
+================================================================================
+5. APPROVAL FIREWALL IMPLEMENTATION
+================================================================================
+
+5.1 Approval state machine
+--------------------------
+Implement the only valid transitions:
+
+pending -> approved
+pending -> rejected
+pending -> expired
+approved -> executing
+executing -> completed
+executing -> failed
+
+No client may directly set completed.
+
+5.2 Approval creation
+---------------------
+When a mutating tool is requested:
+
+1. Validate the tool input.
+2. Build a canonical payload.
+3. Compute payloadHash.
+4. Create an approval document with status pending.
+5. Store a redacted summary for the UI.
+6. Store the sensitive payload in a server-only encrypted reference.
+7. Mark the run waiting_approval.
+8. Notify the user in the web UI and Telegram if enabled.
+
+5.3 Approval execution
+----------------------
+When the user approves:
+
+1. Authenticate the requester.
+2. Verify workspace membership.
+3. Verify approval ownership.
+4. Check status is pending.
+5. Check approval has not expired.
+6. Recalculate or verify payloadHash.
+7. Atomically claim the approval using a Firestore transaction.
+8. Change status pending -> approved -> executing.
+9. Execute exactly once using idempotencyKey.
+10. Store a redacted result and provider reference.
+11. Append a final assistant/tool message.
+12. Mark run completed or failed.
+13. Write an immutable audit event.
+
+Double-clicks, retries, webhook replays, and multiple browser tabs must not
+execute the same side effect twice.
+
+5.4 Telegram approval
+---------------------
+Telegram callbacks must verify:
+- Telegram webhook secret token.
+- User-to-Telegram-account mapping.
+- Workspace ownership.
+- Approval ID ownership.
+- Approval status and expiration.
+- Callback replay protection.
+
+Do not allow a Telegram callback containing only an approval ID to approve an
+unrelated user’s action.
+
+================================================================================
+6. BILLING, OTP, AND ENTITLEMENTS
+================================================================================
+
+6.1 Payment authority
+---------------------
+A payment provider webhook is the source of truth for successful payment.
+
+EmailJS OTP may verify email ownership or purchase intent, but it must not by
+itself activate a subscription.
+
+6.2 Payment flow
+----------------
+Implement:
+
+1. Authenticated user selects a plan.
+2. Server creates a payment order with provider metadata:
+   - workspaceId
+   - uid
+   - planId
+   - orderId
+3. User completes payment.
+4. Provider sends a signed webhook.
+5. Server verifies webhook signature.
+6. Server verifies order ID, user ID, plan ID, amount, currency, and status.
+7. Server writes an idempotent billing event.
+8. Server updates entitlement in a Firestore transaction.
+9. Server writes an audit event.
+10. UI refreshes from server entitlement state.
+
+6.3 Subscription lifecycle
+--------------------------
+Support these states:
+- free
+- trialing
+- active
+- past_due
+- canceled
+- expired
+- suspended
+
+Define the behavior for:
+- failed payment
+- refund
+- cancellation
+- renewal
+- expired card or mandate
+- duplicate webhook
+- late webhook
+- manual admin adjustment
+
+Do not use the browser success page as proof of payment.
+
+6.4 OTP requirements
+--------------------
+OTP rules:
+- Generate cryptographically secure random codes.
+- Store only a hashed OTP.
+- Expire codes quickly.
+- Limit attempts.
+- Rate-limit resend requests.
+- Invalidate after successful verification.
+- Do not include payment card or secret information in email templates.
+- Never log the OTP in production.
+
+================================================================================
+7. INTEGRATION ARCHITECTURE
+================================================================================
+
+7.1 Credentials
+---------------
+Store OAuth refresh tokens, API keys, and bot tokens only on the server in an
+encrypted secrets system or an encrypted Firestore reference with controlled
+server access.
+
+Never return raw credentials to the browser. Never use NEXT_PUBLIC_ variables
+for secrets. Redact credentials from logs, errors, analytics, and model prompts.
+
+7.2 Provider adapters
+---------------------
+Create one adapter per provider:
+
+- lib/integrations/telegram.ts
+- lib/integrations/google.ts
+- lib/integrations/meta.ts
+- lib/integrations/notion.ts
+- lib/integrations/fal.ts
+
+Each adapter must expose:
+- connect or OAuth start
+- callback handling
+- validate connection
+- revoke connection
+- execute supported actions
+- normalize provider errors
+- provider rate-limit handling
+
+Do not scatter provider-specific HTTP calls throughout route handlers.
+
+7.3 Gmail
+---------
+Prefer Gmail API with OAuth over collecting Gmail app passwords. Request the
+smallest possible scopes. Sending email requires approval by default.
+
+7.4 Meta/Instagram
+------------------
+Use a configurable Meta Graph API version. Do not hardcode an obsolete version.
+Validate professional Instagram account requirements, Page connection, scopes,
+token expiration, media processing status, and publish permissions.
+
+7.5 Telegram
+------------
+Validate bot token with getMe. Verify webhook secret. Store the Telegram user
+mapping securely. Apply per-user and per-workspace rate limits.
+
+7.6 External API resilience
+---------------------------
+Every provider call needs:
+- timeout
+- retry policy
+- exponential backoff
+- provider error normalization
+- safe user-facing error
+- correlation ID
+- audit event
+- no secret leakage
+
+================================================================================
+8. FILE UPLOAD, KNOWLEDGE BASE, AND RAG
+================================================================================
+
+8.1 Upload flow
+---------------
+Use this flow:
+
+1. Authenticated client requests a signed upload URL.
+2. Server checks file count and workspace quota.
+3. Client uploads directly to Firebase Storage.
+4. Server creates a file record with status uploaded.
+5. A processing job validates the file signature and MIME type.
+6. Extract text from PDF, DOCX, TXT, and MD.
+7. Reject encrypted, corrupted, oversized, or unsupported files.
+8. Chunk text with metadata.
+9. Generate embeddings.
+10. Store vectors scoped by workspaceId and fileId.
+11. Mark file indexed.
+12. Show processing errors safely.
+
+8.2 Limits
+----------
+Define and enforce:
+- Maximum file size.
+- Maximum pages.
+- Maximum extracted characters.
+- Maximum files per workspace.
+- Maximum total storage.
+- Maximum embedding spend per month.
+
+8.3 Chunk and citation model
+----------------------------
+Each chunk should contain:
+- chunkId
+- workspaceId
+- fileId
+- pageNumber where available
+- sourceName
+- text
+- embedding
+- createdAt
+
+Retrieval must always filter by workspaceId. The model must receive citations or
+source labels with retrieved content. The UI should show which files supported a
+response.
+
+8.4 Deletion
+------------
+When a file is deleted:
+- Mark the Firestore file record deleted.
+- Delete the Storage object.
+- Delete all chunks and vectors.
+- Remove it from retrieval.
+- Record an audit event.
+
+================================================================================
+9. CRON ROUTINES AND BACKGROUND EXECUTION
+================================================================================
+
+9.1 Routine scheduling
+----------------------
+Store nextRunAt as a timestamp. Do not evaluate every user’s cron expression
+from scratch on every request.
+
+9.2 Safe cron flow
+------------------
+Vercel Cron calls a protected endpoint with CRON_SECRET.
+
+The endpoint must:
+1. Authenticate the cron request.
+2. Query only routines with nextRunAt <= now and status active.
+3. Atomically claim each routine with a leaseId and leaseExpiresAt.
+4. Create an AgentRun document.
+5. Dispatch to a durable execution mechanism.
+6. Return quickly.
+7. Allow a worker or scheduled continuation to complete the run.
+8. Update nextRunAt, lastRunAt, failureCount, and status.
+
+Do not launch unlimited unawaited promises inside a Vercel route.
+
+9.3 Idempotency
+----------------
+A routine execution key must include:
+- routineId
+- scheduled timestamp
+
+The same routine schedule must not create duplicate runs after retries.
+
+================================================================================
+10. VERCEL DEPLOYMENT RULES
+================================================================================
+
+10.1 Runtime
+------------
+Use Node.js runtime for server routes that require Firebase Admin SDK, file
+processing, crypto, provider SDKs, or Node APIs. Use Edge runtime only when the
+code is confirmed compatible.
+
+10.2 Environment variables
+---------------------------
+Create .env.example with names only, never real values. Separate variables into:
+
+Public:
+- NEXT_PUBLIC_FIREBASE_API_KEY
+- NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+- NEXT_PUBLIC_FIREBASE_PROJECT_ID
+- NEXT_PUBLIC_APP_URL
+
+Server-only:
+- FIREBASE_PROJECT_ID
+- FIREBASE_CLIENT_EMAIL
+- FIREBASE_PRIVATE_KEY
+- SESSION_SECRET
+- CRON_SECRET
+- ENCRYPTION_KEY
+- LLM provider keys
+- Payment provider secrets
+- Telegram bot token
+- OAuth client secrets
+
+Validate required environment variables at server startup without printing secret
+values. Fail safely with a clear configuration error.
+
+10.3 Health endpoint
+--------------------
+Public /api/health must reveal only:
+
+{
+  "status": "ok"
+}
+
+Detailed provider/database diagnostics require authenticated admin access at a
+separate endpoint. Never reveal localhost model URLs, database implementation,
+provider keys, stack traces, or internal service names publicly.
+
+10.4 Headers
+------------
+Configure and test:
+- Strict-Transport-Security
+- Content-Security-Policy
+- X-Content-Type-Options
+- Referrer-Policy
+- Permissions-Policy
+- frame-ancestors in CSP
+
+Do not use Access-Control-Allow-Origin: * for authenticated APIs. Allow only the
+known application origin where CORS is required.
+
+10.5 Caching
+------------
+Do not publicly cache authenticated responses, billing data, approvals,
+conversations, files, or integration responses.
+
+================================================================================
+11. OBSERVABILITY AND OPERATIONS
+================================================================================
+
+Implement structured logs containing:
+- correlationId
+- workspaceId where safe
+- uid hash or internal ID, not email by default
+- route
+- action type
+- runId
+- provider
+- latency
+- outcome
+- error code
+
+Never log:
+- raw API keys
+- OAuth refresh tokens
+- Telegram bot tokens
+- OTPs
+- full payment payloads
+- full private documents
+- sensitive prompt content unless explicitly configured for debugging
+
+Add:
+- error reporting
+- provider failure metrics
+- run duration metrics
+- approval latency metrics
+- billing webhook failure alerts
+- routine failure alerts
+- rate-limit alerts
+
+================================================================================
+12. ADMIN PANEL REQUIREMENTS
+================================================================================
+
+Admin features must be server-authorized and audit logged:
+- Search users by internal ID or email.
+- View workspace status.
+- View plan and entitlement state.
+- Suspend or restore workspace.
+- Inspect safe run metadata.
+- Inspect billing event status.
+- View security audit events.
+- Configure plan limits from one controlled location.
+
+Do not expose raw provider credentials, private document content, full message
+history, or payment secrets to every admin by default.
+
+Every admin mutation must record:
+- adminUid
+- target resource
+- action
+- reason
+- before summary
+- after summary
+- timestamp
+
+================================================================================
+13. TESTING REQUIREMENTS
+================================================================================
+
+13.1 Required commands
+----------------------
+The repository must provide:
+
+- npm run lint
+- npm run typecheck
+- npm run test
+- npm run test:integration
+- npm run build
+
+13.2 Unit tests
+---------------
+Test:
+- plan limits
+- input schemas
+- tool classification
+- payload hashing
+- approval transitions
+- cron nextRunAt calculation
+- safe error normalization
+- token redaction
+
+13.3 Integration tests
+----------------------
+Using Firebase Emulator Suite and mocked providers, test:
+- signup and authenticated route access
+- cross-workspace denial
+- concurrent agent creation
+- plan entitlement updates
+- payment webhook signature verification
+- duplicate webhook idempotency
+- Telegram secret validation
+- Telegram approval ownership
+- approval double-click protection
+- tool timeout and retry
+- file extraction
+- workspace-scoped retrieval
+- file deletion
+
+13.4 Security tests
+-------------------
+Test:
+- missing token
+- expired token
+- invalid token
+- privilege escalation
+- manipulated userId
+- manipulated workspaceId
+- prompt injection in uploaded document
+- SSRF attempts
+- oversized upload
+- malicious file type
+- secret leakage in logs
+- replayed approval
+- replayed webhook
+- CORS behavior
+
+13.5 End-to-end acceptance tests
+--------------------------------
+A new user must be able to:
+1. Sign up.
+2. Create a workspace.
+3. Create up to the configured free limit.
+4. Receive a clear entitlement error on the next creation.
+5. Create an agent.
+6. Send a message and receive a streamed response.
+7. Add a text knowledge item.
+8. Run a read-only tool.
+9. Trigger an approval-required action.
+10. Approve it once.
+11. See the completed result and audit entry.
+12. Connect Telegram and approve only their own action.
+13. Log out and be denied protected content.
+
+================================================================================
+14. RELEASE PHASES
+================================================================================
+
+PHASE 0 — AUDIT AND CORRECTION
+------------------------------
+- Verify actual repository state.
+- Resolve plan limits.
+- Remove production LocalDB authority.
+- Define workspace and membership model.
+- Add Zod schemas.
+- Add environment validation.
+- Create a migration/data backfill plan.
+
+PHASE 1 — SECURITY FOUNDATION
+-----------------------------
+- Protect every page and API route.
+- Add tenant-scoped Firestore queries.
+- Add Firestore security rules.
+- Add admin role enforcement.
+- Add rate limiting.
+- Add safe health endpoint.
+- Add security headers.
+- Add secret redaction.
+
+PHASE 2 — CORE AGENT RUNTIME
+----------------------------
+- Implement bounded agent loop.
+- Implement one cloud LLM provider first.
+- Add usage and cost tracking.
+- Add run state machine.
+- Add streaming with reconnect-safe event IDs.
+- Add read-only tool execution.
+
+PHASE 3 — APPROVALS AND TELEGRAM
+--------------------------------
+- Implement approval state machine.
+- Implement idempotent resumption dispatcher.
+- Implement web approval.
+- Implement Telegram approval ownership and replay protection.
+- Add audit events.
+
+PHASE 4 — BILLING AND ENTITLEMENTS
+----------------------------------
+- Implement verified payment webhook.
+- Implement subscription lifecycle.
+- Implement plan configuration.
+- Update UI and backend from one entitlement source.
+- Add billing tests.
+
+PHASE 5 — KNOWLEDGE BASE
+------------------------
+- Implement signed file uploads.
+- Implement extraction and limits.
+- Implement workspace-scoped chunks.
+- Implement embeddings and citations.
+- Implement deletion and re-indexing.
+
+PHASE 6 — FIRST LIVE MUTATING INTEGRATION
+-----------------------------------------
+Choose one integration only and complete it end-to-end. Recommended first choice:
+Gmail API send with OAuth.
+
+Required before launch:
+- OAuth scope review.
+- Server credential storage.
+- Approval firewall.
+- Idempotency.
+- Provider retry and timeout.
+- Audit log.
+- Integration tests.
+- User-facing failure states.
+
+PHASE 7 — ROUTINES AND EXPANSION
+--------------------------------
+- Durable routine scheduling.
+- One additional provider.
+- Voice input/output.
+- WhatsApp.
+- Embeddable widget.
+- Multi-agent delegation.
+
+Each expansion requires its own threat model, limits, tests, and feature flag.
+
+================================================================================
+15. DEFINITION OF DONE
+================================================================================
+
+The first production release is complete only when:
+
+- All protected pages require server authentication.
+- All APIs verify authentication and workspace ownership.
+- Agent limits are identical in backend, UI, admin, and tests.
+- Firestore is the production source of truth.
+- No secrets are exposed to the browser or logs.
+- Public health output contains no internal diagnostics.
+- Approval actions are idempotent and cannot be double-executed.
+- Payment entitlements come from verified webhooks.
+- Telegram actions verify user ownership and replay protection.
+- File retrieval is tenant-scoped.
+- External provider failures are handled safely.
+- Automated tests pass.
+- Lint, typecheck, and build pass.
+- Deployment environment variables are documented.
+- A rollback and incident-response procedure exists.
+- No feature is described as live when it is only a mock or sandbox.
+
+================================================================================
+16. FINAL INSTRUCTION TO THE CODING AGENT
+================================================================================
+
+Implement this addendum as the authoritative production-correctness layer over
+the existing master plan.
+
+Do not remove existing UI or product direction unless required for security or
+correctness. Preserve the claymorphism design, agent workspace, Telegram concept,
+marketing use cases, admin panel, and subscription experience.
+
+However, replace unsafe or ambiguous implementation choices with the rules above.
+Prefer a smaller reliable release over a large collection of simulated features.
+
+At the end of each phase, report:
+- files changed
+- database/schema changes
+- environment variables added
+- tests added
+- commands executed
+- known limitations
+- next recommended phase
+
+Do not mark a feature as complete until it has a real implementation, error state,
+authorization check, audit behavior, and automated test coverage.
+================================================================================
+END OF IMPLEMENTATION ADDENDUM
+================================================================================

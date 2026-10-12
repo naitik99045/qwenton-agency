@@ -76,7 +76,7 @@ const INITIAL_PLANS: Plan[] = [
     maxRunsPerMonth: 50,
     maxFileStorageBytes: 25 * 1024 * 1024,
     maxTelegramBots: 1,
-    features: ['2 AI Agents for Free Work', 'Local LM Studio & Ollama', 'Safe Web Research', 'Human Approvals'],
+    features: ['2 AI Agents for Free Work', 'Cloud Groq & Gemini AI Models', 'Safe Web Research', 'Human Approvals'],
     active: true,
   },
   {

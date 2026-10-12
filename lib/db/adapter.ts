@@ -11,6 +11,8 @@ import {
   FileRecord,
   DocumentChunk,
   Routine,
+  Memory,
+  Integration,
   TelegramConnection,
   Plan,
   PlanId,
@@ -66,6 +68,11 @@ export interface DatabaseAdapter {
   // Routines
   getRoutinesByUser(ownerUid: string): Promise<Routine[]>;
   createRoutine(routine: Omit<Routine, 'id' | 'createdAt'>): Promise<Routine>;
+
+  // Memories
+  getMemoriesByUser(ownerUid: string, agentId?: string): Promise<Memory[]>;
+  saveMemory(memory: Omit<Memory, 'id' | 'createdAt'>): Promise<Memory>;
+  deleteMemory(id: string): Promise<boolean>;
 
   // Integrations & API Vault (Saved directly to User's Firestore)
   getIntegrationsByUser(ownerUid: string): Promise<Integration[]>;
@@ -366,6 +373,26 @@ class FirestoreAdapter implements DatabaseAdapter {
     return newR;
   }
 
+  // Memories
+  async getMemoriesByUser(ownerUid: string, agentId?: string): Promise<Memory[]> {
+    let q: FirebaseFirestore.Query = adminFirestore.collection('memories').where('ownerUid', '==', ownerUid);
+    if (agentId) q = q.where('agentId', '==', agentId);
+    const snap = await q.get();
+    return snap.docs.map((d) => d.data() as Memory);
+  }
+
+  async saveMemory(memory: Omit<Memory, 'id' | 'createdAt'>): Promise<Memory> {
+    const ref = adminFirestore.collection('memories').doc();
+    const newM: Memory = { ...memory, id: ref.id, createdAt: new Date().toISOString() };
+    await ref.set(newM);
+    return newM;
+  }
+
+  async deleteMemory(id: string): Promise<boolean> {
+    await adminFirestore.collection('memories').doc(id).delete();
+    return true;
+  }
+
   // Integrations & API Vault (Stored directly in user's subcollection in Firestore)
   async getIntegrationsByUser(ownerUid: string): Promise<Integration[]> {
     const snap = await adminFirestore.collection('users').doc(ownerUid).collection('integrations').get();
@@ -571,6 +598,10 @@ class LocalDBAdapter implements DatabaseAdapter {
 
   async getRoutinesByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getRoutinesByUser(ownerUid); }
   async createRoutine(routine: Omit<Routine, 'id' | 'createdAt'>) { return localDb.createRoutine(routine); }
+
+  async getMemoriesByUser(ownerUid: string, agentId?: string) { await localDb.ensureCloudSync(); return localDb.getMemoriesByUser(ownerUid, agentId); }
+  async saveMemory(memory: Omit<Memory, 'id' | 'createdAt'>) { return await localDb.saveMemory(memory); }
+  async deleteMemory(id: string) { return await localDb.deleteMemory(id); }
 
   async getIntegrationsByUser(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getIntegrationsByUser(ownerUid); }
   async getIntegration(ownerUid: string, provider: string) { await localDb.ensureCloudSync(); return localDb.getIntegration(ownerUid, provider); }

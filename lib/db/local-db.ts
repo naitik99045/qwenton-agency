@@ -12,6 +12,7 @@ import {
   FileRecord,
   DocumentChunk,
   Routine,
+  Memory,
   Integration,
   TelegramConnection,
   Plan,
@@ -33,6 +34,7 @@ interface DatabaseSchema {
   files: Record<string, FileRecord>;
   documentChunks: Record<string, DocumentChunk>;
   routines: Record<string, Routine>;
+  memories?: Record<string, Memory>;
   integrations: Record<string, Integration>;
   telegramConnections: Record<string, TelegramConnection>;
   plans: Record<string, Plan>;
@@ -160,6 +162,7 @@ class LocalDB {
           if (cloudData.subscriptions) this.data.subscriptions = { ...this.data.subscriptions, ...cloudData.subscriptions };
           if (cloudData.approvals) this.data.approvals = { ...this.data.approvals, ...cloudData.approvals };
           if (cloudData.routines) this.data.routines = { ...this.data.routines, ...cloudData.routines };
+          if (cloudData.memories) this.data.memories = { ...this.data.memories, ...cloudData.memories };
           if (cloudData.telegramConnections) this.data.telegramConnections = { ...this.data.telegramConnections, ...cloudData.telegramConnections };
           this.save();
         }
@@ -177,6 +180,7 @@ class LocalDB {
         // Ensure plans and orders match the new 4-tier structure
         parsed.plans = { ...DEFAULT_PLANS, ...(parsed.plans || {}) };
         parsed.orders = parsed.orders || {};
+        parsed.memories = parsed.memories || {};
         // Clean any stale demo accounts
         if (parsed.users && parsed.users['demo_user_1']) {
           delete parsed.users['demo_user_1'];
@@ -207,6 +211,7 @@ class LocalDB {
       files: {},
       documentChunks: {},
       routines: {},
+      memories: {},
       integrations: {},
       telegramConnections: {},
       plans: DEFAULT_PLANS,
@@ -535,6 +540,31 @@ class LocalDB {
     this.data.routines[id] = newR;
     this.save();
     return newR;
+  }
+
+  // Memories
+  getMemoriesByUser(ownerUid: string, agentId?: string): Memory[] {
+    return Object.values(this.data.memories || {})
+      .filter((m) => m.ownerUid === ownerUid && (!agentId || !m.agentId || m.agentId === agentId))
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async saveMemory(memory: Omit<Memory, 'id' | 'createdAt'>): Promise<Memory> {
+    const id = `mem_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const newM: Memory = { ...memory, id, createdAt: new Date().toISOString() };
+    if (!this.data.memories) this.data.memories = {};
+    this.data.memories[id] = newM;
+    await this.syncToCloud(`memories/${id}`, newM);
+    this.save();
+    return newM;
+  }
+
+  async deleteMemory(id: string): Promise<boolean> {
+    if (!this.data.memories || !this.data.memories[id]) return false;
+    delete this.data.memories[id];
+    await this.syncToCloud(`memories/${id}`, null, 'DELETE');
+    this.save();
+    return true;
   }
 
   // Integrations
