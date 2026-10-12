@@ -41,6 +41,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
 
 export default function LandingPage() {
   const [activeSandbox, setActiveSandbox] = useState<'social' | 'design' | 'research' | 'telegram'>('social');
@@ -311,6 +312,10 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-6">
             <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-ink-muted">
+              <a href="#instant-audit" className="text-primary hover:text-primary-deep font-bold transition-colors flex items-center gap-1">
+                <span>Instant Audit</span>
+                <span className="text-[10px] bg-cloud-blue text-primary-deep px-1.5 py-0.2 rounded-full border border-primary/20">Free</span>
+              </a>
               <a href="#console" className="hover:text-ink transition-colors">
                 Live Console
               </a>
@@ -392,6 +397,14 @@ export default function LandingPage() {
               <Check className="w-4 h-4 text-primary" /> Strict human-in-the-loop firewall
             </span>
           </div>
+        </div>
+
+        {/* ----------------------------------------------------
+           ZERO-LOGIN 5-SECOND INSTANT AGENCY AUDIT SANDBOX
+           Direct visitor-to-user 100x conversion engine
+           ---------------------------------------------------- */}
+        <div id="instant-audit" className="w-full">
+          <InstantAuditSandbox />
         </div>
 
         {/* ----------------------------------------------------

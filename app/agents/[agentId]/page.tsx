@@ -27,6 +27,9 @@ import {
   Activity,
   Layers,
   Key,
+  Code2,
+  ExternalLink,
+  Copy,
 } from 'lucide-react';
 import { FormattedMessage } from '@/components/ui/FormattedMessage';
 import { Agent, Conversation, Message, Approval, RunEvent } from '@/lib/db/types';
@@ -57,6 +60,8 @@ export default function AgentWorkspacePage() {
   const [pendingApproval, setPendingApproval] = useState<Approval | null>(null);
   const [mobileActivityOpen, setMobileActivityOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -400,6 +405,30 @@ export default function AgentWorkspacePage() {
                 Bot ready to receive messages and dispatch approvals.
               </p>
             </div>
+
+            <div className="bg-[#F8F6F1] p-3 rounded-control border border-border/80">
+              <div className="flex items-center justify-between text-xs font-bold text-ink mb-1">
+                <span className="flex items-center gap-1.5">
+                  <Code2 className="w-3.5 h-3.5 text-primary" />
+                  <span>Website Widget</span>
+                </span>
+                <Badge variant="info" className="text-[9px]">
+                  Viral
+                </Badge>
+              </div>
+              <p className="text-[10px] text-ink-muted mb-2">
+                Embed this coworker on any landing page or website.
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowEmbedModal(true)}
+                className="w-full text-xs font-bold gap-1.5 py-1 h-7"
+              >
+                <Code2 className="w-3 h-3 text-primary" />
+                <span>Get Embed Code</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -419,6 +448,17 @@ export default function AgentWorkspacePage() {
             </div>
 
             <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowEmbedModal(true)}
+                className="gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/5 shadow-xs py-1 px-2.5"
+              >
+                <Code2 className="w-3.5 h-3.5 text-primary" />
+                <span className="hidden sm:inline">Embed Widget</span>
+                <span className="sm:hidden">Embed</span>
+              </Button>
+
               <Link href="/integrations">
                 <Button size="sm" variant="outline" className="gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/5 shadow-xs py-1 px-2.5">
                   <Key className="w-3.5 h-3.5 text-primary" />
@@ -674,6 +714,71 @@ export default function AgentWorkspacePage() {
           </div>
         </div>
       </div>
+
+      {/* Viral Embed Widget Modal */}
+      {showEmbedModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-border space-y-4">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center shadow-xs">
+                  <Code2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm text-ink">Embed {agent.name} on Your Website</h3>
+                  <p className="text-[11px] text-ink-muted">Viral growth widget with automatic lead capture</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowEmbedModal(false)}
+                className="p-1 rounded-lg text-ink-muted hover:text-ink hover:bg-black/5"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-ink mb-1 uppercase tracking-wider">
+                1-Line Responsive iframe Snippet
+              </label>
+              <textarea
+                readOnly
+                rows={3}
+                value={`<iframe src="${typeof window !== 'undefined' ? window.location.origin : 'https://agents.qwenton.shop'}/widget/${agent.id}" width="100%" height="600" frameborder="0" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);"></iframe>`}
+                className="w-full p-2.5 text-xs font-mono bg-canvas rounded-xl border border-border select-all focus:outline-none"
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-3 pt-2">
+              <a
+                href={`/widget/${agent.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Test Live Widget in New Tab</span>
+              </a>
+
+              <Button
+                size="sm"
+                onClick={() => {
+                  const snippet = `<iframe src="${window.location.origin}/widget/${agent.id}" width="100%" height="600" frameborder="0" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);"></iframe>`;
+                  if (navigator?.clipboard) {
+                    navigator.clipboard.writeText(snippet);
+                    setCopiedEmbed(true);
+                    setTimeout(() => setCopiedEmbed(false), 2000);
+                  }
+                }}
+                className="font-bold gap-1.5 text-xs shadow-clay-button"
+              >
+                {copiedEmbed ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedEmbed ? 'Copied Snippet!' : 'Copy Embed Code'}</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }

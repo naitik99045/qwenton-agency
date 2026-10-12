@@ -1,0 +1,753 @@
+================================================================================
+QWENTON-AGENTS — GROWTH STRATEGY & FUTURE FEATURE BACKLOG
+================================================================================
+Document Type: Update-only executive and product-growth strategy
+Version: 1.1 Corrected
+Target: Build a trusted AI coworker product for founders, marketing teams, agencies,
+SMBs, creators, and AI builders.
+================================================================================
+
+IMPORTANT SCOPE NOTICE
+--------------------------------------------------------------------------------
+This document is for updating the existing qwenton-agents system. It is not a
+rebuild specification and it is not permission to create a new application.
+
+The coding agent must preserve the existing qwenton-agents repository, architecture,
+Firebase authentication, Firestore data, Vercel deployment, claymorphism UI, Telegram
+integration, billing system, approval firewall, admin panel, agent workspace, and
+existing routes unless a change is required for security, reliability, or correctness.
+
+Treat the features in this document as a prioritized growth backlog. Implement only
+one approved feature at a time inside the current architecture. Before coding any
+feature, audit the existing implementation and identify the exact files, APIs, data
+models, tests, and UI surfaces that must be updated.
+
+Do not:
+- Rebuild qwenton-agents from scratch.
+- Replace the current frontend framework or authentication system.
+- Create a second competing database authority.
+- Change plan limits or pricing from this document.
+- Create fake integrations or fake success states.
+- Enable unrestricted autonomous external actions.
+- Publish unsupported competitor comparisons or performance claims.
+
+================================================================================
+1. PRODUCT POSITIONING
+================================================================================
+
+qwenton-agents is an AI coworker workspace for business owners, startup founders,
+marketing teams, freelancers, agencies, creators, SMBs, and AI builders.
+
+The product helps users create focused AI agents for research, content, documents,
+company knowledge, and workflow support. The product should feel practical,
+calm, trustworthy, and easy to use rather than overly technical or hype-driven.
+
+Core positioning:
+
+- Give AI a clear role.
+- Connect only approved tools and information.
+- Assign a real business task.
+- Show the activity and output.
+- Require human approval before sensitive external actions.
+
+Preferred product language:
+- Focused AI agents
+- AI coworkers
+- Business workflows
+- Approved tools
+- Company knowledge
+- Visible activity
+- Human approval
+- Early users and honest feedback
+
+Avoid these claims unless verified through evidence and approved for advertising:
+- 100x faster
+- Guaranteed viral growth
+- 100% safe
+- Replaces your entire team
+- India’s number one AI agent platform
+- Zero unauthorized actions
+- Guaranteed productivity
+- Better than Skydive
+- Unlimited AI usage
+
+================================================================================
+2. TARGET CUSTOMER SEGMENTS
+================================================================================
+
+Prioritize the following segments without pretending that one message fits every
+customer.
+
+2.1 Startup founders and solo operators
+---------------------------------------
+Primary problems:
+- Too many repetitive research and follow-up tasks.
+- Limited time for content, operations, and customer communication.
+- Need for simple workflows without hiring a large team.
+
+Useful qwenton-agents workflows:
+- Market research brief.
+- Competitor monitoring.
+- Founder memory and company rules.
+- Content calendar drafts.
+- Weekly operating summary.
+
+2.2 Marketing freelancers and boutique agencies
+-----------------------------------------------
+Primary problems:
+- Repeating research and content work for multiple clients.
+- Need for reusable agents and approval workflows.
+- Need to keep client data separated.
+
+Useful workflows:
+- Client-specific research agent.
+- Campaign brief generator.
+- Social caption and carousel draft.
+- Approval queue.
+- Client reporting assistant.
+
+2.3 Local SMBs and retailers
+----------------------------
+Examples:
+- Cafes
+- Clinics
+- Salons
+- Bakeries
+- Real-estate businesses
+- Local services
+- D2C brands
+
+Useful workflows:
+- Content ideas.
+- Customer reply drafts.
+- Local competitor research.
+- Offer and campaign drafts.
+- Company FAQ knowledge base.
+
+2.4 AI builders, vibe coders, and indie hackers
+------------------------------------------------
+Primary problems:
+- Need to test agent workflows quickly.
+- Need a simple workspace for tools, prompts, memory, and approvals.
+- Need to demonstrate agentic products to early users.
+
+Useful workflows:
+- Role-based agent prototypes.
+- Tool connection experiments.
+- Structured research.
+- Approval-gated demos.
+- Reusable agent templates.
+
+================================================================================
+3. COMPETITIVE POSITIONING
+================================================================================
+
+qwenton-agents may be positioned as an alternative for customers who want practical
+AI coworkers, mobile access, business workflows, and human approval. Do not use
+aggressive language such as “destroy,” “obliterate,” or “kill” in customer-facing
+copy.
+
+Do not publish a comparison table unless every competitor price, feature, and
+limitation has been verified from a current official source. Competitor pricing,
+features, and availability can change.
+
+Use this safe positioning:
+
+“qwenton-agents is designed for teams that want focused AI coworkers, connected
+business workflows, and human control over sensitive actions.”
+
+If a comparison is required, compare documented capabilities neutrally:
+
+- Agent creation experience.
+- Supported communication channels.
+- Tool and API connection model.
+- Approval controls.
+- Knowledge-base support.
+- Pricing as officially published.
+- Data and credential handling.
+- Availability by region.
+
+Do not claim that another company is unsafe, overpriced, limited, or US-only unless
+there is current, reliable evidence supporting that exact statement.
+
+================================================================================
+4. GROWTH ADVANTAGES TO BUILD ON THE EXISTING SYSTEM
+================================================================================
+
+4.1 Faster first value
+----------------------
+Improve the existing landing page and onboarding so a new visitor can understand
+qwenton-agents quickly.
+
+Update the existing system to include:
+- Clear explanation of AI coworkers.
+- Three or four realistic business use cases.
+- A safe interactive demo using fictional data.
+- A visible human-approval example.
+- Clear early-user CTA.
+- No requirement to connect private tools for the demo.
+
+The public demo must be protected with:
+- IP and session rate limiting.
+- Maximum input length.
+- Anonymous daily usage quota.
+- No private file uploads.
+- No external write actions.
+- No real customer data.
+- No unrestricted expensive model calls.
+- Bot protection if abuse appears.
+
+Do not publish an estimated conversion increase unless measured through an actual
+experiment.
+
+4.2 Agent templates
+-------------------
+Add templates inside the existing agent-creation wizard. Templates should create
+safe starting configurations, not pretend that a complete autonomous agency has
+been created.
+
+Recommended templates:
+- Competitor Researcher.
+- Social Content Planner.
+- Marketing Brief Builder.
+- Company Knowledge Assistant.
+- Customer Reply Drafting Assistant.
+- Weekly Business Summary.
+
+Each template must define:
+- Role.
+- Instructions.
+- Allowed read-only tools.
+- Approval requirements.
+- Example prompts.
+- Output format.
+- Usage limits.
+
+4.3 Campaign workspace
+----------------------
+Add a campaign workspace as an update to the existing agent workspace.
+
+A campaign may combine outputs from several focused agents, but it must not create
+unrestricted autonomous activity.
+
+Recommended flow:
+1. User describes a campaign goal.
+2. Research agent prepares findings.
+3. Content agent prepares drafts.
+4. Creative agent prepares a visual brief or carousel copy.
+5. Operations agent prepares optional scheduling suggestions.
+6. User reviews each deliverable.
+7. External actions remain separately approval-gated.
+
+Do not use one broad “Approve Entire Campaign” button for all external actions.
+Show separate approvals for:
+- Research completion.
+- Content draft.
+- Visual asset.
+- Email draft.
+- Calendar action.
+- WhatsApp message.
+- Telegram message.
+- Instagram publishing.
+
+4.4 Exportable marketing assets
+------------------------------
+Add a safe export workflow to the existing marketing features:
+
+- Instagram carousel copy.
+- LinkedIn post draft.
+- Campaign brief.
+- Marketing research report.
+- Content calendar.
+- PDF or PNG visual export using existing design tokens.
+
+Every export should show whether it is:
+- AI-generated draft.
+- User-edited draft.
+- Approved final.
+
+Do not state that generated content is guaranteed to perform or go viral.
+
+4.5 Mobile-first interaction
+----------------------------
+Continue improving the existing Telegram integration. Consider WhatsApp only as a
+later feature after Meta Business setup, webhook verification, template rules,
+consent handling, and rate limits are implemented.
+
+Telegram improvements:
+- View assigned agents.
+- Submit a task.
+- Receive progress updates.
+- Review drafts.
+- Approve or reject pending actions.
+- Receive failure notifications.
+- Link every approval to the correct workspace and user.
+
+================================================================================
+5. FUTURE FEATURE BACKLOG
+================================================================================
+
+The following features are optional future updates. They must not be implemented
+all at once.
+
+5.1 Campaign mission mode
+-------------------------
+Goal: Allow a user to coordinate several focused agents through one campaign view.
+
+First release:
+- Sequential or bounded execution.
+- Maximum number of delegated subtasks.
+- Clear subtask ownership.
+- Shared workspace-scoped context.
+- Progress timeline.
+- User review between phases.
+
+Later release:
+- Parallel subtasks where safe.
+- Automatic result bundling.
+- Cost and token estimate.
+- Failure recovery.
+
+Never allow mission mode to bypass approval requirements.
+
+5.2 Embeddable agent widget
+---------------------------
+Goal: Allow a workspace owner to embed a public, limited agent on a website.
+
+Required protections:
+- Explicit public-agent setting.
+- Workspace owner approval.
+- Public/private distinction.
+- Signed widget configuration.
+- Allowed origin list.
+- Per-IP rate limit.
+- Per-workspace quota.
+- Maximum message size.
+- No private files by default.
+- No external write tools by default.
+- Abuse reporting.
+- Disable and revoke controls.
+
+A “Powered by qwenton-agents” badge may be included as an opt-in growth loop.
+Do not make attribution deceptive or impossible to remove from a paid plan unless
+that commercial policy is clearly disclosed.
+
+5.3 Voice input and output
+--------------------------
+Goal: Let users send voice instructions and optionally listen to agent responses.
+
+Requirements:
+- Explicit microphone permission.
+- Clear recording state.
+- Upload size and duration limits.
+- Transcription error handling.
+- User confirmation before executing a transcribed instruction.
+- No external action directly from a voice recording.
+- Provider cost limit.
+- Audio retention and deletion controls.
+
+5.4 WhatsApp Business Cloud API
+--------------------------------
+Treat this as a separate integration project, not a simple Telegram copy.
+
+Requirements:
+- Meta Business setup.
+- Webhook verification.
+- Approved templates where required.
+- Consent and opt-out flow.
+- Message-status tracking.
+- User-to-workspace mapping.
+- Rate limits.
+- Audit logs.
+- Separate approval for outbound messages.
+- Secure token storage.
+
+5.5 Lead research assistant
+---------------------------
+A lead research feature may search approved business-data sources and prepare a
+prospect list, but it must not become an unrestricted scraper or spam engine.
+
+Allowed first version:
+- User supplies a target sector and location.
+- Provider-compliant search is used.
+- Results include source links and retrieval time.
+- Data is used for internal research.
+- Agent drafts an outreach message.
+- User approves each message or clearly bounded batch.
+- Opt-out and compliance guidance is shown.
+
+Do not:
+- Scrape Google Maps outside provider rules.
+- Harvest personal phone numbers or emails unlawfully.
+- Send bulk unsolicited outreach automatically.
+- Promise leads or revenue.
+- Hide the source of business information.
+
+5.6 Voice and carousel content tools
+------------------------------------
+Add these only after the core agent and approval systems are reliable.
+
+The tools must support:
+- Draft state.
+- User editing.
+- Visual preview.
+- Attribution where required.
+- Provider usage limits.
+- Asset deletion.
+- Approval before publishing.
+
+================================================================================
+6. VIRAL AND ORGANIC DISTRIBUTION LOOPS
+================================================================================
+
+6.1 Embeddable widget attribution
+---------------------------------
+If a user chooses to publish a public widget, an optional attribution badge may
+link to the qwenton-agents signup page.
+
+Track only privacy-respecting metrics:
+- Widget loads.
+- Qualified interactions.
+- Signup clicks.
+- Signup conversions.
+- Disable rate.
+
+Do not assume a viral coefficient or publish a K-factor claim without measurement.
+
+6.2 Export attribution
+----------------------
+For free exports, offer an optional small “Created with qwenton-agents” mark. Make
+attribution policy clear. Do not insert hidden links or misleading metadata.
+
+6.3 Referral program
+--------------------
+Add a referral feature only after abuse prevention is designed.
+
+Required:
+- Unique referral code.
+- Referral attribution window.
+- Duplicate-account prevention.
+- Reward limits.
+- Fraud review.
+- Terms shown to users.
+- Admin reporting.
+
+6.4 Community-led growth
+------------------------
+Use genuine educational content:
+- AI workflow examples.
+- Marketing research tutorials.
+- Founder productivity use cases.
+- Agent-building walkthroughs.
+- Build-in-public updates.
+- Customer feedback stories with permission.
+
+Do not use fake testimonials, fake user counts, fake case studies, or fabricated
+screenshots.
+
+================================================================================
+7. PRICING AND ENTITLEMENT RULE
+================================================================================
+
+This growth strategy must not define a second pricing or entitlement system.
+Pricing, agent limits, run limits, and integration access must come from the
+existing canonical server-side configuration.
+
+The coding agent must:
+- Read the current configured plans.
+- Display plan details from one source.
+- Enforce limits on the server.
+- Keep frontend, admin, billing, and tests consistent.
+- Never change prices or limits because of this strategy file alone.
+
+If the product owner changes pricing later, update the canonical entitlement
+configuration first. Then update the pricing UI, billing logic, tests, and public
+marketing copy from that source.
+
+Do not promise unlimited AI runs. Use one of these accurately configured labels:
+- Monthly run allowance.
+- Fair-use limit.
+- Usage-based allowance.
+- Admin-configured quota.
+
+The user must be able to see:
+- Current plan.
+- Agent limit.
+- Run usage.
+- File/storage usage if applicable.
+- Integration access.
+- Renewal or expiration status.
+
+================================================================================
+8. FOUR-WEEK GROWTH EXECUTION PLAN
+================================================================================
+
+WEEK 1 — TRUSTED PRODUCT DEMO
+-----------------------------
+Product updates:
+- Improve landing-page explanation.
+- Add safe fictional-data demo.
+- Add one or two strong agent templates.
+- Show approval workflow.
+- Fix signup and onboarding friction.
+- Add analytics with privacy-respecting events.
+
+Content:
+- Record one Hinglish creator Reel.
+- Publish one founder-style product walkthrough.
+- Publish one marketing-team use case.
+- Publish one behind-the-scenes build update.
+
+Success metrics:
+- Demo starts.
+- Demo completions.
+- Signup conversion.
+- First agent creation.
+- First successful run.
+
+Do not set conversion targets before establishing a baseline.
+
+WEEK 2 — EARLY USERS AND BUILDERS
+---------------------------------
+Recruit:
+- Startup founders.
+- Marketing freelancers.
+- Indie hackers.
+- Vibe coders.
+- AI builders.
+- Local SMB operators.
+
+Use direct, respectful outreach. Ask for feedback rather than making exaggerated
+claims. Provide a simple feedback form with:
+- What they tried.
+- Where they got stuck.
+- Which output was useful.
+- Which integration they need.
+- What they would pay for.
+
+Success metrics:
+- Activated users.
+- Users returning within seven days.
+- Completed agent runs.
+- Qualitative feedback quality.
+- Reported bugs.
+
+WEEK 3 — COMMUNITY AND USE-CASE VALIDATION
+-------------------------------------------
+Share demos in relevant communities only when permitted. Use different messages
+for founders, marketers, developers, and SMBs.
+
+Test these use cases:
+- Competitor research.
+- Campaign brief.
+- Content calendar.
+- Company knowledge search.
+- Telegram approval.
+
+Success metrics:
+- Qualified signups.
+- Activation rate by segment.
+- Retention by use case.
+- Most-requested template.
+- Most common failure point.
+
+WEEK 4 — RETENTION AND PRODUCT IMPROVEMENT
+------------------------------------------
+Review actual usage and improve:
+- Onboarding.
+- Agent templates.
+- Output quality.
+- Approval clarity.
+- Telegram reliability.
+- Error messages.
+- Pricing understanding.
+
+Only begin the next feature after the current workflow is reliable and tested.
+
+================================================================================
+9. MEASUREMENT AND ANALYTICS
+================================================================================
+
+Track product outcomes rather than vanity numbers.
+
+Acquisition:
+- Landing-page visits.
+- Demo starts.
+- Signup conversion.
+- Source campaign.
+
+Activation:
+- First login.
+- First agent created.
+- First successful run.
+- First knowledge item added.
+- First approval completed.
+
+Engagement:
+- Weekly active workspaces.
+- Completed runs.
+- Returning users.
+- Approved actions.
+- Telegram usage.
+
+Retention:
+- Day-1 return.
+- Day-7 return.
+- Day-30 return.
+- Active workspace retention.
+- Repeat workflow usage.
+
+Reliability:
+- Run failure rate.
+- Provider timeout rate.
+- Approval failure rate.
+- Duplicate action rate.
+- Webhook failure rate.
+- File-processing failure rate.
+
+Business:
+- Trial-to-paid conversion.
+- Paid retention.
+- Refund rate.
+- Provider cost per active workspace.
+- Support volume.
+
+Do not claim growth, retention, virality, or cost savings until the data has been
+collected, defined, and reviewed.
+
+================================================================================
+10. SECURITY AND TRUST REQUIREMENTS FOR GROWTH FEATURES
+================================================================================
+
+Every growth feature must preserve the existing security model.
+
+Required for every feature:
+- Firebase authentication.
+- Workspace ownership checks.
+- Server-side authorization.
+- Rate limits.
+- Input validation.
+- Safe error messages.
+- Audit logging where actions or data change.
+- Secret redaction.
+- Feature flag or staged rollout.
+- Automated tests.
+
+External mutating actions such as sending messages, publishing content, creating
+calendar events, modifying records, or contacting leads must remain approval-gated.
+
+Public demos and widgets must not access private company files or user credentials.
+
+================================================================================
+11. IMPLEMENTATION ORDER FOR THE EXISTING SYSTEM
+================================================================================
+
+Before implementing any future growth feature, complete or verify these existing
+system foundations:
+
+1. Server-side authentication and route protection.
+2. Workspace and tenant isolation.
+3. Canonical plan and entitlement enforcement.
+4. Approval resumption with idempotency.
+5. Payment webhook verification.
+6. Telegram ownership and replay protection.
+7. Secure integration credential storage.
+8. File upload and deletion controls.
+9. Workspace-scoped knowledge retrieval.
+10. Automated tests and production build.
+
+Then implement future updates in this order:
+
+PHASE A — EXISTING PRODUCT QUALITY
+----------------------------------
+- Fix current UI errors.
+- Fix incomplete loading and error states.
+- Remove mock production data.
+- Improve onboarding.
+- Improve agent templates.
+- Improve approval visibility.
+
+PHASE B — MARKETING WORKFLOW VALUE
+----------------------------------
+- Competitor research template.
+- Campaign brief template.
+- Content calendar template.
+- Carousel export.
+- Marketing dashboard improvements.
+
+PHASE C — MOBILE AND TEAM ADOPTION
+----------------------------------
+- Telegram reliability.
+- Telegram approvals.
+- Workspace member roles.
+- Feedback and support flows.
+- Optional public widget behind a feature flag.
+
+PHASE D — ADVANCED AGENTS
+-------------------------
+- Bounded campaign mission mode.
+- Voice input.
+- Voice output.
+- WhatsApp Cloud API.
+- Approved lead research assistant.
+
+Every phase requires a repository audit, implementation, tests, security review,
+and deployment verification before the next phase begins.
+
+================================================================================
+12. TEAM ACTION CHECKLIST
+================================================================================
+
+[ ] Confirm that this is an update to the existing qwenton-agents repository.
+[ ] Preserve the existing Next.js, Firebase, Firestore, Vercel, Telegram, billing,
+    admin, approval, and claymorphism systems.
+[ ] Confirm the current canonical plan limits from the server configuration.
+[ ] Remove conflicting pricing and entitlement numbers from public copy.
+[ ] Audit the existing repository before changing code.
+[ ] Complete existing security and authorization foundations.
+[ ] Complete approval resumption and idempotency.
+[ ] Complete verified billing webhooks.
+[ ] Improve the current marketing-agent templates.
+[ ] Add the protected homepage demo.
+[ ] Add analytics and feedback collection.
+[ ] Test one growth feature before starting another.
+[ ] Use feature flags for experimental features.
+[ ] Review all claims before publishing them.
+[ ] Obtain user permission before using testimonials, screenshots, or logos.
+[ ] Run lint, typecheck, tests, and build before deployment.
+
+================================================================================
+13. EXACT INSTRUCTION TO THE CODING AI
+================================================================================
+
+Read this document as a growth strategy and future-feature backlog for the
+existing qwenton-agents application.
+
+Do not create a new qwenton system. Do not replace the current architecture. Do
+not rebuild the UI. Do not change authentication, billing, database, or plan
+limits because this document mentions a feature or idea.
+
+First inspect the current repository. Then produce a small implementation plan for
+only the highest-priority approved update. For each update:
+
+1. Identify the existing files and routes to modify.
+2. Reuse existing components, services, schemas, and authentication helpers.
+3. Add or update server-side authorization.
+4. Add loading, empty, error, and unavailable states.
+5. Add feature flags for experimental functionality.
+6. Add automated tests.
+7. Run lint, typecheck, tests, and production build.
+8. Report changed files, database changes, environment variables, tests, limitations,
+   and deployment steps.
+
+Do not mark an integration as live unless it calls the real provider successfully,
+handles errors, has secure credentials, has approval behavior where required, and
+has automated test coverage.
+
+Do not implement autonomous swarms, WhatsApp, lead mining, widgets, voice, or
+carousel export all in the same change. Implement one update at a time and keep
+existing qwenton-agents functionality working.
+
+================================================================================
+END OF UPDATE-ONLY GROWTH STRATEGY AND FUTURE FEATURE BACKLOG
+================================================================================

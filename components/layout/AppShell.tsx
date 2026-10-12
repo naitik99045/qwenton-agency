@@ -133,6 +133,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+    { label: 'Agency Swarm', href: '/swarm', icon: Sparkles, badgeText: 'Mission' },
     { label: 'My Agents', href: '/agents', icon: Bot, count: entitlements ? `${entitlements.activeAgents}/${entitlements.maxAgents}` : undefined },
     { label: 'Conversations', href: '/conversations', icon: MessageSquare },
     { label: 'Approvals', href: '/approvals', icon: ShieldAlert, badgeCount: pendingApprovalsCount },
@@ -208,6 +209,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {item.badgeCount && item.badgeCount > 0 ? (
                     <Badge variant="amber" className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center font-bold">
                       {item.badgeCount}
+                    </Badge>
+                  ) : item.badgeText ? (
+                    <Badge variant="info" className="text-[10px] px-1.5 py-0 h-4 flex items-center justify-center font-bold">
+                      {item.badgeText}
                     </Badge>
                   ) : item.count ? (
                     <span className="text-[11px] text-ink-light font-semibold">{item.count}</span>
