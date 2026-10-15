@@ -403,4 +403,221 @@ export const TOOL_CATALOG: Record<string, ToolMeta> = {
       },
     },
   },
+  perplexity_research: {
+    name: 'perplexity_research',
+    displayName: 'Perplexity AI Live Search & Sonar Reasoning',
+    description: 'Queries live web sources with citations, market grounding, and real-time intelligence.',
+    category: 'research',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'perplexity_research',
+        description: 'Perform deep cited web research using Perplexity Sonar search engine.',
+        parameters: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: 'Detailed research query or market question' },
+            recency: { type: 'string', enum: ['day', 'week', 'month', 'year'], description: 'Filter search recency' },
+          },
+          required: ['query'],
+        },
+      },
+    },
+  },
+  higgsfield_video: {
+    name: 'higgsfield_video',
+    displayName: 'Higgsfield Cinematic AI Video Generator',
+    description: 'Generates cinematic video scenes, camera pans, and promotional video specifications.',
+    category: 'utility',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'higgsfield_video',
+        description: 'Create cinematic video generations and camera motion blueprints via Higgsfield AI.',
+        parameters: {
+          type: 'object',
+          properties: {
+            prompt: { type: 'string', description: 'Visual video scene prompt with lighting, subject, and atmosphere' },
+            cameraMovement: { type: 'string', enum: ['dolly_in', 'dolly_out', 'orbit', 'pan_left', 'pan_right', 'crane_up', 'static'], description: 'Cinematic camera movement' },
+            durationSeconds: { type: 'number', description: 'Duration in seconds (e.g. 5 or 10)' },
+          },
+          required: ['prompt'],
+        },
+      },
+    },
+  },
+  huggingface_inference: {
+    name: 'huggingface_inference',
+    displayName: 'Hugging Face Model Inference & Embeddings',
+    description: 'Runs inference against open-source models, classifiers, or embeddings on Hugging Face.',
+    category: 'utility',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'huggingface_inference',
+        description: 'Execute open-source model inference or classification on Hugging Face Hub.',
+        parameters: {
+          type: 'object',
+          properties: {
+            model: { type: 'string', description: 'Hugging Face model repository ID (e.g. meta-llama/Llama-3-8b, BAAI/bge-large-en)' },
+            input: { type: 'string', description: 'Input text prompt or payload to process' },
+          },
+          required: ['input'],
+        },
+      },
+    },
+  },
+  analyze_meta_ads: {
+    name: 'analyze_meta_ads',
+    displayName: 'Meta Ads Manager Performance Analyzer',
+    description: 'Audits Facebook & Instagram ad campaign metrics, ROAS, CPC, and ad budget recommendations. Requires Approval.',
+    category: 'communication',
+    requiresApproval: true,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'analyze_meta_ads',
+        description: 'Audit Meta Ads Manager campaigns, ROAS, CPA, and CTR metrics. Requires approval.',
+        parameters: {
+          type: 'object',
+          properties: {
+            timeframe: { type: 'string', enum: ['last_7d', 'last_14d', 'last_30d', 'lifetime'], description: 'Reporting timeframe' },
+            campaignId: { type: 'string', description: 'Optional specific Campaign ID' },
+          },
+        },
+      },
+    },
+  },
+  analyze_similarweb_traffic: {
+    name: 'analyze_similarweb_traffic',
+    displayName: 'Similarweb Competitor Traffic Intelligence',
+    description: 'Inspects website traffic volumes, top referral sources, bounce rates, and organic channels.',
+    category: 'research',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'analyze_similarweb_traffic',
+        description: 'Audit competitor website traffic, visitor demographics, and traffic channels via Similarweb.',
+        parameters: {
+          type: 'object',
+          properties: {
+            domain: { type: 'string', description: 'Target website domain (e.g. competitor.com)' },
+          },
+          required: ['domain'],
+        },
+      },
+    },
+  },
+  audit_ahrefs_seo: {
+    name: 'audit_ahrefs_seo',
+    displayName: 'Ahrefs SEO & Backlink Auditor',
+    description: 'Extracts domain ratings, organic keyword rankings, and high-value backlink opportunities.',
+    category: 'research',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'audit_ahrefs_seo',
+        description: 'Analyze SEO performance, organic search volume, and backlink profile via Ahrefs.',
+        parameters: {
+          type: 'object',
+          properties: {
+            target: { type: 'string', description: 'Domain or URL to audit' },
+            mode: { type: 'string', enum: ['overview', 'keywords', 'backlinks'], description: 'Audit focus' },
+          },
+          required: ['target'],
+        },
+      },
+    },
+  },
+  track_brand_mentions: {
+    name: 'track_brand_mentions',
+    displayName: 'Brand24 Social Mentions & Sentiment Radar',
+    description: 'Monitors brand mentions, public sentiment polarity, customer complaints, and reach.',
+    category: 'research',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'track_brand_mentions',
+        description: 'Track social media mentions, brand sentiment, and influencer reach via Brand24.',
+        parameters: {
+          type: 'object',
+          properties: {
+            brandName: { type: 'string', description: 'Brand or keyword to monitor' },
+          },
+          required: ['brandName'],
+        },
+      },
+    },
+  },
+  manage_vercel_deployment: {
+    name: 'manage_vercel_deployment',
+    displayName: 'Vercel Deployment Manager',
+    description: 'Inspects active Vercel deployments, staging preview URLs, and production domains. Requires Approval.',
+    category: 'utility',
+    requiresApproval: true,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'manage_vercel_deployment',
+        description: 'Check project deployment status or trigger rebuilds on Vercel. Requires human approval.',
+        parameters: {
+          type: 'object',
+          properties: {
+            action: { type: 'string', enum: ['status', 'list_deployments', 'trigger_redeploy'], description: 'Action to perform' },
+            projectId: { type: 'string', description: 'Optional specific Vercel project ID or slug' },
+          },
+          required: ['action'],
+        },
+      },
+    },
+  },
+  run_dify_workflow: {
+    name: 'run_dify_workflow',
+    displayName: 'Dify Workflow Orchestrator',
+    description: 'Triggers external multi-step LLM workflows and knowledge retrieval chains on Dify.',
+    category: 'utility',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'run_dify_workflow',
+        description: 'Execute an external AI workflow application in Dify.',
+        parameters: {
+          type: 'object',
+          properties: {
+            inputs: { type: 'object', description: 'Parameters and inputs required by the Dify workflow' },
+          },
+          required: ['inputs'],
+        },
+      },
+    },
+  },
+  elevenlabs_voice_synthesis: {
+    name: 'elevenlabs_voice_synthesis',
+    displayName: 'ElevenLabs Lifelike Voiceover & Narration',
+    description: 'Generates realistic AI voiceovers and multilingual speech audio from text.',
+    category: 'utility',
+    requiresApproval: false,
+    definition: {
+      type: 'function',
+      function: {
+        name: 'elevenlabs_voice_synthesis',
+        description: 'Synthesize realistic voice audio narration for video or podcast scripts using ElevenLabs.',
+        parameters: {
+          type: 'object',
+          properties: {
+            text: { type: 'string', description: 'The script or dialogue to synthesize into speech' },
+            voice: { type: 'string', description: 'Voice ID or description (e.g. Rachel, Adam, Josh, Bella)' },
+          },
+          required: ['text'],
+        },
+      },
+    },
+  },
 };

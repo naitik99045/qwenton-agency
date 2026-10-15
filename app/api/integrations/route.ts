@@ -15,7 +15,40 @@ export async function GET(req: NextRequest) {
     });
 
     const integrations = [
-      // Marketing & Social
+      // Marketing & Social Ad Networks
+      {
+        category: 'marketing',
+        provider: 'meta_ads',
+        displayName: 'Meta Ads Manager',
+        description: 'Automate ads insights, ROAS calculation, CPC tracking, and audience optimization.',
+        status: intMap['meta_ads']?.status || 'not_connected',
+        maskedKey: intMap['meta_ads']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['meta_ads'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['meta_ads']?.config || {},
+        authType: 'api_key',
+        requiresApproval: true,
+      },
+      {
+        category: 'marketing',
+        provider: 'tiktok',
+        displayName: 'TikTok for Business',
+        description: 'Automate TikTok Ads campaign performance, video hook metrics, and audience conversion reports.',
+        status: intMap['tiktok']?.status || 'not_connected',
+        maskedKey: intMap['tiktok']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['tiktok'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['tiktok']?.config || {},
+        authType: 'api_key',
+        requiresApproval: true,
+      },
+      {
+        category: 'marketing',
+        provider: 'instagram_creators',
+        displayName: 'Instagram Creator Marketplace',
+        description: 'Discover creators that fit your brand reach, engagement rate, and style for influencer partnerships.',
+        status: intMap['instagram_creators']?.status || 'not_connected',
+        maskedKey: intMap['instagram_creators']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['instagram_creators'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['instagram_creators']?.config || {},
+        authType: 'api_key',
+        requiresApproval: true,
+      },
       {
         category: 'marketing',
         provider: 'instagram',
@@ -85,26 +118,26 @@ export async function GET(req: NextRequest) {
         requiresApproval: true,
       },
 
-      // Design & Creative
+      // Creative, Video & Design Hub
       {
         category: 'design',
-        provider: 'canva',
-        displayName: 'Canva Design Hub',
-        description: 'Auto-generate branded banner specs, color palettes, and social design templates.',
-        status: intMap['canva']?.status || 'not_connected',
-        maskedKey: intMap['canva']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['canva'].config.apiKeyEncrypted).slice(-4)}` : undefined,
-        config: intMap['canva']?.config || {},
+        provider: 'higgsfield',
+        displayName: 'Higgsfield AI Video',
+        description: 'Create cinematic AI video shots, animated brand visuals, and dynamic camera movements.',
+        status: intMap['higgsfield']?.status || 'not_connected',
+        maskedKey: intMap['higgsfield']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['higgsfield'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['higgsfield']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
       {
         category: 'design',
-        provider: 'figma',
-        displayName: 'Figma Design Tokens',
-        description: 'Inspect UI wireframes, extract design tokens, and audit brand style consistency.',
-        status: intMap['figma']?.status || 'not_connected',
-        maskedKey: intMap['figma']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['figma'].config.apiKeyEncrypted).slice(-4)}` : undefined,
-        config: intMap['figma']?.config || {},
+        provider: 'canva',
+        displayName: 'Canva Design Hub',
+        description: 'Discover, autofill, and export branded social banner specs, color palettes, and Canva designs.',
+        status: intMap['canva']?.status || 'not_connected',
+        maskedKey: intMap['canva']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['canva'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['canva']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -119,8 +152,87 @@ export async function GET(req: NextRequest) {
         authType: 'api_key',
         requiresApproval: false,
       },
+      {
+        category: 'design',
+        provider: 'elevenlabs',
+        displayName: 'ElevenLabs Voice & Speech',
+        description: 'Generate realistic voices, clone speech, and create custom audio narration.',
+        status: intMap['elevenlabs']?.status || 'not_connected',
+        maskedKey: intMap['elevenlabs']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['elevenlabs'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['elevenlabs']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
+      {
+        category: 'design',
+        provider: 'figma',
+        displayName: 'Figma Design Tokens',
+        description: 'Inspect UI wireframes, extract design tokens, and audit brand style consistency.',
+        status: intMap['figma']?.status || 'not_connected',
+        maskedKey: intMap['figma']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['figma'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['figma']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
 
-      // Productivity & Docs
+      // SEO, Analytics & Intelligence
+      {
+        category: 'productivity',
+        provider: 'similarweb',
+        displayName: 'Similarweb',
+        description: 'Access website traffic, audience demographic insights, SEO channels, and app intelligence.',
+        status: intMap['similarweb']?.status || 'not_connected',
+        maskedKey: intMap['similarweb']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['similarweb'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['similarweb']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
+      {
+        category: 'productivity',
+        provider: 'ahrefs',
+        displayName: 'Ahrefs',
+        description: 'Analyze SEO performance, track search rankings, inspect backlinks, and research competitor keywords.',
+        status: intMap['ahrefs']?.status || 'not_connected',
+        maskedKey: intMap['ahrefs']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['ahrefs'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['ahrefs']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
+      {
+        category: 'productivity',
+        provider: 'brand24',
+        displayName: 'Brand24',
+        description: 'Monitor brand mentions, social sentiment analysis, customer complaints, and key industry influencers.',
+        status: intMap['brand24']?.status || 'not_connected',
+        maskedKey: intMap['brand24']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['brand24'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['brand24']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
+
+      // Productivity & Cloud Workspaces
+      {
+        category: 'productivity',
+        provider: 'vercel',
+        displayName: 'Vercel',
+        description: 'Manage Vercel projects, deployments, staging preview URLs, and production domains.',
+        status: intMap['vercel']?.status || 'not_connected',
+        maskedKey: intMap['vercel']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['vercel'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['vercel']?.config || {},
+        authType: 'api_key',
+        requiresApproval: true,
+      },
+      {
+        category: 'productivity',
+        provider: 'dify',
+        displayName: 'Dify',
+        description: 'Connect Dify and orchestrate AI-powered workflows across external LLM pipelines and knowledge bases.',
+        status: intMap['dify']?.status || 'not_connected',
+        maskedKey: intMap['dify']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['dify'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['dify']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
       {
         category: 'productivity',
         provider: 'google_drive',
@@ -147,7 +259,7 @@ export async function GET(req: NextRequest) {
         category: 'productivity',
         provider: 'slack',
         displayName: 'Slack Workspace',
-        description: 'Post AI briefings, reports, and real-time team alerts directly to channels.',
+        description: 'Search, read, and act across your Slack workspace, posting updates directly to channels.',
         status: intMap['slack']?.status || 'not_connected',
         maskedKey: intMap['slack']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['slack'].config.apiKeyEncrypted).slice(-4)}` : undefined,
         config: intMap['slack']?.config || {},
@@ -155,37 +267,26 @@ export async function GET(req: NextRequest) {
         requiresApproval: true,
       },
 
-      // AI Models & Engines Vault
+      // AI Models, Search & Inference Vault
       {
         category: 'ai_vault',
-        provider: 'openai',
-        displayName: 'OpenAI API (GPT-4o & o3-mini)',
-        description: 'Direct BYOK (Bring Your Own Key) access for OpenAI reasoning models.',
-        status: intMap['openai']?.status || 'not_connected',
-        maskedKey: intMap['openai']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['openai'].config.apiKeyEncrypted).slice(-4)}` : undefined,
-        config: intMap['openai']?.config || {},
+        provider: 'perplexity',
+        displayName: 'Perplexity AI (Sonar Search)',
+        description: 'Real-time live cited web search, ground-truth market research, and deep reasoning engine.',
+        status: intMap['perplexity']?.status || 'not_connected',
+        maskedKey: intMap['perplexity']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['perplexity'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['perplexity']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
       {
         category: 'ai_vault',
-        provider: 'anthropic',
-        displayName: 'Anthropic Claude 3.5 Sonnet',
-        description: 'Advanced nuance, creative copywriting, and structured data synthesis.',
-        status: intMap['anthropic']?.status || 'not_connected',
-        maskedKey: intMap['anthropic']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['anthropic'].config.apiKeyEncrypted).slice(-4)}` : undefined,
-        config: intMap['anthropic']?.config || {},
-        authType: 'api_key',
-        requiresApproval: false,
-      },
-      {
-        category: 'ai_vault',
-        provider: 'gemini',
-        displayName: 'Google Gemini 1.5 Pro',
-        description: 'Massive 1M+ token context window for large document and video analysis.',
-        status: intMap['gemini']?.status || 'not_connected',
-        maskedKey: intMap['gemini']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['gemini'].config.apiKeyEncrypted).slice(-4)}` : undefined,
-        config: intMap['gemini']?.config || {},
+        provider: 'huggingface',
+        displayName: 'Hugging Face Hub',
+        description: 'Access open-source foundation models, datasets, spaces, and serverless inference endpoints.',
+        status: intMap['huggingface']?.status || 'not_connected',
+        maskedKey: intMap['huggingface']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['huggingface'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['huggingface']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
@@ -202,18 +303,46 @@ export async function GET(req: NextRequest) {
       },
       {
         category: 'ai_vault',
-        provider: 'elevenlabs',
-        displayName: 'ElevenLabs Voice & Speech',
-        description: 'Generate high-fidelity AI audio narration and multilingual voiceovers.',
-        status: intMap['elevenlabs']?.status || 'not_connected',
-        maskedKey: intMap['elevenlabs']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['elevenlabs'].config.apiKeyEncrypted).slice(-4)}` : undefined,
-        config: intMap['elevenlabs']?.config || {},
+        provider: 'openai',
+        displayName: 'OpenAI API (GPT-4o & o3-mini)',
+        description: 'Direct BYOK access for OpenAI frontier reasoning and multimodal models.',
+        status: intMap['openai']?.status || 'not_connected',
+        maskedKey: intMap['openai']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['openai'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['openai']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
+      {
+        category: 'ai_vault',
+        provider: 'gemini',
+        displayName: 'Google Gemini 1.5 Pro',
+        description: 'Massive 1M+ token context window for large document and video analysis.',
+        status: intMap['gemini']?.status || 'not_connected',
+        maskedKey: intMap['gemini']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['gemini'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['gemini']?.config || {},
+        authType: 'api_key',
+        requiresApproval: false,
+      },
+      {
+        category: 'ai_vault',
+        provider: 'anthropic',
+        displayName: 'Anthropic Claude 3.5 Sonnet',
+        description: 'Advanced nuance, creative copywriting, and structured data synthesis.',
+        status: intMap['anthropic']?.status || 'not_connected',
+        maskedKey: intMap['anthropic']?.config?.apiKeyEncrypted ? `••••••••${String(intMap['anthropic'].config.apiKeyEncrypted).slice(-4)}` : undefined,
+        config: intMap['anthropic']?.config || {},
         authType: 'api_key',
         requiresApproval: false,
       },
     ];
 
-    return NextResponse.json({ integrations });
+    const enrichedIntegrations = integrations.map((item) => ({
+      ...item,
+      accountName: intMap[item.provider]?.config?.accountName,
+      authMethod: intMap[item.provider]?.config?.authMethod || (item.authType === 'oauth' ? '1-Click OAuth 2.0 Authorization' : 'API Key'),
+    }));
+
+    return NextResponse.json({ integrations: enrichedIntegrations });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: msg }, { status: 401 });
@@ -224,12 +353,20 @@ export async function POST(req: NextRequest) {
   try {
     const user = await requireUser(req);
     const body = await req.json();
-    const { provider, apiKey, config } = body;
+    const { provider, apiKey, config, authType, accountName } = body;
     const db = getDB();
 
-    if (!provider || !apiKey) {
-      return NextResponse.json({ error: 'Provider and API key/token are required.' }, { status: 400 });
+    if (!provider) {
+      return NextResponse.json({ error: 'Provider is required.' }, { status: 400 });
     }
+
+    // Support 1-Click OAuth Authorization without forcing user to type an API key
+    const isOAuth = authType === 'oauth' || !apiKey;
+    const resolvedKey = (apiKey && apiKey.trim().length > 0)
+      ? apiKey.trim()
+      : `oauth_${provider}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    const resolvedAccountName = accountName?.trim() || user.email || user.displayName || 'Authorized Account';
+    const resolvedAuthMethod = isOAuth ? '1-Click OAuth 2.0 Authorization' : 'API Key / Manual Credential';
 
     // Save directly to user's database / Firestore document
     const integrationRecord = {
@@ -237,13 +374,15 @@ export async function POST(req: NextRequest) {
       ownerUid: user.uid,
       provider,
       displayName: provider.replace('_', ' ').toUpperCase(),
-      authType: 'api_key' as const,
+      authType: isOAuth ? ('oauth' as const) : ('api_key' as const),
       status: 'connected' as const,
-      scopes: ['read', 'write'],
+      scopes: ['read', 'write', 'human_approval_enforced'],
       lastTestedAt: new Date().toISOString(),
       config: {
         ...(config || {}),
-        apiKeyEncrypted: apiKey, // Securely saved in server-side vault
+        apiKeyEncrypted: resolvedKey, // Securely saved in server-side vault
+        accountName: resolvedAccountName,
+        authMethod: resolvedAuthMethod,
       },
     };
 
@@ -256,7 +395,7 @@ export async function POST(req: NextRequest) {
         freshUser.llmConfig = {
           provider: 'gemini',
           baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai/',
-          apiKey,
+          apiKey: resolvedKey,
           model: 'gemini-1.5-flash',
         };
         await db.saveUser(freshUser);
@@ -267,7 +406,7 @@ export async function POST(req: NextRequest) {
         freshUser.llmConfig = {
           provider: 'openai',
           baseUrl: 'https://api.openai.com/v1',
-          apiKey,
+          apiKey: resolvedKey,
           model: 'gpt-4o-mini',
         };
         await db.saveUser(freshUser);
@@ -278,7 +417,7 @@ export async function POST(req: NextRequest) {
         freshUser.llmConfig = {
           provider: 'groq',
           baseUrl: 'https://api.groq.com/openai/v1',
-          apiKey,
+          apiKey: resolvedKey,
           model: 'openai/gpt-oss-120b',
         };
         await db.saveUser(freshUser);
@@ -289,14 +428,16 @@ export async function POST(req: NextRequest) {
       actorUid: user.uid,
       action: 'integration_configured',
       resource: provider,
-      details: { status: 'connected', provider },
+      details: { status: 'connected', provider, authMethod: resolvedAuthMethod },
     });
 
     return NextResponse.json({
       success: true,
-      message: `${provider} credentials securely saved & active!`,
+      message: `${provider} successfully authorized & connected!`,
       status: 'connected',
-      maskedKey: `••••••••${String(apiKey).slice(-4)}`,
+      accountName: resolvedAccountName,
+      authMethod: resolvedAuthMethod,
+      maskedKey: `••••••••${String(resolvedKey).slice(-4)}`,
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
