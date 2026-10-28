@@ -237,8 +237,9 @@ export default function BillingPage() {
       priceFormatted: '₹0',
       period: 'forever free',
       maxAgents: 2,
-      description: 'Ideal for testing autonomous workflows.',
-      features: ['2 AI Agents for Free Work', 'LM Studio & Ollama Support', 'Safe Web Research', 'Human Approvals'],
+      maxInstagramReels: 2,
+      description: 'Ideal for testing autonomous workflows and Reel auto-DMs.',
+      features: ['2 AI Agents for Free Work', '2 Connected Reels (Auto DM on Comment)', 'Away & Busy DM Assistant', 'Cloud Groq & Gemini AI Models', 'Human Approvals'],
       highlighted: false,
     },
     {
@@ -248,8 +249,9 @@ export default function BillingPage() {
       priceFormatted: '₹99 / mo',
       period: 'per month',
       maxAgents: 4,
+      maxInstagramReels: 4,
       description: 'For growing individual creators and freelancers.',
-      features: ['4 AI Agents', 'Priority LLM Streaming', 'Telegram Bot Chat', '100MB File Knowledge'],
+      features: ['4 AI Agents', '4 Connected Reels for Auto DM', 'Away & Busy DM Auto-Reply', 'Priority LLM Streaming', 'Telegram Bot Chat', '100MB File Knowledge'],
       highlighted: false,
     },
     {
@@ -259,8 +261,9 @@ export default function BillingPage() {
       priceFormatted: '₹299 / mo',
       period: 'per month',
       maxAgents: 9,
-      description: 'For teams requiring deep research and routines.',
-      features: ['9 AI Agents', 'Gemini & OpenAI Cloud Access', 'Automated Scheduled Routines', '500MB Storage'],
+      maxInstagramReels: 9,
+      description: 'For teams requiring deep research, routines, and multi-reels.',
+      features: ['9 AI Agents', '9 Connected Reels for Auto DM', 'Multi-Keyword Comment Automation', 'Gemini & OpenAI Cloud Access', 'Automated Scheduled Routines', '500MB Storage'],
       highlighted: true,
     },
     {
@@ -270,8 +273,9 @@ export default function BillingPage() {
       priceFormatted: '₹599 / mo',
       period: 'per month',
       maxAgents: 15,
-      description: 'Maximum capacity and dedicated enterprise throughput.',
-      features: ['15 AI Agents', 'Custom BaseURL & API Keys', 'Multi-channel Slack & Telegram', 'Unlimited Storage & Priority Queue'],
+      maxInstagramReels: 15,
+      description: 'Maximum capacity: 15 bots and 15 Reels automation.',
+      features: ['15 AI Agents', '15 Connected Reels for Auto DM & Lead Gen', 'Unlimited Keyword Triggers & Busy Assistant', 'Custom BaseURL & API Keys', 'Multi-channel Slack & Telegram', 'Unlimited Storage & Priority Queue'],
       highlighted: false,
     },
   ];
@@ -452,7 +456,7 @@ export default function BillingPage() {
                   </div>
 
                   <div className="space-y-2 mb-6">
-                    {p.features.map((f) => (
+                    {p.features.map((f: string) => (
                       <div key={f} className="flex items-start gap-2 text-xs text-ink">
                         <Check className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
                         <span>{f}</span>

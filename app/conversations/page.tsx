@@ -503,7 +503,7 @@ export default function ConversationsPage() {
                   <div
                     className={`p-3.5 sm:p-4 rounded-card text-xs sm:text-sm leading-relaxed max-w-[90%] sm:max-w-none ${
                       msg.sender === 'user'
-                        ? 'bg-gradient-to-b from-[#4667B1] to-[#34518F] text-white shadow-clay-button'
+                        ? 'bg-primary text-white shadow-clay-button font-medium'
                         : 'bg-white text-ink border border-border shadow-xs'
                     }`}
                   >
@@ -608,7 +608,7 @@ export default function ConversationsPage() {
                 <button
                   type="submit"
                   disabled={!inputPrompt.trim() || isStreaming}
-                  className="w-11 h-11 rounded-[12px] bg-gradient-to-b from-primary to-primary-deep text-white flex items-center justify-center shadow-clay-button hover:brightness-105 active:scale-95 transition-all disabled:opacity-50 shrink-0"
+                  className="w-11 h-11 rounded-[12px] bg-primary hover:bg-primary-deep text-white flex items-center justify-center shadow-clay-button active:scale-95 transition-all disabled:opacity-50 shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>

@@ -42,6 +42,9 @@ interface EnrichedAgent extends Agent {
   ownerEmail?: string;
   ownerName?: string;
   ownerPlan?: string;
+  modelProvider?: string;
+  modelName?: string;
+  tools?: Record<string, boolean>;
 }
 
 interface SystemDiagnostics {
@@ -76,6 +79,7 @@ const INITIAL_PLANS: Plan[] = [
     maxRunsPerMonth: 50,
     maxFileStorageBytes: 25 * 1024 * 1024,
     maxTelegramBots: 1,
+    maxInstagramReels: 2,
     features: ['2 AI Agents for Free Work', 'Cloud Groq & Gemini AI Models', 'Safe Web Research', 'Human Approvals'],
     active: true,
   },
@@ -88,6 +92,7 @@ const INITIAL_PLANS: Plan[] = [
     maxRunsPerMonth: 300,
     maxFileStorageBytes: 100 * 1024 * 1024,
     maxTelegramBots: 1,
+    maxInstagramReels: 4,
     features: ['4 AI Agents', 'Priority LLM Streaming', 'Telegram Bot Chat', '100MB File Knowledge'],
     active: true,
   },
@@ -100,6 +105,7 @@ const INITIAL_PLANS: Plan[] = [
     maxRunsPerMonth: 1000,
     maxFileStorageBytes: 500 * 1024 * 1024,
     maxTelegramBots: 3,
+    maxInstagramReels: 9,
     features: ['9 AI Agents', 'Gemini & OpenAI Cloud Access', 'Automated Scheduled Routines', '500MB Storage'],
     active: true,
   },
@@ -112,6 +118,7 @@ const INITIAL_PLANS: Plan[] = [
     maxRunsPerMonth: 5000,
     maxFileStorageBytes: 2 * 1024 * 1024 * 1024,
     maxTelegramBots: 5,
+    maxInstagramReels: 15,
     features: ['15 AI Agents', 'Custom BaseURL & API Keys', 'Multi-channel Slack & Telegram', 'Unlimited Storage & Priority Queue'],
     active: true,
   },

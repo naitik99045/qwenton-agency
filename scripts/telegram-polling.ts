@@ -50,7 +50,7 @@ async function startPolling() {
             const conversations = localDb.getConversationsByUser(user.uid);
             let conv = conversations.find((c) => c.agentId === assignedAgent.id);
             if (!conv) {
-              conv = localDb.createConversation(user.uid, assignedAgent.id, 'Telegram Chat');
+              conv = await localDb.createConversation(user.uid, assignedAgent.id, 'Telegram Chat');
             }
 
             const runner = runAgentLoop({

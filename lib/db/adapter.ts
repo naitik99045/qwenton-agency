@@ -19,6 +19,8 @@ import {
   Order,
   Subscription,
   AuditEvent,
+  InstagramReelRule,
+  InstagramAutoReplySettings,
 } from './types';
 
 export interface DatabaseAdapter {
@@ -84,6 +86,14 @@ export interface DatabaseAdapter {
   getTelegramConnection(ownerUid: string): Promise<TelegramConnection | null>;
   saveTelegramConnection(conn: TelegramConnection): Promise<TelegramConnection>;
   deleteTelegramConnection(id: string): Promise<void>;
+
+  // Instagram Reel Automation & Auto-Replies
+  getInstagramReelRules(ownerUid: string): Promise<InstagramReelRule[]>;
+  getInstagramReelRule(id: string): Promise<InstagramReelRule | null>;
+  saveInstagramReelRule(rule: InstagramReelRule): Promise<InstagramReelRule>;
+  deleteInstagramReelRule(id: string): Promise<boolean>;
+  getInstagramSettings(ownerUid: string): Promise<InstagramAutoReplySettings | null>;
+  saveInstagramSettings(settings: InstagramAutoReplySettings): Promise<InstagramAutoReplySettings>;
 
   // Plans
   getPlans(): Promise<Plan[]>;
@@ -438,6 +448,68 @@ class FirestoreAdapter implements DatabaseAdapter {
     await adminFirestore.collection('telegramConnections').doc(id).delete();
   }
 
+  async getInstagramReelRules(ownerUid: string): Promise<InstagramReelRule[]> {
+    try {
+      const snap = await adminFirestore
+        .collection('instagramReelRules')
+        .where('ownerUid', '==', ownerUid)
+        .get();
+      if (!snap.empty) {
+        return snap.docs.map((d) => d.data() as InstagramReelRule);
+      }
+    } catch (e) {
+      console.warn('[FirestoreAdapter] getInstagramReelRules fallback to localDb', e);
+    }
+    return localDb.getInstagramReelRules(ownerUid);
+  }
+
+  async getInstagramReelRule(id: string): Promise<InstagramReelRule | null> {
+    try {
+      const doc = await adminFirestore.collection('instagramReelRules').doc(id).get();
+      if (doc.exists) return doc.data() as InstagramReelRule;
+    } catch (e) {
+      console.warn('[FirestoreAdapter] getInstagramReelRule fallback to localDb', e);
+    }
+    return localDb.getInstagramReelRule(id);
+  }
+
+  async saveInstagramReelRule(rule: InstagramReelRule): Promise<InstagramReelRule> {
+    try {
+      await adminFirestore.collection('instagramReelRules').doc(rule.id).set(rule, { merge: true });
+    } catch (e) {
+      console.warn('[FirestoreAdapter] saveInstagramReelRule fallback to localDb', e);
+    }
+    return localDb.saveInstagramReelRule(rule);
+  }
+
+  async deleteInstagramReelRule(id: string): Promise<boolean> {
+    try {
+      await adminFirestore.collection('instagramReelRules').doc(id).delete();
+    } catch (e) {
+      console.warn('[FirestoreAdapter] deleteInstagramReelRule fallback to localDb', e);
+    }
+    return localDb.deleteInstagramReelRule(id);
+  }
+
+  async getInstagramSettings(ownerUid: string): Promise<InstagramAutoReplySettings | null> {
+    try {
+      const doc = await adminFirestore.collection('instagramSettings').doc(`ig_settings_${ownerUid}`).get();
+      if (doc.exists) return doc.data() as InstagramAutoReplySettings;
+    } catch (e) {
+      console.warn('[FirestoreAdapter] getInstagramSettings fallback to localDb', e);
+    }
+    return localDb.getInstagramSettings(ownerUid);
+  }
+
+  async saveInstagramSettings(settings: InstagramAutoReplySettings): Promise<InstagramAutoReplySettings> {
+    try {
+      await adminFirestore.collection('instagramSettings').doc(settings.id).set(settings, { merge: true });
+    } catch (e) {
+      console.warn('[FirestoreAdapter] saveInstagramSettings fallback to localDb', e);
+    }
+    return localDb.saveInstagramSettings(settings);
+  }
+
   async getPlans(): Promise<Plan[]> {
     try {
       const snap = await adminFirestore.collection('plans').get();
@@ -611,6 +683,13 @@ class LocalDBAdapter implements DatabaseAdapter {
   async getTelegramConnection(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getTelegramConnection(ownerUid); }
   async saveTelegramConnection(conn: TelegramConnection) { return localDb.saveTelegramConnection(conn); }
   async deleteTelegramConnection(id: string) { return localDb.deleteTelegramConnection(id); }
+
+  async getInstagramReelRules(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getInstagramReelRules(ownerUid); }
+  async getInstagramReelRule(id: string) { await localDb.ensureCloudSync(); return localDb.getInstagramReelRule(id); }
+  async saveInstagramReelRule(rule: InstagramReelRule) { return await localDb.saveInstagramReelRule(rule); }
+  async deleteInstagramReelRule(id: string) { return await localDb.deleteInstagramReelRule(id); }
+  async getInstagramSettings(ownerUid: string) { await localDb.ensureCloudSync(); return localDb.getInstagramSettings(ownerUid); }
+  async saveInstagramSettings(settings: InstagramAutoReplySettings) { return await localDb.saveInstagramSettings(settings); }
 
   async getPlans() { await localDb.ensureCloudSync(); return localDb.getPlans(); }
   async getPlan(id: string) { await localDb.ensureCloudSync(); return localDb.getPlan(id); }

@@ -188,7 +188,7 @@ export default function PricingPage() {
                 </div>
 
                 <div className="space-y-2.5 mb-8">
-                  {p.features.map((f) => (
+                  {p.features.map((f: string) => (
                     <div key={f} className="flex items-start gap-2.5 text-xs text-ink">
                       <div className="w-4 h-4 rounded-full bg-cloud-blue text-primary flex items-center justify-center shrink-0 mt-0.5">
                         <Check className="w-2.5 h-2.5" />

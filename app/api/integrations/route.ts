@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireUser } from '@/lib/auth/require-user';
 import { getDB } from '@/lib/db/adapter';
+import { InstagramReelRule } from '@/lib/db/types';
 
 export async function GET(req: NextRequest) {
   try {
@@ -387,6 +388,42 @@ export async function POST(req: NextRequest) {
     };
 
     await db.saveIntegration(integrationRecord);
+
+    // If Instagram is configured, auto-provision or update an active Reel Comment-to-DM rule
+    if (provider === 'instagram') {
+      try {
+        const triggerKeyword = (config?.triggerKeyword || 'GROWTH').trim().toUpperCase();
+        const reelUrl = (config?.reelUrl || 'https://instagram.com/reel/all').trim();
+        const dmMessage = (config?.dmMessage || 'Hey! Thanks for commenting. Here is the exclusive link and free resource you requested: https://qwenton.com/access 🔥').trim();
+        const existingRules = await db.getInstagramReelRules(user.uid);
+        const match = existingRules.find((r) => r.triggerKeyword.toUpperCase() === triggerKeyword);
+
+        if (!match) {
+          const newRule: InstagramReelRule = {
+            id: `ig_reel_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            ownerUid: user.uid,
+            reelUrl,
+            reelTitle: `Automated Reel (${triggerKeyword})`,
+            triggerKeyword,
+            matchType: 'contains',
+            publicReplies: [
+              'Check your DM! Just sent you the details 🚀',
+              'Sent to your inbox! Check your DMs 📩',
+              'Just DM’d you the access link! Let me know what you think 🔥',
+            ],
+            dmMessage,
+            status: 'active',
+            totalCommentsHandled: 0,
+            totalDmsSent: 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          await db.saveInstagramReelRule(newRule);
+        }
+      } catch (igErr) {
+        console.error('Failed to auto-provision Instagram rule:', igErr);
+      }
+    }
 
     // If an AI provider was configured, sync directly with user's active LLM config
     if (provider === 'gemini') {

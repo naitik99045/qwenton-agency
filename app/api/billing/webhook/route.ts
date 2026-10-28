@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/billing/stripe';
 import { getDB } from '@/lib/db/adapter';
+import { PlanId } from '@/lib/db/types';
 import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
         if (user) {
           await db.saveUser({
             ...user,
-            planId,
+            planId: planId as PlanId,
             stripeCustomerId: typeof session.customer === 'string' ? session.customer : undefined,
             updatedAt: new Date().toISOString(),
           });
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
       if (matchedUser) {
         await db.saveUser({
           ...matchedUser,
-          planId: 'starter',
+          planId: 'normal',
           updatedAt: new Date().toISOString(),
         });
       }

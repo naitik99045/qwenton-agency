@@ -148,6 +148,8 @@ export default function AgentWorkspacePage() {
     const tempUserMsg: Message = {
       id: `temp_${Date.now()}`,
       conversationId: conversation.id,
+      agentId: agent?.id || '',
+      ownerUid: conversation.ownerUid,
       sender: 'user',
       content: promptToSend,
       createdAt: new Date().toISOString(),

@@ -99,8 +99,9 @@ export function getLLMConfig(override?: ModelOverride): LLMConfig {
   };
 }
 
-export async function testLLMConnection(configOverride?: LLMConfig): Promise<{ ok: boolean; message: string; model?: string; provider?: string }> {
+export async function testLLMConnection(configOverride?: LLMConfig): Promise<{ ok: boolean; message: string; model?: string; provider?: string; latencyMs?: number }> {
   const config = configOverride || getLLMConfig();
+  const startTime = Date.now();
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 6000);
@@ -117,12 +118,14 @@ export async function testLLMConnection(configOverride?: LLMConfig): Promise<{ o
       signal: controller.signal,
     });
     clearTimeout(timeout);
+    const latencyMs = Date.now() - startTime;
 
     if (!res.ok) {
       return {
         ok: false,
         message: `Model server (${config.provider}) returned HTTP ${res.status}: ${res.statusText}`,
         provider: config.provider,
+        latencyMs,
       };
     }
 
@@ -133,6 +136,7 @@ export async function testLLMConnection(configOverride?: LLMConfig): Promise<{ o
       message: `Connected successfully to ${config.baseUrl} (${config.provider})`,
       model: models[0] || config.model,
       provider: config.provider,
+      latencyMs,
     };
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
@@ -147,6 +151,7 @@ export async function testLLMConnection(configOverride?: LLMConfig): Promise<{ o
 export interface StreamEvent {
   type: 'token' | 'tool_call' | 'error' | 'done';
   token?: string;
+  content?: string;
   toolCall?: {
     id?: string;
     name: string;

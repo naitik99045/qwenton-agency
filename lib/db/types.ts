@@ -205,6 +205,39 @@ export interface TelegramConnection {
   createdAt: string;
 }
 
+export interface InstagramReelRule {
+  id: string;
+  ownerUid: string;
+  reelUrl: string;
+  reelTitle: string;
+  triggerKeyword: string;
+  matchType: 'contains' | 'exact';
+  publicReplies: string[];
+  dmMessage: string;
+  assignedAgentId?: string;
+  status: 'active' | 'paused';
+  totalCommentsHandled: number;
+  totalDmsSent: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InstagramAutoReplySettings {
+  id: string;
+  ownerUid: string;
+  assignedAgentId?: string;
+  isBusyModeActive: boolean;
+  busyModeMessage: string;
+  dmKeywordTriggers: Array<{
+    id: string;
+    keyword: string;
+    reply: string;
+    active: boolean;
+  }>;
+  fallbackAiReply: boolean;
+  updatedAt: string;
+}
+
 export interface Plan {
   id: PlanId;
   name: string;
@@ -214,6 +247,7 @@ export interface Plan {
   maxRunsPerMonth: number;
   maxFileStorageBytes: number;
   maxTelegramBots: number;
+  maxInstagramReels: number; // Normal: 2, Lite: 4, Pro: 9, Ultra: 15
   features: string[];
   active: boolean;
 }

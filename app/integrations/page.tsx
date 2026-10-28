@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { AppShell } from '@/components/layout/AppShell';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -380,7 +381,13 @@ export default function IntegrationsPage() {
   const [secondaryInput, setSecondaryInput] = useState('');
   const [selectedAgentId, setSelectedAgentId] = useState('');
 
+  // Meta & Instagram Reel Connection specific states
+  const [metaTriggerKeyword, setMetaTriggerKeyword] = useState('GROWTH');
+  const [metaDmMessage, setMetaDmMessage] = useState('Hey! Thanks for commenting. Here is the exclusive link and free resource you requested: https://qwenton.com/access 🔥');
+  const [selectedMetaAccount, setSelectedMetaAccount] = useState('@qwenton_official');
+
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [disconnecting, setDisconnecting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -409,6 +416,8 @@ export default function IntegrationsPage() {
       }
     } catch (e) {
       console.error('Fetch error:', e);
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -444,7 +453,15 @@ export default function IntegrationsPage() {
     
     // Preload secondary config if existing
     if (item.provider === 'instagram') {
-      setSecondaryInput(item.config?.accountId || '');
+      const savedAcc = item.config?.accountId || item.accountName || '@qwenton_official';
+      setSecondaryInput(savedAcc);
+      setSelectedMetaAccount(
+        ['@qwenton_official', '@qwenton_growth', '@creative_studio'].includes(savedAcc)
+          ? savedAcc
+          : 'custom'
+      );
+      setMetaTriggerKeyword(item.config?.triggerKeyword || 'GROWTH');
+      setMetaDmMessage(item.config?.dmMessage || 'Hey! Thanks for commenting. Here is the exclusive link and free resource you requested: https://qwenton.com/access 🔥');
     } else if (item.provider === 'google_calendar') {
       setSecondaryInput(item.config?.calendarId || 'primary');
     } else if (item.provider === 'google_drive') {
@@ -478,7 +495,9 @@ export default function IntegrationsPage() {
 
       const configData: Record<string, any> = {};
       if (activeModalItem.provider === 'instagram') {
-        configData.accountId = secondaryInput.trim();
+        configData.accountId = secondaryInput.trim() || selectedMetaAccount;
+        configData.triggerKeyword = metaTriggerKeyword.trim() || 'GROWTH';
+        configData.dmMessage = metaDmMessage.trim();
       } else if (activeModalItem.provider === 'meta_ads') {
         configData.adAccountId = secondaryInput.trim();
       } else if (activeModalItem.provider === 'vercel') {
@@ -530,19 +549,87 @@ export default function IntegrationsPage() {
     if (!activeModalItem) return null;
     if (activeModalItem.provider === 'instagram') {
       return (
-        <div>
-          <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
-            Instagram Business Account ID (Optional)
-          </label>
-          <Input
-            type="text"
-            placeholder="e.g. 17841400012345678"
-            value={secondaryInput}
-            onChange={(e) => setSecondaryInput(e.target.value)}
-          />
-          <p className="text-[11px] text-ink-muted mt-1 ml-1">
-            Your numeric Instagram Page/Account ID for direct container publishing.
-          </p>
+        <div className="space-y-3.5 pt-1">
+          <div>
+            <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+              Select Instagram Account to Use
+            </label>
+            <select
+              value={selectedMetaAccount}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedMetaAccount(val);
+                if (val !== 'custom') {
+                  setSecondaryInput(val);
+                  setAccountLabelInput(val);
+                }
+              }}
+              className="w-full text-xs bg-white border border-border text-ink rounded-control px-3.5 py-2.5 font-medium shadow-clay-button-subtle focus:outline-none focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="@qwenton_official">@qwenton_official (Primary Brand)</option>
+              <option value="@qwenton_growth">@qwenton_growth (Growth & Outreach Channel)</option>
+              <option value="@creative_studio">@creative_studio (Agency Production Channel)</option>
+              <option value="custom">-- Connect Custom Account ID / Handle --</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+              Instagram Business / Creator Account ID or Handle
+            </label>
+            <Input
+              type="text"
+              placeholder="e.g. @mybrand_official or 17841400012345678"
+              value={secondaryInput}
+              onChange={(e) => {
+                setSecondaryInput(e.target.value);
+                setAccountLabelInput(e.target.value);
+              }}
+            />
+            <p className="text-[11px] text-ink-muted mt-1 ml-1">
+              Your verified Instagram Business username or numeric Page/Account ID.
+            </p>
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <div className="flex items-center justify-between mb-1.5 ml-1">
+              <label className="block text-xs font-semibold text-ink">
+                Reel Trigger Keyword (Auto-DM Trigger)
+              </label>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-approval-amber bg-approval-amber-bg px-2 py-0.5 rounded-md">
+                Reels Lead Magnet
+              </span>
+            </div>
+            <Input
+              type="text"
+              placeholder="e.g. GROWTH, DM, PRICE, GUIDE"
+              value={metaTriggerKeyword}
+              onChange={(e) => setMetaTriggerKeyword(e.target.value.toUpperCase())}
+            />
+            <p className="text-[11px] text-ink-muted mt-1 ml-1">
+              Whenever any user comments this word on your Reels, Qwenton automatically sends them your DM offer and replies in public comments!
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-ink mb-1.5 ml-1">
+              Automated Direct Message (DM) to Send
+            </label>
+            <textarea
+              rows={2}
+              className="w-full text-xs bg-white border border-border text-ink rounded-control p-2.5 shadow-clay-button-subtle focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-ink-light resize-none"
+              placeholder="Hey! Thanks for commenting. Here is the link you requested: https://..."
+              value={metaDmMessage}
+              onChange={(e) => setMetaDmMessage(e.target.value)}
+            />
+          </div>
+
+          <div className="p-3 rounded-card bg-[#F8F6F1] border border-border flex items-start gap-2.5 text-xs text-ink">
+            <Radio className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+            <div className="text-[11px] leading-relaxed text-ink">
+              <strong className="text-ink font-bold">Instant Provisioning:</strong> Saving this connection registers your Meta API key and auto-creates an active Reel comment-to-DM rule. Configure multiple reels and away mode anytime in the <Link href="/instagram" className="underline font-bold text-primary hover:text-primary-deep">Instagram Reels Hub</Link>.
+            </div>
+          </div>
         </div>
       );
     }
@@ -683,7 +770,9 @@ export default function IntegrationsPage() {
       } else {
         const configData: Record<string, any> = {};
         if (activeModalItem.provider === 'instagram') {
-          configData.accountId = secondaryInput.trim();
+          configData.accountId = secondaryInput.trim() || selectedMetaAccount;
+          configData.triggerKeyword = metaTriggerKeyword.trim() || 'GROWTH';
+          configData.dmMessage = metaDmMessage.trim();
         } else if (activeModalItem.provider === 'meta_ads') {
           configData.adAccountId = secondaryInput.trim();
         } else if (activeModalItem.provider === 'vercel') {
@@ -906,67 +995,109 @@ export default function IntegrationsPage() {
         </div>
 
         {/* Connectors Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredIntegrations.map((item) => (
-            <div key={item.provider} className="clay-surface p-5 flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
-              <div>
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-[12px] bg-white border border-border flex items-center justify-center shadow-clay-button-subtle">
-                    {getProviderIcon(item.provider)}
+        {isInitialLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[1, 2, 3, 4, 5, 6].map((idx) => (
+              <div key={idx} className="clay-surface p-5 space-y-4 animate-pulse">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-[12px] bg-border-strong" />
+                  <div className="h-4 w-20 bg-border-subtle rounded-md" />
+                </div>
+                <div className="space-y-2 pt-2">
+                  <div className="h-4 bg-border-strong rounded-md w-2/3" />
+                  <div className="h-3 bg-border-subtle rounded-md w-full" />
+                  <div className="h-3 bg-border-subtle rounded-md w-4/5" />
+                </div>
+                <div className="h-8 bg-border-subtle rounded-control w-full mt-4" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredIntegrations.map((item) => (
+              <div key={item.provider} className="clay-surface p-5 flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
+                <div>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-[12px] bg-white border border-border flex items-center justify-center shadow-clay-button-subtle">
+                      {getProviderIcon(item.provider)}
+                    </div>
+
+                    <Badge variant={item.status === 'connected' ? 'success' : 'outline'} className="text-[10px]">
+                      {item.status === 'connected' ? '● Connected' : 'Not Connected'}
+                    </Badge>
                   </div>
 
-                  <Badge variant={item.status === 'connected' ? 'success' : 'outline'} className="text-[10px]">
-                    {item.status === 'connected' ? '● Connected' : 'Not Connected'}
-                  </Badge>
-                </div>
+                  <h3 className="text-sm font-bold text-ink mb-1">{item.displayName}</h3>
+                  <p className="text-xs text-ink-muted leading-relaxed mb-3 min-h-[36px]">
+                    {item.description}
+                  </p>
 
-                <h3 className="text-sm font-bold text-ink mb-1">{item.displayName}</h3>
-                <p className="text-xs text-ink-muted leading-relaxed mb-3 min-h-[36px]">
-                  {item.description}
-                </p>
-
-                {item.status === 'connected' && (
-                  <div className="mb-3 px-2.5 py-1.5 rounded-control bg-[#E5F4EC]/70 border border-[#C8E8D7] text-[11px] flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 overflow-hidden">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0" />
-                      <span className="font-semibold text-ink truncate text-[11px]">
-                        {item.accountName ? `Authorized: ${item.accountName}` : 'Authorized & Active'}
+                  {item.status === 'connected' && (
+                    <div className="mb-2 px-2.5 py-1.5 rounded-control bg-[#E5F4EC]/70 border border-[#C8E8D7] text-[11px] flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 overflow-hidden">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0" />
+                        <span className="font-semibold text-ink truncate text-[11px]">
+                          {item.accountName ? `Authorized: ${item.accountName}` : 'Authorized & Active'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-success/90 font-mono font-medium shrink-0 ml-1">
+                        {item.authMethod?.includes('OAuth') || !item.maskedKey ? 'OAuth 2.0' : item.maskedKey}
                       </span>
                     </div>
-                    <span className="text-[10px] text-success/90 font-mono font-medium shrink-0 ml-1">
-                      {item.authMethod?.includes('OAuth') || !item.maskedKey ? 'OAuth 2.0' : item.maskedKey}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-3 border-t border-border/50 flex items-center justify-between">
-                <span className="text-[10px] font-semibold text-ink-light flex items-center gap-1">
-                  {item.requiresApproval ? '🛡️ Human Approval' : '⚡ Direct Execution'}
-                </span>
-
-                <Button
-                  size="sm"
-                  variant={item.status === 'connected' ? 'outline' : 'primary'}
-                  onClick={() => openIntegrationModal(item)}
-                  className="text-xs py-1 px-3 gap-1.5"
-                >
-                  {item.status === 'connected' ? (
-                    <>
-                      <Key className="w-3 h-3" />
-                      <span>Manage</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-3 h-3" />
-                      <span>Connect</span>
-                    </>
                   )}
-                </Button>
+
+                  {item.provider === 'instagram' && item.config?.triggerKeyword && (
+                    <div className="mb-3 px-2.5 py-1 rounded-[8px] bg-approval-amber-bg border border-approval-amber/30 text-[11px] flex items-center justify-between">
+                      <span className="font-semibold text-ink text-[11px]">Reels Auto-DM Trigger:</span>
+                      <span className="font-mono font-bold text-approval-amber uppercase">
+                        &quot;{item.config.triggerKeyword}&quot;
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-3 border-t border-border/50 flex items-center justify-between">
+                  <span className="text-[10px] font-semibold text-ink-light flex items-center gap-1">
+                    {item.requiresApproval ? '🛡️ Human Approval' : '⚡ Direct Execution'}
+                  </span>
+
+                  <div className="flex items-center gap-1.5">
+                    {item.provider === 'instagram' && (
+                      <Link href="/instagram">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs py-1 px-2.5 gap-1 text-primary border-primary/30 hover:bg-primary/10 font-bold"
+                        >
+                          <Film className="w-3 h-3" />
+                          <span>Reels Auto DM</span>
+                        </Button>
+                      </Link>
+                    )}
+                    <Button
+                      size="sm"
+                      variant={item.status === 'connected' ? 'outline' : 'primary'}
+                      onClick={() => openIntegrationModal(item)}
+                      className="text-xs py-1 px-3 gap-1.5"
+                    >
+                      {item.status === 'connected' ? (
+                        <>
+                          <Key className="w-3 h-3" />
+                          <span>Manage</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-3 h-3" />
+                          <span>Connect</span>
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Universal Connection & API Key Modal */}
         {activeModalItem ? (

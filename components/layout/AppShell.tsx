@@ -21,6 +21,7 @@ import {
   Menu,
   X,
   Plus,
+  Instagram,
 } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
@@ -139,6 +140,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { label: 'Approvals', href: '/approvals', icon: ShieldAlert, badgeCount: pendingApprovalsCount },
     { label: 'Knowledge Base', href: '/files', icon: FolderLock },
     { label: 'Routines', href: '/routines', icon: CalendarClock },
+    { label: 'Instagram Auto DM', href: '/instagram', icon: Instagram, badgeText: 'Reels' },
     { label: 'Integrations', href: '/integrations', icon: Radio },
     { label: 'Billing & Plans', href: '/billing', icon: CreditCard },
     { label: 'AI Settings', href: '/settings', icon: Settings },
@@ -331,7 +333,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link href="/agents/new">
               <button
                 disabled={entitlements?.isAtLimit}
-                className="px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-gradient-to-b from-primary to-primary-deep text-white text-xs font-semibold rounded-[12px] shadow-clay-button hover:brightness-105 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1"
+                className="px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-primary hover:bg-primary-deep text-white text-xs font-semibold rounded-[12px] shadow-clay-button active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5 sm:hidden" />
                 <span className="hidden sm:inline">+ New Agent</span>
@@ -342,7 +344,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page Container */}
-        <main className="flex-1 p-4 sm:p-8 overflow-y-auto">{children}</main>
+        <main className="flex-1 p-4 sm:p-8 overflow-y-auto flex flex-col justify-between">
+          <div>{children}</div>
+          <footer className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between text-xs text-ink-muted gap-2 pb-16 lg:pb-0">
+            <div>
+              <span>© {new Date().getFullYear()} Qwenton Inc. All rights reserved.</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs font-medium">
+              <Link href="/terms" className="hover:text-ink transition-colors hover:underline">
+                Terms of Service
+              </Link>
+              <span>•</span>
+              <Link href="/privacy" className="hover:text-ink transition-colors hover:underline">
+                Privacy Policy
+              </Link>
+              <span>•</span>
+              <span className="font-mono text-[10px] text-ink-light">Tri-Color 60-30-10 OKLCH</span>
+            </div>
+          </footer>
+        </main>
 
         {/* Android / Mobile Bottom Tab Bar */}
         <div className="fixed bottom-0 inset-x-0 h-14 bg-white/95 backdrop-blur-md border-t border-border/80 flex items-center justify-around px-2 z-30 lg:hidden shadow-lg">

@@ -14,6 +14,10 @@ export const EMAILJS_CONFIG = {
   privateKey: process.env.EMAILJS_PRIVATE_KEY || 'i19DT2N0T7cMlepB-nivt',
 };
 
+export function isEmailConfigured(): boolean {
+  return Boolean(EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId && EMAILJS_CONFIG.publicKey);
+}
+
 export async function sendOtpEmail(payload: EmailJSOtpPayload): Promise<{ ok: boolean; message: string }> {
   const now = new Date();
   const requestedAtFormatted = new Intl.DateTimeFormat('en-US', {

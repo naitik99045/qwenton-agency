@@ -427,6 +427,7 @@ export async function executeTool(
             link: 'https://calendar.google.com',
             message: `Event "${title}" successfully scheduled on Google Calendar.`,
           },
+        };
       }
 
       case 'send_telegram_message': {

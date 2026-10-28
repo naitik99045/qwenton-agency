@@ -18,9 +18,9 @@ export function Avatar({ name = '', role, variant = 'agent', size = 'md', classN
   };
 
   const variantStyles = {
-    agent: 'bg-gradient-to-br from-[#E6EEF8] to-[#CBDDF5] text-primary-deep border border-[#C5D7EF] shadow-clay-button-subtle',
-    user: 'bg-gradient-to-br from-[#F5DED1] to-[#E8C4B0] text-[#7A3F22] border border-[#DFC3B2] shadow-clay-button-subtle',
-    system: 'bg-gradient-to-br from-[#EAE7F5] to-[#D5CEEB] text-[#523E8C] border border-[#CEC5EB] shadow-clay-button-subtle',
+    agent: 'bg-[#E6EEF8] text-primary-deep border border-[#C5D7EF] shadow-clay-button-subtle',
+    user: 'bg-[#F5DED1] text-[#7A3F22] border border-[#DFC3B2] shadow-clay-button-subtle',
+    system: 'bg-[#EAE7F5] text-[#523E8C] border border-[#CEC5EB] shadow-clay-button-subtle',
   };
 
   const getInitials = (str: string) => {

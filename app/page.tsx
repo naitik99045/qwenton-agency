@@ -320,7 +320,7 @@ export default function LandingPage() {
                 Live Console
               </a>
               <a href="#suite" className="hover:text-ink transition-colors">
-                Bento Suite
+                Capabilities
               </a>
               <a href="#roster" className="hover:text-ink transition-colors">
                 Agent Personas
@@ -1024,7 +1024,7 @@ export default function LandingPage() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cloud-blue text-primary-deep text-xs font-bold mb-4 border border-primary/20">
             <Layers className="w-3.5 h-3.5" />
-            <span>Asymmetric Bento Capability Architecture</span>
+            <span>Autonomous Capability Architecture</span>
           </div>
           <h2 className="font-fluid-section font-extrabold text-ink tracking-tight mb-4">
             A Complete Autonomous Workforce for Every Function
@@ -1768,9 +1768,15 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-muted">
           <div>© 2026 qwenton-agents. Solid OKLCH Tri-Color Architecture. All rights reserved.</div>
           <div className="flex items-center gap-6">
-            <span className="hover:text-ink cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-ink cursor-pointer">Terms of Service</span>
-            <span className="hover:text-ink cursor-pointer">Security Safeguards</span>
+            <Link href="/privacy" className="hover:text-ink hover:underline transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-ink hover:underline transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/terms" className="hover:text-ink hover:underline transition-colors">
+              Security Safeguards
+            </Link>
           </div>
         </div>
       </footer>

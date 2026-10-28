@@ -9,23 +9,23 @@
        Strictly Zero Gradients — Pure Color Science
        ---------------------------------------------------- */
 
-    /* 60% Dominant Base: Tactile Linen Cream & Crisp Surface */
-    --canvas-cream: oklch(97.8% 0.008 85);          /* #F8F6F1 Warm tactile linen */
-    --surface-white: oklch(100% 0 0);              /* Pure solid card surface */
-    --surface-inset: oklch(96.5% 0.01 85);          /* Inset panel */
-    --border-subtle: oklch(91% 0.006 85);          /* #E3E0D8 Muted structure border */
-    --border-strong: oklch(84% 0.012 85);          /* #D4CEBF Crisp border */
+    /* 60% Dominant Base: Tactile Linen Alabaster & Crisp Solid Surfaces */
+    --canvas-cream: oklch(97.8% 0.008 85);          /* Pure warm alabaster linen */
+    --surface-white: oklch(100% 0 0);              /* Solid clean card surface */
+    --surface-inset: oklch(96.2% 0.01 85);          /* Tactile inset panel */
+    --border-subtle: oklch(89% 0.008 85);          /* Crisp hairline border */
+    --border-strong: oklch(82% 0.015 85);          /* High-definition border */
 
-    /* 30% Structural Ink & Typography */
-    --ink: oklch(28% 0.038 260);                   /* #263247 Deep slate architectural navy */
-    --ink-muted: oklch(46% 0.026 260);             /* #697386 Secondary readable text */
-    --ink-light: oklch(65% 0.015 260);             /* #9AA2B1 Metadata / subtle text */
+    /* 30% Structural Ink & Typography (Stark Architectural Obsidian) */
+    --ink: oklch(22% 0.02 260);                    /* Deep architectural obsidian */
+    --ink-muted: oklch(42% 0.025 260);             /* High-contrast readable secondary text */
+    --ink-light: oklch(60% 0.015 260);             /* Metadata / subtle labels */
 
-    /* 10% High-Energy Accent: Single Brand Anchor Derivation */
-    --brand-primary: oklch(52% 0.16 258);          /* #4667B1 Royal cobalt primary */
-    --brand-primary-deep: oklch(42% 0.14 258);     /* #34518F Deep cobalt interactive */
-    --brand-primary-light: oklch(93% 0.03 258);    /* #E6EEF8 Soft cloud tint */
-    --brand-primary-glow: oklch(52% 0.16 258 / 0.18);
+    /* 10% High-Energy Accent: High-Contrast Signal Amber (Avoids generic primary blue/purple) */
+    --brand-primary: oklch(62% 0.19 45);           /* Tactile Signal Ember/Amber */
+    --brand-primary-deep: oklch(54% 0.18 45);      /* Deep interactive hover state */
+    --brand-primary-light: oklch(95% 0.035 45);    /* Soft signal amber tint */
+    --brand-primary-glow: oklch(62% 0.19 45 / 0.18);
 
     /* Functional Accents */
     --approval-amber: oklch(62% 0.15 75);          /* #B98232 Amber approval gate */

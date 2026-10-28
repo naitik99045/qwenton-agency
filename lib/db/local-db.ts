@@ -21,6 +21,8 @@ import {
   Subscription,
   BillingEvent,
   AuditEvent,
+  InstagramReelRule,
+  InstagramAutoReplySettings,
 } from './types';
 
 interface DatabaseSchema {
@@ -37,6 +39,8 @@ interface DatabaseSchema {
   memories?: Record<string, Memory>;
   integrations: Record<string, Integration>;
   telegramConnections: Record<string, TelegramConnection>;
+  instagramReelRules?: Record<string, InstagramReelRule>;
+  instagramSettings?: Record<string, InstagramAutoReplySettings>;
   plans: Record<string, Plan>;
   orders: Record<string, Order>;
   subscriptions: Record<string, Subscription>;
@@ -54,7 +58,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
     maxRunsPerMonth: 50,
     maxFileStorageBytes: 25 * 1024 * 1024, // 25MB
     maxTelegramBots: 1,
-    features: ['2 AI Agents for Free Work', 'Cloud Groq & Gemini AI Models', 'Safe Web Research', 'Human Approvals'],
+    maxInstagramReels: 2,
+    features: ['2 AI Agents for Free Work', '2 Connected Reels (Auto DM & Comment-to-DM)', 'Away & Busy DM Auto-Reply', 'Cloud Groq & Gemini AI Models', 'Human Approvals'],
     active: true,
   },
   lite: {
@@ -66,7 +71,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
     maxRunsPerMonth: 300,
     maxFileStorageBytes: 100 * 1024 * 1024, // 100MB
     maxTelegramBots: 1,
-    features: ['4 AI Agents', 'Priority LLM Streaming', 'Telegram Bot Chat', '100MB File Knowledge'],
+    maxInstagramReels: 4,
+    features: ['4 AI Agents', '4 Connected Reels for Auto DM', 'Away & Busy DM Auto-Reply', 'Priority LLM Streaming', 'Telegram Bot Chat', '100MB File Knowledge'],
     active: true,
   },
   pro: {
@@ -78,7 +84,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
     maxRunsPerMonth: 1000,
     maxFileStorageBytes: 500 * 1024 * 1024, // 500MB
     maxTelegramBots: 3,
-    features: ['9 AI Agents', 'Gemini & OpenAI Cloud Access', 'Automated Scheduled Routines', '500MB Storage'],
+    maxInstagramReels: 9,
+    features: ['9 AI Agents', '9 Connected Reels for Auto DM', 'Multi-Keyword Comment Automation', 'Automated Scheduled Routines', '500MB Storage'],
     active: true,
   },
   ultra: {
@@ -90,7 +97,8 @@ export const DEFAULT_PLANS: Record<PlanId, Plan> = {
     maxRunsPerMonth: 5000,
     maxFileStorageBytes: 2 * 1024 * 1024 * 1024, // 2GB
     maxTelegramBots: 5,
-    features: ['15 AI Agents', 'Custom BaseURL & API Keys', 'Multi-channel Slack & Telegram', 'Unlimited Storage & Priority Queue'],
+    maxInstagramReels: 15,
+    features: ['15 AI Agents', '15 Connected Reels for Auto DM & Lead Gen', 'Unlimited Keyword Triggers & Busy Assistant', 'Custom BaseURL & API Keys', 'Multi-channel Slack & Telegram', 'Unlimited Storage & Priority Queue'],
     active: true,
   },
 };
@@ -164,9 +172,10 @@ class LocalDB {
           if (cloudData.routines) this.data.routines = { ...this.data.routines, ...cloudData.routines };
           if (cloudData.memories) this.data.memories = { ...this.data.memories, ...cloudData.memories };
           if (cloudData.telegramConnections) this.data.telegramConnections = { ...this.data.telegramConnections, ...cloudData.telegramConnections };
+          if (cloudData.instagramReelRules) this.data.instagramReelRules = { ...this.data.instagramReelRules, ...cloudData.instagramReelRules };
+          if (cloudData.instagramSettings) this.data.instagramSettings = { ...this.data.instagramSettings, ...cloudData.instagramSettings };
           this.save();
         }
-      }
     } catch (e) {
       console.warn('[RTDB Sync] Error during ensureCloudSync:', e);
     }
@@ -181,6 +190,8 @@ class LocalDB {
         parsed.plans = { ...DEFAULT_PLANS, ...(parsed.plans || {}) };
         parsed.orders = parsed.orders || {};
         parsed.memories = parsed.memories || {};
+        parsed.instagramReelRules = parsed.instagramReelRules || {};
+        parsed.instagramSettings = parsed.instagramSettings || {};
         // Clean any stale demo accounts
         if (parsed.users && parsed.users['demo_user_1']) {
           delete parsed.users['demo_user_1'];
@@ -214,6 +225,8 @@ class LocalDB {
       memories: {},
       integrations: {},
       telegramConnections: {},
+      instagramReelRules: {},
+      instagramSettings: {},
       plans: DEFAULT_PLANS,
       orders: {},
       subscriptions: {},
@@ -696,6 +709,48 @@ class LocalDB {
     await this.syncToCloud(`subscriptions/${sub.id}`, sub);
     this.save();
     return sub;
+  }
+
+  // Instagram Reel Automation & Auto-Replies
+  getInstagramReelRules(ownerUid: string): InstagramReelRule[] {
+    const rules = this.data.instagramReelRules || {};
+    return Object.values(rules)
+      .filter((r) => r.ownerUid === ownerUid)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  getInstagramReelRule(id: string): InstagramReelRule | null {
+    const rules = this.data.instagramReelRules || {};
+    return rules[id] || null;
+  }
+
+  async saveInstagramReelRule(rule: InstagramReelRule): Promise<InstagramReelRule> {
+    if (!this.data.instagramReelRules) this.data.instagramReelRules = {};
+    this.data.instagramReelRules[rule.id] = rule;
+    await this.syncToCloud(`instagramReelRules/${rule.id}`, rule);
+    this.save();
+    return rule;
+  }
+
+  async deleteInstagramReelRule(id: string): Promise<boolean> {
+    if (!this.data.instagramReelRules || !this.data.instagramReelRules[id]) return false;
+    delete this.data.instagramReelRules[id];
+    await this.syncToCloud(`instagramReelRules/${id}`, null, 'DELETE');
+    this.save();
+    return true;
+  }
+
+  getInstagramSettings(ownerUid: string): InstagramAutoReplySettings | null {
+    const settings = this.data.instagramSettings || {};
+    return settings[`ig_settings_${ownerUid}`] || null;
+  }
+
+  async saveInstagramSettings(settings: InstagramAutoReplySettings): Promise<InstagramAutoReplySettings> {
+    if (!this.data.instagramSettings) this.data.instagramSettings = {};
+    this.data.instagramSettings[settings.id] = settings;
+    await this.syncToCloud(`instagramSettings/${settings.id}`, settings);
+    this.save();
+    return settings;
   }
 
   // Audit

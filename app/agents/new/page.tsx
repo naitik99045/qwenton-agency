@@ -88,6 +88,14 @@ const TEMPLATES = [
     tools: ['perplexity_research', 'track_brand_mentions', 'analyze_similarweb_traffic', 'web_research', 'generate_report'],
   },
   {
+    id: 'instagram_growth_bot',
+    name: 'Instagram Reels & Auto DM Growth Engine',
+    role: 'Instagram Lead Generation & Auto Responder',
+    description: 'Monitors Reel comments, auto-replies with dynamic variations, sends automated DMs on keyword triggers, and acts as 24/7 away/busy concierge.',
+    systemPrompt: 'You are an Instagram Reels & DM Automation specialist. You craft high-converting keyword hooks, generate dynamic public comment responses, deliver instant DMs with lead magnets, and intelligently answer customer DMs when the business owner is busy.',
+    tools: ['publish_instagram_post', 'web_research', 'generate_canva_asset', 'generate_report'],
+  },
+  {
     id: 'custom_blank',
     name: 'Custom AI Coworker',
     role: 'Specialized Business Assistant',

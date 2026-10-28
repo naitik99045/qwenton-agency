@@ -30,6 +30,7 @@ export async function PATCH(
     const updatedUser = await db.saveUser({
       ...user,
       ...validated,
+      status: validated.status === 'pending' ? 'pending_verification' : (validated.status || user.status),
       role: validated.role ? (validated.role === 'admin' ? 'admin' : validated.role === 'owner' ? 'admin' : 'user') : user.role,
       planId: (validated.planId || user.planId) as PlanId,
       updatedAt: new Date().toISOString(),

@@ -157,7 +157,7 @@ export default function AgencySwarmPage() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Badge variant="purple" className="px-3 py-1 text-xs font-bold gap-1.5 shadow-sm">
+              <Badge variant="info" className="px-3 py-1 text-xs font-bold gap-1.5 shadow-sm">
                 <Zap className="w-3.5 h-3.5 fill-current" />
                 <span>100x Autonomous Agency Swarm</span>
               </Badge>
@@ -429,7 +429,7 @@ export default function AgencySwarmPage() {
                   <Palette className="w-5 h-5 text-primary" />
                   <h3 className="text-base font-bold text-ink">Creative Visual Direction</h3>
                 </div>
-                <Badge variant="purple">{dossier.visualDirective.canvaDimensions}</Badge>
+                <Badge variant="info">{dossier.visualDirective.canvaDimensions}</Badge>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
