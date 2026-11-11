@@ -1,45 +1,37 @@
 # Project Execution Roadmap
-**Status:** Complete
+**Status:** Active
+**Instruction for Execution Agent:** Pick the first unchecked `[ ]` task in the current active phase, implement it completely without placeholders, verify it, and mark it `[x]`.
 
-## Phase 1: Meta Connection Ingress in Integrations Tab
-- [x] **Task 1.1: Meta API Key, Account Selector & Reel Trigger Keyword in `/integrations`**
-  - *Action:* Enhanced the Meta / Instagram modal in `app/integrations/page.tsx` with:
-    1. Meta API Key / Access Token input with documentation guidance.
-    2. Account Selector dropdown (select from connected accounts or enter Instagram Account ID/handle).
-    3. Reel Trigger Keyword input (e.g. `GROWTH`, `DM`, `PRICE`) with helper explanation.
-    4. Auto-sync on save: When saved, call `/api/integrations` and automatically provision or update the user's default `InstagramReelRule`.
-    5. Direct action button to open `/instagram` for multi-reel rules.
-  - *Target Files:* `app/integrations/page.tsx`, `app/api/integrations/route.ts`
-  - *Done When:* User can enter Meta API key, select their account, specify the trigger word, click save, and see the integration connected and rule active.
+## Phase 1: Context Discovery & Design System Modernization
+- [x] **Task 1.1: Web & Competitor Research with api-anything & Linear/Raycast Analysis**
+  - *Action:* Researched modern power-user UI standards (command palettes, prompt-first heroes, surface ladders, non-primary OKLCH palettes, and removal of AI slop).
+  - *Target Files:* `.agent/project_state.md`, `app/globals.css`
+  - *Done When:* Design tokens are updated with 0 primary colors, 0 gradients, and high-contrast OKLCH definitions.
+- [x] **Task 1.2: Purge AI Slop and Outdated Palette Tokens**
+  - *Action:* Removed lingering royal cobalt (`#4667B1`), purple (`#523E8C`), soft-lavender pastels, and sparkle decorative icons (`Sparkles`).
+  - *Target Files:* `app/globals.css`, `components/landing/InstantAuditSandbox.tsx`
+  - *Done When:* Codebase contains zero sparkle tropes and zero primary blue/purple references.
 
-## Phase 2: Live Meta Webhook Ingress & Dispatch Architecture
-- [x] **Task 2.1: Live Meta Webhook Route Handler**
-  - *Action:* Implemented `app/api/instagram/webhook/route.ts` with `GET` challenge handshake (`hub.challenge`, `hub.verify_token`) and `POST` event handler parsing incoming Instagram comment and DM events.
-  - *Target Files:* `app/api/instagram/webhook/route.ts`
-  - *Done When:* Route passes challenge verification and parses incoming comment events to trigger auto-replies.
-- [x] **Task 2.2: Live Meta Graph API Client**
-  - *Action:* Created `lib/instagram/api.ts` with `replyToComment`, `sendPrivateReply`, and `sendDirectMessage` using Meta Graph API v20.0.
-  - *Target Files:* `lib/instagram/api.ts`
-  - *Done When:* Graph API client is typed, supports Bearer auth from integration tokens, and handles error states.
+## Phase 2: High-Craft Landing Page Redesign (The Wow Factor)
+- [x] **Task 2.1: Live Interactive Hero Cockpit with Real Human-in-the-Loop Gateway**
+  - *Action:* Replaced static marketing copy with an interactive dual-stage execution console allowing visitors to test 4 real workflows and click live `[Authorize & Dispatch]` / `[Reject]` controls.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* Visitors can test operations, modify trigger keywords, view live step traces, and toggle human approvals in real time.
+- [x] **Task 2.2: Standalone Instagram Reel Comment-to-DM Playground**
+  - *Action:* Built an interactive Reel tester right on the landing page where users test Reel links, input keywords, and preview public replies + private direct messages.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* Comment-to-DM simulator evaluates keywords and renders simulated Instagram phone screen.
+- [x] **Task 2.3: Anti-Slop Architectural Pillars & Telemetry Specs**
+  - *Action:* Implemented asymmetric split-stage capabilities (zero Bento grids, zero 3-card rows) and high-density technical comparison matrix.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* All 28 negative design constraints pass without marketing fluff.
 
-## Phase 3: High-Contrast Tri-Color UI Redesign (Strictly Zero Gradients)
-- [x] **Task 3.1: Eliminate All Gradients Across Codebase**
-  - *Action:* Removed all `bg-linear-*`, `bg-gradient-*`, and ash gradients from `app/globals.css`, `components/layout/AppShell.tsx`, `app/integrations/page.tsx`, `app/instagram/page.tsx`, `app/conversations/page.tsx`, and `components/ui/Avatar.tsx`.
-  - *Target Files:* `app/globals.css`, `components/layout/AppShell.tsx`, `app/integrations/page.tsx`, `app/instagram/page.tsx`, `app/conversations/page.tsx`, `components/ui/Avatar.tsx`
-  - *Done When:* Codebase contains zero gradient utilities and renders with solid, high-contrast surfaces.
-- [x] **Task 3.2: 60-30-10 Tri-Color Palette & Mandatory Review Elements**
-  - *Action:* Applied 60% Base Canvas, 30% Structural Panels/Chalk, 10% High-Contrast Accent. Added skeleton loaders for async states and verified legal footer links (`/terms`, `/privacy`) are visible.
-  - *Target Files:* `app/integrations/page.tsx`, `app/instagram/page.tsx`, `components/layout/AppShell.tsx`
-  - *Done When:* Clean, high-contrast tri-color aesthetic is active without banned tropes.
-
-## Phase 4: Defensive Security Pentest (`qwenton-pentest`)
-- [x] **Task 4.1: Security Audit & Vulnerability Remediation**
-  - *Action:* Audited `/api/integrations`, `/api/instagram/webhook`, `/api/instagram/rules`, and `/api/instagram/settings`. Verified secret masking, HMAC-SHA256 signature verification, and input validation.
-  - *Target Files:* `.agent/security_report.md`, `app/api/instagram/webhook/route.ts`
-  - *Done When:* Security audit report is compiled, all issues are marked `[FIXED]`, and verified.
-
-## Phase 5: Design Review & Anti-Trope Verification (`qwenton-review`)
-- [x] **Task 5.1: Negative Design Constraint Checklist & Final Polish**
-  - *Action:* Audited against the 28 forbidden tropes (no gradients, no radial orbs, no 3 cards in a row, no em dashes in Geist, skeleton loaders present, legal footer links present).
-  - *Target Files:* `.agent/review_report.md`
-  - *Done When:* All 28 checks pass and full application builds with zero errors.
+## Phase 3: Production Verification & Git Sync
+- [ ] **Task 3.1: TypeScript & Next.js Build Verification**
+  - *Action:* Run `npm run typecheck` and `npm run build` to verify 0 errors across all 57 routes.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* Build exits with code 0.
+- [ ] **Task 3.2: Git Commit & Remote Synchronization**
+  - *Action:* Stage and commit all redesigned UI assets, push to `origin/main` on GitHub.
+  - *Target Files:* Git workspace
+  - *Done When:* Remote `origin/main` is up to date with new commit hash.

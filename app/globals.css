@@ -35,10 +35,16 @@
     --danger: oklch(52% 0.18 25);                  /* #B95151 Carmine danger */
     --danger-bg: oklch(95% 0.03 25);
 
-    /* Subtle Functional Pastels */
-    --soft-lavender: oklch(92% 0.03 295);
-    --peach: oklch(91% 0.04 55);
-    --butter: oklch(93% 0.05 90);
+    /* Non-Primary Accent Derivations & Functional States */
+    --brand-hover: oklch(56% 0.18 45);
+    --brand-active: oklch(50% 0.17 45);
+    --brand-soft: oklch(94% 0.04 45);
+    --brand-border: oklch(75% 0.12 45);
+
+    /* Architectural Contrast Surfaces */
+    --surface-raised: oklch(99.2% 0.003 85);
+    --surface-panel: oklch(95.5% 0.008 85);
+    --accent-subtle: oklch(93% 0.035 45);
   }
 
   body {

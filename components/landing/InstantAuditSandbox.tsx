@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Sparkles,
   Zap,
   MapPin,
   Instagram,
@@ -16,6 +15,7 @@ import {
   ShieldCheck,
   Bot,
   ExternalLink,
+  Radio,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -207,7 +207,7 @@ export function InstantAuditSandbox() {
             >
               {isLoading ? (
                 <>
-                  <Sparkles className="w-4 h-4 animate-spin text-white" />
+                  <Zap className="w-4 h-4 animate-spin text-white" />
                   <span>AI Coworker Fleet Auditing Competitors (~1.2s)...</span>
                 </>
               ) : (
@@ -462,7 +462,7 @@ export function InstantAuditSandbox() {
             <div className="mt-6 p-5 rounded-xl bg-ink text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-clay-card">
               <div className="space-y-1">
                 <div className="text-xs font-bold text-primary-light uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Radio className="w-3.5 h-3.5 text-primary" />
                   <span>Next Step: Put This Strategy on Autopilot</span>
                 </div>
                 <div className="text-sm font-bold text-white">
