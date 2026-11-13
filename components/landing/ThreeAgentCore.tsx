@@ -232,10 +232,21 @@ export function ThreeAgentCore({ className = '' }: { className?: string }) {
           sat.scale.set(pulse, pulse, pulse);
         });
 
-        // Scroll Choreography: Expand orbital rings with depth
-        const ringScale = 1 + scrollProgress * 0.35;
+        // Scroll Choreography: Dynamic camera zoom and perspective elevation
+        camera.position.z = 7.8 - scrollProgress * 1.8;
+        camera.position.y = scrollProgress * 0.6;
+        camera.lookAt(0, 0, 0);
+
+        // Core tilt influenced by scroll
+        coreMesh.rotation.x += (0.18 + scrollProgress * 0.3) * delta;
+
+        // Expand orbital rings with depth on scroll
+        const ringScale = 1 + scrollProgress * 0.45;
         ring1.scale.set(ringScale, ringScale, ringScale);
         ring2.scale.set(ringScale, ringScale, ringScale);
+
+        // Satellite orbital vertical wave on scroll
+        satellitesGroup.position.y = Math.sin(scrollProgress * Math.PI) * 0.4;
 
         // Tilt scene towards pointer
         scene.rotation.y = targetX;

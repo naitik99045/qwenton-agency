@@ -1,30 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ShieldCheck, Cpu, Terminal } from 'lucide-react';
+import { ShieldCheck, Cpu, Terminal, Zap } from 'lucide-react';
 
 interface TactileStickerProps {
   className?: string;
-  variant?: 'seal' | 'badge' | 'hardware' | 'animated-bot';
+  variant?: 'seal' | 'badge' | 'hardware' | 'animated-bot' | 'multitask-bot';
   rotation?: number;
+  scrollReactive?: boolean;
 }
 
 export function TactileSticker({
   className = '',
   variant = 'badge',
   rotation = -2.5,
+  scrollReactive = true,
 }: TactileStickerProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [scrollYOffset, setScrollYOffset] = useState<number>(0);
 
-  // Live Animated Bot Sticker from Online Asset Search
+  useEffect(() => {
+    if (!scrollReactive) return;
+
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scroll = window.scrollY;
+          // Smooth sinusoidal parallax float between -8px and +8px
+          const floatOffset = Math.sin(scroll * 0.0035) * 6;
+          setScrollYOffset(floatOffset);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrollReactive]);
+
+  const currentTransform = isHovered
+    ? 'scale(1.05) rotate(0deg) translateY(0px)'
+    : `rotate(${rotation}deg) translateY(${scrollYOffset}px)`;
+
+  // Live Animated Coding Bot Sticker
   if (variant === 'animated-bot') {
     return (
       <div
         className={`relative inline-block cursor-pointer select-none group ${className}`}
         style={{
-          transform: isHovered ? 'scale(1.05) rotate(0deg)' : `rotate(${rotation}deg)`,
-          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: currentTransform,
+          transition: isHovered
+            ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            : 'transform 0.15s ease-out',
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -38,7 +68,7 @@ export function TactileSticker({
               alt="Autonomous Coding Agent Working"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Online Live Status Pulse */}
+            {/* Live Status Pulse */}
             <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/70 border border-primary/40 text-[9px] font-mono font-bold text-primary">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>ACTIVE</span>
@@ -54,13 +84,54 @@ export function TactileSticker({
     );
   }
 
+  // Live Multitask Coworker Bot Sticker
+  if (variant === 'multitask-bot') {
+    return (
+      <div
+        className={`relative inline-block cursor-pointer select-none group ${className}`}
+        style={{
+          transform: currentTransform,
+          transition: isHovered
+            ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            : 'transform 0.15s ease-out',
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="relative rounded-2xl p-2.5 bg-surface border border-primary/30 shadow-clay-card flex flex-col items-center gap-1.5 backdrop-blur-md">
+          {/* Animated GIF Container */}
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-canvas/80 border border-border flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/stickers/multitask-agent.gif"
+              alt="Autonomous Multitask Coworker"
+              className="w-full h-full object-contain pointer-events-none select-none"
+            />
+            {/* Live Status Pulse */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/70 border border-primary/40 text-[9px] font-mono font-bold text-primary">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span>DISPATCH</span>
+            </div>
+          </div>
+          <div className="text-[10px] font-mono text-ink-muted flex items-center gap-1">
+            <Zap className="w-3 h-3 text-primary" />
+            <span className="font-bold text-ink">LEAD ENGINE</span>
+            <span>• PARALLEL</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (variant === 'seal') {
     return (
       <div
         className={`relative inline-block cursor-pointer select-none group ${className}`}
         style={{
-          transform: isHovered ? 'scale(1.05) rotate(0deg)' : `rotate(${rotation}deg)`,
-          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: currentTransform,
+          transition: isHovered
+            ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            : 'transform 0.15s ease-out',
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -88,8 +159,10 @@ export function TactileSticker({
       <div
         className={`relative inline-block cursor-pointer select-none ${className}`}
         style={{
-          transform: isHovered ? 'scale(1.04) rotate(0deg)' : `rotate(${rotation}deg)`,
-          transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: currentTransform,
+          transition: isHovered
+            ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            : 'transform 0.15s ease-out',
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -101,13 +174,13 @@ export function TactileSticker({
           <div>
             <div className="flex items-center gap-2">
               <span className="font-black text-ink tracking-tight uppercase text-[11px]">
-                HW-CERTIFIED
+                FLEET-VERIFIED
               </span>
               <span className="text-[9px] px-1.5 py-0.2 rounded bg-primary/10 text-primary font-bold border border-primary/20">
                 100% DISPATCH
               </span>
             </div>
-            <div className="text-[10px] text-ink-muted">META_V20_GRAPH // NO_SLOP</div>
+            <div className="text-[10px] text-ink-muted">META_V20_GRAPH // REELS_ENGINE</div>
           </div>
         </div>
       </div>
@@ -119,8 +192,10 @@ export function TactileSticker({
     <div
       className={`relative inline-block cursor-pointer select-none ${className}`}
       style={{
-        transform: isHovered ? 'scale(1.04) rotate(0deg)' : `rotate(${rotation}deg)`,
-        transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: currentTransform,
+        transition: isHovered
+          ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+          : 'transform 0.15s ease-out',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

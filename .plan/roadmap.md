@@ -39,13 +39,19 @@
   - *Action:* Built `components/landing/ScrollProgressBar.tsx` for real-time scroll completion tracking and `components/landing/ScrollPipeline.tsx` to demonstrate the 3-stage lead execution lifecycle.
   - *Target Files:* `components/landing/ScrollProgressBar.tsx`, `components/landing/ScrollPipeline.tsx`, `app/page.tsx`
   - *Done When:* Scroll bar tracks reading progress and pipeline updates stages dynamically during scroll.
-- [x] **Task 3.4: Typography Upgrade (Space Grotesk, Plus Jakarta Sans, JetBrains Mono)**
-  - *Action:* Integrated Google Fonts in `app/layout.tsx` and `tailwind.config.ts` without layout shifts or FOIT.
-  - *Target Files:* `app/layout.tsx`, `tailwind.config.ts`, `app/globals.css`
-  - *Done When:* Headings use Space Grotesk, body uses Plus Jakarta Sans, and metrics use JetBrains Mono.
 
-## Phase 4: Production Verification & Git Sync
-- [ ] **Task 4.1: Git Commit & Remote Synchronization**
-  - *Action:* Stage and commit all redesigned UI assets, Three.js 3D artifact, scroll components, and font configurations, and push to `origin/main` on GitHub.
+## Phase 4: Header Streamlining, Scroll-Animated Stickers & Internal Data Cleanse
+- [x] **Task 4.1: Remove Top Header Bar & Purge Internal Design Tokens**
+  - *Action:* Deleted top telemetry black bar from `app/page.tsx`, sanitized eyebrow badges and comparison matrix of internal "60-30-10" meta-copy, and purged vendor mentions in `app/privacy/page.tsx`.
+  - *Target Files:* `app/page.tsx`, `app/privacy/page.tsx`, `app/agents/[agentId]/page.tsx`
+  - *Done When:* Page starts directly at sticky navigation, and zero internal design formulas are shown to users.
+- [x] **Task 4.2: Scroll-Animated GIF Stickers & 3D Depth Zoom**
+  - *Action:* Added `scrollReactive` sinusoidal parallax floating to `TactileSticker.tsx`, mounted `multitask-agent.gif` in the Reels Playground, and added camera zoom depth to `ThreeAgentCore.tsx`.
+  - *Target Files:* `components/landing/TactileSticker.tsx`, `components/landing/ThreeAgentCore.tsx`, `app/page.tsx`
+  - *Done When:* Stickers float gracefully during page scroll and 3D camera dynamically tracks scroll depth.
+
+## Phase 5: Production Verification & Git Sync
+- [ ] **Task 5.1: Git Commit & Remote Synchronization**
+  - *Action:* Stage and commit all streamlined UI assets and push to `origin/main` on GitHub.
   - *Target Files:* Git workspace
   - *Done When:* All changes are committed and pushed cleanly to `origin/main`.

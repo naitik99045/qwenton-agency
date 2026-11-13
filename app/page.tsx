@@ -182,31 +182,6 @@ export default function LandingPage() {
       <ScrollProgressBar />
 
       {/* ----------------------------------------------------
-          TOP TECHNICAL TELEMETRY TICKER (Zero Vendor AI Names in Corner)
-          ---------------------------------------------------- */}
-      <div className="bg-ink text-white text-xs py-2 px-4 border-b border-border select-none">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4 font-mono text-[11px]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-            <span className="text-white font-bold tracking-wider uppercase">Qwenton Fleet Architecture</span>
-            <span className="text-ink-light hidden sm:inline">|</span>
-            <span className="text-ink-light hidden sm:inline">v0.6.0 Production Core</span>
-          </div>
-          <div className="flex items-center gap-4 text-ink-light">
-            <span className="hidden md:inline">
-              META_GRAPH_API: <strong className="text-white font-semibold">v20.0 Active</strong>
-            </span>
-            <span>
-              HUMAN_GATE: <strong className="text-primary font-semibold">100% Enforced</strong>
-            </span>
-            <span className="hidden sm:inline">
-              TELEMETRY: <strong className="text-white font-semibold">99.98% Operational</strong>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ----------------------------------------------------
           ARCHITECTURAL NAVIGATION HEADER (With Light/Dark Switch)
           ---------------------------------------------------- */}
       <header className="sticky top-0 z-40 bg-canvas/95 backdrop-blur-md border-b border-border">
@@ -276,7 +251,7 @@ export default function LandingPage() {
           <div className="lg:col-span-7 space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-[11px] font-medium border border-border shadow-xs">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span>AUTONOMOUS WORKFORCE • 60-30-10 SOLID CONTRAST • ZERO GRADIENTS</span>
+              <span>AUTONOMOUS WORKFORCE • ENTERPRISE FLEET PLATFORM</span>
             </div>
 
             <h1 className="font-fluid-hero font-black text-ink tracking-tight font-display">
@@ -586,7 +561,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <TactileSticker variant="hardware" rotation={1.5} className="shrink-0" />
+          <TactileSticker variant="multitask-bot" rotation={2} className="shrink-0" scrollReactive={true} />
         </div>
 
         <div className="clay-surface p-6 sm:p-8 bg-surface border border-border shadow-clay-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -926,11 +901,11 @@ export default function LandingPage() {
                 <td className="py-3.5 px-4 text-ink-muted">Single provider lock-in</td>
               </tr>
               <tr>
-                <td className="py-3.5 px-4 font-bold">Design Aesthetics</td>
+                <td className="py-3.5 px-4 font-bold">Interface Architecture</td>
                 <td className="py-3.5 px-4 text-primary font-bold">
-                  Tri-Color 60-30-10 Solid (90% Carbon Slate + 10% Cyber Mint)
+                  High-Density Focused System (Dark & Light Mode)
                 </td>
-                <td className="py-3.5 px-4 text-ink-muted">Generic dark template</td>
+                <td className="py-3.5 px-4 text-ink-muted">Generic template</td>
                 <td className="py-3.5 px-4 text-ink-muted">Overused AI purple glows</td>
               </tr>
             </tbody>
@@ -1236,7 +1211,7 @@ export default function LandingPage() {
             <Link href="/privacy" className="hover:text-ink hover:underline transition-colors">
               Privacy Policy
             </Link>
-            <span className="text-primary font-bold">● 60-30-10 Tri-Color System • Dark & Light Engine</span>
+            <span className="text-primary font-bold">● All Systems Operational</span>
           </div>
         </div>
       </footer>

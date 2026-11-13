@@ -516,8 +516,8 @@ export default function AgentWorkspacePage() {
                 <div
                   className={`p-3 sm:p-4 rounded-card text-xs sm:text-sm leading-relaxed max-w-[88%] sm:max-w-none ${
                     msg.sender === 'user'
-                      ? 'bg-gradient-to-b from-[#4667B1] to-[#34518F] text-white shadow-clay-button'
-                      : 'bg-[#F8F6F1] text-ink border border-border shadow-xs'
+                      ? 'bg-primary text-black font-medium shadow-clay-button'
+                      : 'bg-surface text-ink border border-border shadow-xs'
                   }`}
                 >
                   <FormattedMessage content={msg.content} />
@@ -621,7 +621,7 @@ export default function AgentWorkspacePage() {
               <button
                 type="submit"
                 disabled={!inputPrompt.trim() || isStreaming}
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-[12px] bg-gradient-to-b from-primary to-primary-deep text-white flex items-center justify-center shadow-clay-button hover:brightness-105 active:scale-95 transition-all disabled:opacity-50 shrink-0"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-[12px] bg-primary text-black font-extrabold flex items-center justify-center shadow-clay-button hover:bg-brand-hover active:scale-95 transition-all disabled:opacity-50 shrink-0"
               >
                 <Send className="w-4 h-4" />
               </button>

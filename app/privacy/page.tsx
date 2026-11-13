@@ -51,9 +51,9 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section className="space-y-2">
-              <h2 className="text-base font-bold text-ink">4. Third-Party AI Inference</h2>
+              <h2 className="text-base font-bold text-ink">4. Secure Neural Inference</h2>
               <p>
-                Agent tasks are executed via server-side API calls to verified AI model providers (Groq, Google Gemini, OpenAI). Your data is processed in accordance with enterprise data privacy standards with zero training on your workspace data.
+                Agent tasks are executed via server-side API calls to verified enterprise model providers. Your data is processed in accordance with enterprise data privacy standards with zero training on your workspace data.
               </p>
             </section>
 
