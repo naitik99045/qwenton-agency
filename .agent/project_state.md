@@ -1,5 +1,5 @@
 # Project State & Context
-**Last Updated:** November 13, 2026, 12:28 IST (v0.8.0 90% Dark Carbon + 10% Cyber Mint UI, Online Animated Sticker & Total Vendor/Orange Purge)
+**Last Updated:** November 13, 2026, 13:05 IST (v0.9.0 3D Agent Core Artifact, Dark/Light Mode Tri-Color Engine, Scroll-Linked Pipeline & Space Grotesk Typography)
 
 ---
 
@@ -9,46 +9,55 @@
 
 ### Operating Standards & Non-Negotiable Directives:
 - **Strictly Non-Primary Tri-Color Architecture (qwenton-ui 60-30-10 Solid OKLCH)**:
-  - **90% Dark Shades Hierarchy**:
+  - **Light Mode (`:root`)**:
+    - **60% Dominant Base**: Architectural Porcelain (`oklch(97.6% 0.005 250)`).
+    - **30% Structure & High-Contrast Typography**: Elevated Pure Chalk (`oklch(100% 0 0)`), Hairline Slate Borders (`oklch(88% 0.012 250)`), and Deep Obsidian Ink (`oklch(18% 0.02 250)`).
+    - **10% Light / Focal Accent**: Signal Cyber Mint (`oklch(76% 0.16 160)`) on buttons with bold black text, and Forest Emerald (`oklch(44% 0.16 160)`) for icons/links.
+  - **Dark Mode (`.dark`)**:
     - **60% Dominant Base**: Deep Obsidian Carbon (`oklch(14.5% 0.015 250)`).
-    - **30% Structure & High-Contrast Typography**: Elevated Graphite Slate (`oklch(19.5% 0.018 250)`), Hairline Wireframe Borders (`oklch(27% 0.018 250)`), and Softened Platinum Chalk Text (`oklch(96% 0.005 90)`).
-  - **10% Light / High-Contrast Accent**:
-    - High-Voltage Cyber Mint / Electric Jade (`oklch(78% 0.16 158)`).
-    - Capable of extreme value contrast against deep carbon ($>11:1$ with black typography on buttons).
-  - **Zero Orange & Zero Primary Colors**: Completely purged of orange, pure blue, pure red, and pure yellow.
-  - **Strictly Zero Gradients**: Zero `bg-linear-*`, zero `bg-gradient-*`, zero radial glows, zero purple/neon haze.
+    - **30% Structure & High-Contrast Typography**: Elevated Graphite Slate (`oklch(19.5% 0.018 250)`), Hairline Borders (`oklch(27% 0.018 250)`), and Softened Platinum Chalk (`oklch(96% 0.005 90)`).
+    - **10% Light / Focal Accent**: High-Voltage Cyber Mint (`oklch(78% 0.16 158)`).
+  - **Zero Orange & Zero Primary Colors**: 100% free of orange (`#D96B27`), pure blue, pure red, and pure yellow.
+  - **Strictly Zero Gradients**: Zero `bg-gradient-*`, zero radial glows, zero purple/neon haze.
+- **Typography Pairing**:
+  - Display Headings: `Space Grotesk` (`--font-display`).
+  - Body & Interfaces: `Plus Jakarta Sans` (`--font-sans`).
+  - Technical Metrics & Code: `JetBrains Mono` (`--font-mono`).
+- **Interactive 3D Artifact**:
+  - Three.js Autonomous Agent Neural Core (`components/landing/ThreeAgentCore.tsx`) featuring rotating gimbal rings, orbiting satellite data nodes, pointer-tracked lerp tilt, scroll-responsive ring scaling, and automated theme synchronization.
+- **Scroll Effects**:
+  - Fixed 2px hairline scroll progress bar (`components/landing/ScrollProgressBar.tsx`).
+  - 3-stage scroll-reactive execution pipeline (`components/landing/ScrollPipeline.tsx`).
 - **Total Purge of AI Vendor Hype & Emojis**:
-  - Zero mentions of "Groq", "Grok", "Gemini", or "OpenAI" on the user-facing landing page, pricing page, and billing portal.
-  - Zero emojis (`🔥`, `📩`, `🚀`, `⚡`, `🤖`) across all pages and mockups.
+  - Zero mentions of "Groq", "Grok", "Gemini", or "OpenAI".
+  - Zero emojis across all pages and mockups.
 
 ---
 
 ## 2. Brainstormed Upgrades & Architectural Decisions
 
 ### Top 3 Brainstormed Upgrades:
-1. **90% Dark Carbon + 10% Cyber Mint UI (qwenton-ui Solid Tri-Color)**:
-   - Completely replaced orange and warm palettes with an architectural dark carbon workstation aesthetic.
-   - 90% dark surfaces provide depth and calmness, while the 10% light Electric Mint (`oklch(78% 0.16 158)`) commands instant visual hierarchy for primary CTAs and verification seals.
-2. **Online-Sourced Live Animated Coding Agent Sticker**:
-   - Downloaded and self-hosted an animated coding robot sticker at [`public/stickers/coding-agent.gif`](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/public/stickers/coding-agent.gif).
-   - Embedded with physical tactile hover tilt and active pulse telemetry in [`components/landing/TactileSticker.tsx`](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/TactileSticker.tsx), rendered directly in the hero section.
-3. **Comprehensive User Page Anti-Slop & Vendor Purge**:
-   - Cleaned all user-facing pages (`app/page.tsx`, `app/pricing/page.tsx`, `app/billing/page.tsx`, `app/dashboard/page.tsx`, `app/login/page.tsx`, `app/signup/page.tsx`).
-   - Replaced all vendor names with generic, production-ready system terminology ("Autonomous Multi-Model Cloud Engine", "Priority Neural Model Routing").
+1. **Full Dark Mode & Light Mode Tri-Color Engine (`app/globals.css`)**:
+   - Implemented symmetrical 60-30-10 OKLCH tri-color palettes for both Light Mode (`:root`) and Dark Mode (`.dark`).
+   - Clean dynamic switching via `ThemeToggle` with zero page reload and high WCAG AAA contrast ratios.
+2. **Three.js 3D Autonomous Agent Neural Core (`components/landing/ThreeAgentCore.tsx`)**:
+   - Built a custom 3D artifact representing the core agent engine, complete with dual orbital gimbal rings (Tool Execution & Social Webhook), orbiting satellite nodes, interactive mouse tilt, and SVG accessible fallback.
+3. **Scroll-Linked Telemetry Bar & Deterministic Execution Pipeline (`components/landing/ScrollPipeline.tsx`)**:
+   - Integrated a top scroll progress bar and a 3-stage interactive pipeline that updates in real-time as the user scrolls, visualizing webhook capture, approval firewall, and Meta Graph API v20.0 dispatch.
 
 ---
 
 ## 3. Current Progress Audit
 
 ### Completed Milestones:
-- **Design Tokens (`app/globals.css` & `tailwind.config.ts`)**: 90% Dark Carbon + 10% Cyber Mint, zero orange, zero primary colors.
-- **Hero & Landing Page (`app/page.tsx`)**: Sourced animated bot sticker mounted, buttons updated to high-contrast black on mint, zero vendor names.
-- **User Pricing & Billing (`app/pricing/page.tsx` & `app/billing/page.tsx`)**: Cleaned of Groq and Gemini mentions.
-- **User Dashboard & Auth (`app/dashboard/page.tsx`, `app/login/page.tsx`, `app/signup/page.tsx`)**: Replaced `Sparkles` decorative icons with functional `Bot` and `Zap` icons.
-- **Animated Seals (`public/stickers/autonomous-seal.svg`)**: Updated with Electric Mint vector accents.
+- **Design Tokens (`app/globals.css` & `tailwind.config.ts`)**: Full Dark and Light Mode palettes, zero orange, zero primary colors.
+- **Typography (`app/layout.tsx`)**: `Space Grotesk`, `Plus Jakarta Sans`, and `JetBrains Mono` configured via `next/font/google`.
+- **3D Hero Artifact (`components/landing/ThreeAgentCore.tsx`)**: Three.js scene mounted in hero right column.
+- **Scroll Effects (`components/landing/ScrollProgressBar.tsx` & `components/landing/ScrollPipeline.tsx`)**: Real-time progress bar and 3-stage interactive pipeline.
+- **Verification**: `npm run typecheck` passed (exit code `0`), `npm run build` compiled all 57 static/dynamic pages (exit code `0`).
 
 ---
 
 ## 4. Pending Work & Next Steps
 
-All tasks in Phase 1 through Phase 5 are complete. Refer to `.plan/roadmap.md` for live progress tracking.
+All core phases in `.plan/roadmap.md` are actively tracked. Ready for next automated execution task.

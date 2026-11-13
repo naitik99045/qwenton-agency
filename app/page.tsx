@@ -26,6 +26,9 @@ import { Badge } from '@/components/ui/Badge';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { TactileSticker } from '@/components/landing/TactileSticker';
 import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
+import { ThreeAgentCore } from '@/components/landing/ThreeAgentCore';
+import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
+import { ScrollPipeline } from '@/components/landing/ScrollPipeline';
 
 export default function LandingPage() {
   // Hero Interactive Cockpit State
@@ -175,6 +178,9 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-canvas text-ink selection:bg-primary/20 selection:text-primary font-sans transition-colors duration-200">
+      {/* Real-time Scroll Progress Bar Indicator */}
+      <ScrollProgressBar />
+
       {/* ----------------------------------------------------
           TOP TECHNICAL TELEMETRY TICKER (Zero Vendor AI Names in Corner)
           ---------------------------------------------------- */}
@@ -265,19 +271,19 @@ export default function LandingPage() {
           HERO SECTION: THE COMMAND-CENTER & PHYSICAL STICKERS
           ---------------------------------------------------- */}
       <section className="max-w-6xl mx-auto px-6 pt-14 pb-12 w-full relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
-          {/* Hero Copy (8 cols) */}
-          <div className="lg:col-span-8 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-[11px] font-medium border border-border">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
+          {/* Hero Copy (7 cols) */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-[11px] font-medium border border-border shadow-xs">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span>AUTONOMOUS WORKFORCE • 90% DARK CARBON + 10% CYBER MINT • ZERO GRADIENTS</span>
+              <span>AUTONOMOUS WORKFORCE • 60-30-10 SOLID CONTRAST • ZERO GRADIENTS</span>
             </div>
 
-            <h1 className="font-fluid-hero font-black text-ink tracking-tight">
+            <h1 className="font-fluid-hero font-black text-ink tracking-tight font-display">
               Autonomous Coworkers for Web, Leads & Social Growth.
             </h1>
 
-            <p className="text-base sm:text-lg text-ink-muted leading-relaxed font-normal max-w-2xl">
+            <p className="text-base sm:text-lg text-ink-muted leading-relaxed font-normal max-w-2xl font-sans">
               Deploy specialized coworkers that execute real work: turn Instagram comments into instant direct messages, crawl competitor intelligence, and automate 24/7 routines with a strict human approval firewall.
             </p>
 
@@ -295,15 +301,32 @@ export default function LandingPage() {
                 </Button>
               </a>
             </div>
+
+            <div className="flex flex-wrap items-center gap-6 pt-2 text-xs font-mono text-ink-muted">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-primary" />
+                <span>Zero Docker Setup</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-primary" />
+                <span>Meta v20.0 Verified</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-primary" />
+                <span>Human Firewall</span>
+              </div>
+            </div>
           </div>
 
-          {/* Hero Tactile Stickers & Online-Sourced Animated Bot Sticker (4 cols) */}
-          <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col items-center lg:items-end justify-center gap-4 pt-2">
-            {/* Live Animated Coding Bot Sticker from Online Asset Search */}
-            <TactileSticker variant="animated-bot" rotation={-2} />
-
-            {/* Holographic Rotating Technical Seal Sticker */}
-            <TactileSticker variant="seal" rotation={2.5} />
+          {/* Hero 3D Autonomous Agent Core & Animated Bot Sticker (5 cols) */}
+          <div className="lg:col-span-5 space-y-4">
+            <ThreeAgentCore />
+            <div className="flex items-center justify-between gap-3 px-1">
+              {/* Live Animated Coding Bot Sticker */}
+              <TactileSticker variant="animated-bot" rotation={-1.5} />
+              {/* Holographic Rotating Technical Seal Sticker */}
+              <TactileSticker variant="seal" rotation={2} />
+            </div>
           </div>
         </div>
 
@@ -670,6 +693,11 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ----------------------------------------------------
+          SCROLL-LINKED EXECUTION PIPELINE (Interactive Architecture)
+          ---------------------------------------------------- */}
+      <ScrollPipeline />
 
       {/* ----------------------------------------------------
           SECTION 3: INSTANT AGENCY AUDIT SANDBOX (Free Lead Utility)
@@ -1208,7 +1236,7 @@ export default function LandingPage() {
             <Link href="/privacy" className="hover:text-ink hover:underline transition-colors">
               Privacy Policy
             </Link>
-            <span className="text-primary font-bold">● 90% Dark Carbon + 10% Cyber Mint</span>
+            <span className="text-primary font-bold">● 60-30-10 Tri-Color System • Dark & Light Engine</span>
           </div>
         </div>
       </footer>

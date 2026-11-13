@@ -26,26 +26,26 @@
   - *Target Files:* `app/page.tsx`
   - *Done When:* All 28 negative design constraints pass without marketing fluff.
 
-## Phase 3: Light/Dark Mode Switch, Tactile Stickers & Anti-Slop Completion
-- [x] **Task 3.1: Interactive Light & Dark Mode Switch**
-  - *Action:* Built `components/ui/ThemeToggle.tsx` with Sun/Moon icons, zero-FOUC inline script in `app/layout.tsx`, and solid dual OKLCH tokens in `app/globals.css`.
-  - *Target Files:* `components/ui/ThemeToggle.tsx`, `app/layout.tsx`, `app/globals.css`, `tailwind.config.ts`
-  - *Done When:* User can toggle light/dark modes with instant persistence and zero layout shift.
-- [x] **Task 3.2: Tactile Physical Stickers & Animated Vector Engineering Seal**
-  - *Action:* Created `public/stickers/autonomous-seal.svg` and `components/landing/TactileSticker.tsx` with physical die-cut styling and hover tilt physics.
-  - *Target Files:* `public/stickers/autonomous-seal.svg`, `components/landing/TactileSticker.tsx`, `app/page.tsx`
-  - *Done When:* Tactile stickers render on hero and product proof sections.
-- [x] **Task 3.3: Total Emoji & Vendor Corner Name Purge**
-  - *Action:* Removed third-party AI vendor names from top-right corner marquee and front page. Removed all emojis (`🔥`, `📩`, `🚀`, `⚡`) across all pages and mockups.
-  - *Target Files:* `app/page.tsx`, `components/landing/InstantAuditSandbox.tsx`
-  - *Done When:* Front page contains zero emojis and zero vendor names in right corner.
+## Phase 3: Three.js 3D Artifact, Dark/Light Mode Engine & Scroll Effects
+- [x] **Task 3.1: Three.js 3D Autonomous Agent Neural Core (`components/landing/ThreeAgentCore.tsx`)**
+  - *Action:* Built an interactive Three.js 3D scene with central icosahedron core, dual rotating gimbal rings, orbiting satellite nodes, pointer-tracked lerp tilt, scroll-responsive scaling, dynamic dark/light re-theming, and SVG accessible fallback.
+  - *Target Files:* `components/landing/ThreeAgentCore.tsx`, `package.json`
+  - *Done When:* 3D artifact renders smoothly on hero right column without WebGL errors or memory leaks.
+- [x] **Task 3.2: Complete Dark Mode and Light Mode Tri-Color Architecture**
+  - *Action:* Configured symmetrical 60-30-10 OKLCH tri-color palettes in `app/globals.css` with Architectural Porcelain in light mode, Deep Obsidian Carbon in dark mode, and high-voltage Signal Cyber Mint accents with >11:1 contrast.
+  - *Target Files:* `app/globals.css`, `components/ui/ThemeToggle.tsx`
+  - *Done When:* User can toggle dark and light modes with instant persistence and clean contrast across all components.
+- [x] **Task 3.3: Scroll Progress Bar & Scroll-Linked Execution Pipeline**
+  - *Action:* Built `components/landing/ScrollProgressBar.tsx` for real-time scroll completion tracking and `components/landing/ScrollPipeline.tsx` to demonstrate the 3-stage lead execution lifecycle.
+  - *Target Files:* `components/landing/ScrollProgressBar.tsx`, `components/landing/ScrollPipeline.tsx`, `app/page.tsx`
+  - *Done When:* Scroll bar tracks reading progress and pipeline updates stages dynamically during scroll.
+- [x] **Task 3.4: Typography Upgrade (Space Grotesk, Plus Jakarta Sans, JetBrains Mono)**
+  - *Action:* Integrated Google Fonts in `app/layout.tsx` and `tailwind.config.ts` without layout shifts or FOIT.
+  - *Target Files:* `app/layout.tsx`, `tailwind.config.ts`, `app/globals.css`
+  - *Done When:* Headings use Space Grotesk, body uses Plus Jakarta Sans, and metrics use JetBrains Mono.
 
 ## Phase 4: Production Verification & Git Sync
-- [ ] **Task 4.1: TypeScript & Next.js Build Verification**
-  - *Action:* Run `npm run typecheck` and `npm run build` to verify 0 errors across all 57 routes.
-  - *Target Files:* `app/page.tsx`
-  - *Done When:* Build exits with code 0.
-- [ ] **Task 4.2: Git Commit & Remote Synchronization**
-  - *Action:* Stage and commit all redesigned UI assets, push to `origin/main` on GitHub.
+- [ ] **Task 4.1: Git Commit & Remote Synchronization**
+  - *Action:* Stage and commit all redesigned UI assets, Three.js 3D artifact, scroll components, and font configurations, and push to `origin/main` on GitHub.
   - *Target Files:* Git workspace
-  - *Done When:* Remote `origin/main` is up to date with new commit hash.
+  - *Done When:* All changes are committed and pushed cleanly to `origin/main`.

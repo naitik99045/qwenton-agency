@@ -1,17 +1,31 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+const sans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
   weight: ['400', '500', '600', '700', '800'],
 });
 
+const display = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['600', '700'],
+});
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+  weight: ['400', '500', '600', '700'],
+});
+
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F7F7F4' },
+    { media: '(prefers-color-scheme: light)', color: '#F6F8FA' },
     { media: '(prefers-color-scheme: dark)', color: '#131418' },
   ],
   width: 'device-width',
@@ -41,7 +55,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`h-full ${inter.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`h-full ${sans.variable} ${display.variable} ${mono.variable}`}
+    >
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
