@@ -1,50 +1,49 @@
 # Project State & Context
-**Last Updated:** November 11, 2026, 16:38 IST (v0.6.0 High-Craft Raycast/Linear Landing Page & Non-Primary Tri-Color Architecture)
+**Last Updated:** November 13, 2026, 12:05 IST (v0.7.0 Seamless Light/Dark Mode, Tactile Engineering Stickers, Anti-Slop & Zero Primary Tri-Color Architecture)
 
 ---
 
 ## 1. Project Overview
 
-**Qwenton** (`qwenton-agents`) is an autonomous AI coworker platform, marketing automation engine, and agency operating system. It features real-time **Instagram Reel Comment-to-DM lead generation**, multi-agent swarms, Telegram mobile push approvals, single-key cloud AI inference (Groq, Gemini, OpenAI), and zero-Docker serverless deployment on Vercel and Firebase.
+**Qwenton** (`qwenton-agents`) is an autonomous AI coworker platform, marketing automation engine, and agency operating system. It features real-time **Instagram Reel Comment-to-DM lead generation**, multi-agent swarms, Telegram mobile push approvals, single-key cloud AI inference, and zero-Docker serverless deployment on Vercel and Firebase.
 
 ### Operating Standards & Non-Negotiable Directives:
 - **Strictly Non-Primary Tri-Color Architecture (60-30-10 Solid OKLCH)**:
-  - **60% Dominant Canvas**: Warm Tactile Alabaster Linen (`oklch(97.8% 0.008 85)`) and Deep Obsidian Basalt (`oklch(14% 0.012 250)`).
-  - **30% Structure & High-Contrast Typography**: Stark Architectural Obsidian (`oklch(22% 0.02 260)`), Crisp Chalk Text (`oklch(94% 0.005 250)`), and 1px hairline wireframe borders (`oklch(89% 0.008 85)`).
-  - **10% High-Energy Non-Primary Accent**: Signal Ember / Electric Ochre (`oklch(62% 0.19 45)`).
-  - **Zero Primary Colors**: Completely purged of pure Blue (#0000FF, Cobalt #4667B1), pure Red (#FF0000), and pure Yellow (#FFFF00).
+  - **Light Mode**: Warm Tactile Alabaster Linen (`oklch(97.8% 0.008 85)`), Solid White Cards, Stark Architectural Basalt (`oklch(18% 0.018 260)`), and Signal Burnt Ochre/Ember (`oklch(62% 0.19 45)`).
+  - **Dark Mode**: Deep Pitch Obsidian Basalt (`oklch(13.5% 0.01 250)`), Elevated Slate Layers (`oklch(18% 0.012 250)`), Crisp Chalk Text (`oklch(96% 0.006 85)`), and Luminous Signal Amber (`oklch(66% 0.20 45)`).
+  - **Zero Primary Colors**: Completely purged of pure Blue (#0000FF, Cobalt #4667B1), pure Red (#FF0000), and pure Yellow (#FFFF00), as well as any shades of primary colors.
   - **Strictly Zero Gradients**: Zero `bg-linear-*`, zero `bg-gradient-*`, zero radial glows, zero purple/neon haze.
-- **Anti-AI Slop Enforcement (28 Negative Design Constraints)**:
-  - Eliminated Bento grids, 3-card rows, sparkle/star icons, decorative terminal windows, and fake testimonials.
-  - Replaced marketing fluff with **Product-First Interactive Sandboxes**.
+- **Anti-AI Slop Enforcement**:
+  - Eliminated all emojis (`🔥`, `📩`, `🚀`, `⚡`), Bento grids, 3-card rows, sparkle/star icons, decorative terminal windows, and hype vendor names.
+  - Placed **Product-First Interactive Sandboxes** and tactile engineering stamps front and center.
 
 ---
 
 ## 2. Brainstormed Upgrades & Architectural Decisions
 
 ### Top 3 Brainstormed Upgrades:
-1. **Interactive Dual-Stage Hero Cockpit (`qwenton-cockpit://fleet.dispatch`)**:
-   - Replaced static marketing headlines with an interactive agent execution console.
-   - Users can switch between 4 real-world operational workflows (`Reels Comment-to-DM`, `Competitor Intelligence`, `Away Mode Assistant`, and `4-Agent Swarm`).
-   - Features a **live interactive Human-in-the-Loop Gateway** where visitors can click `[Authorize & Dispatch]` or `[Reject]`, witnessing the firewall state transition and sub-400ms HTTP dispatch.
-2. **Interactive Standalone Instagram Reel Comment-to-DM Playground**:
-   - Live utility on the landing page where visitors input their own Reel URL and keyword (e.g. `GROWTH`, `PRICING`, `VIP`).
-   - Typing a test follower comment simulates Meta's webhook handshake and renders the exact public comment reply and private direct message dispatched via Meta Graph API v20.0.
-3. **High-Density Technical Specification Matrix**:
-   - Compares Qwenton against heavy $20/mo VM platforms (Skydive.com) and generic AI wrappers across rate limits, jitter guards, and human approval firewalls.
+1. **Seamless Light / Dark Mode Architecture & Interactive Toggle**:
+   - Built a tactile `ThemeToggle` component mounted directly in the navigation header.
+   - Initialized via zero-FOUC inline script in `app/layout.tsx` with automatic persistence in `localStorage` and OS preference synchronization.
+   - Comprehensive OKLCH color token inversion ensuring high-contrast readability without primary color contamination.
+2. **Tactile Hardware Badges & Animated Vector Seal Stickers**:
+   - Engineered authentic die-cut physical stickers with interactive tilt physics (`components/landing/TactileSticker.tsx`).
+   - Created an animated vector engineering disc (`public/stickers/autonomous-seal.svg`) with counter-rotating gears, coordinate stamps, and pulsing geometric aperture core.
+3. **Purge of AI Slop & Vendor Corner Names**:
+   - Removed all vendor AI names from the front page and top corner marquee, replacing them with deterministic verification telemetry (`META_GRAPH_API: v20.0 Active`, `HUMAN_GATE: 100% Enforced`, `TELEMETRY: 99.98% Operational`).
+   - Cleaned all comment and message text of emojis, converting to clean, professional developer copy.
 
 ---
 
 ## 3. Current Progress Audit
 
 ### Completed Milestones:
-- **Landing Page Redesign (`app/page.tsx`)**: Completely redesigned with high-craft command center, interactive cockpit, standalone Reel DM tester, instant agency audit sandbox, asymmetric capability pillars, 4 transparent pricing tiers (Normal ₹0 to Ultra ₹599), FAQ accordion, and legal compliance footers.
-- **Instant Audit Sandbox (`components/landing/InstantAuditSandbox.tsx`)**: Purged of all sparkle icons and primary color references.
-- **Global Design Tokens (`app/globals.css`)**: Non-primary solid OKLCH design system active.
-- **Meta Integrations Vault (`app/integrations/page.tsx`)**: Account selector and Reel trigger keyword input.
-- **Instagram Reels Engine (`app/instagram/page.tsx`)**: Comment-to-DM rules, 24/7 away mode, and live interactive smartphone preview.
-- **Webhook & Graph API Client (`app/api/instagram/webhook/route.ts` & `lib/instagram/api.ts`)**: Cryptographic HMAC-SHA256 signature verification and v20.0 private reply execution.
-- **Legal Compliance (`app/terms/page.tsx` & `app/privacy/page.tsx`)**: Production ready.
+- **Theme Switcher (`components/ui/ThemeToggle.tsx`)**: Zero layout shift, smooth Sun/Moon icon transitions, and localStorage persistence.
+- **Engineering Stickers (`public/stickers/autonomous-seal.svg` & `components/landing/TactileSticker.tsx`)**: Interactive physical hover tilt, verified serial stamps (#QW-8821), and dual-mode contrast borders.
+- **Landing Page Redesign (`app/page.tsx`)**: Purged vendor AI names from header corner, purged all emojis, integrated stickers and theme toggle, and verified dark/light mode across all 8 page sections.
+- **Instant Audit Sandbox (`components/landing/InstantAuditSandbox.tsx`)**: Stripped of emojis and vendor AI names, converted to adaptive dual-mode surfaces.
+- **Global Design Tokens (`app/globals.css` & `tailwind.config.ts`)**: Enabled `darkMode: 'class'`, defined solid OKLCH values for `:root` and `.dark`.
+- **TypeScript Typecheck**: Exited with code 0.
 
 ---
 

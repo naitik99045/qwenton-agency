@@ -10,7 +10,10 @@ const inter = Inter({
 });
 
 export const viewport: Viewport = {
-  themeColor: '#4667B1',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F7F7F4' },
+    { media: '(prefers-color-scheme: dark)', color: '#131418' },
+  ],
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -19,13 +22,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'qwenton-agents — Tactile AI Coworker Platform',
-  description: 'Deploy, operate, and control specialized AI agents with built-in safety, human approvals, and multi-channel intelligence.',
+  title: 'QWENTON — Autonomous Coworker Platform & Social Lead Engine',
+  description: 'Deploy, operate, and control specialized AI coworkers with built-in human approval firewalls and Instagram Reel Comment-to-DM virality.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'qwenton agents',
+    title: 'Qwenton Agents',
   },
   formatDetection: {
     telephone: false,
@@ -38,12 +41,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`h-full ${inter.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`h-full ${inter.variable}`}>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('theme');
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (saved === 'dark' || (!saved && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className="h-full font-sans bg-canvas text-ink antialiased selection:bg-cloud-blue selection:text-primary-deep overflow-x-hidden">
+      <body className="h-full font-sans bg-canvas text-ink antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden">
         {children}
       </body>
     </html>

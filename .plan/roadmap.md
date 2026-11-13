@@ -26,12 +26,26 @@
   - *Target Files:* `app/page.tsx`
   - *Done When:* All 28 negative design constraints pass without marketing fluff.
 
-## Phase 3: Production Verification & Git Sync
-- [ ] **Task 3.1: TypeScript & Next.js Build Verification**
+## Phase 3: Light/Dark Mode Switch, Tactile Stickers & Anti-Slop Completion
+- [x] **Task 3.1: Interactive Light & Dark Mode Switch**
+  - *Action:* Built `components/ui/ThemeToggle.tsx` with Sun/Moon icons, zero-FOUC inline script in `app/layout.tsx`, and solid dual OKLCH tokens in `app/globals.css`.
+  - *Target Files:* `components/ui/ThemeToggle.tsx`, `app/layout.tsx`, `app/globals.css`, `tailwind.config.ts`
+  - *Done When:* User can toggle light/dark modes with instant persistence and zero layout shift.
+- [x] **Task 3.2: Tactile Physical Stickers & Animated Vector Engineering Seal**
+  - *Action:* Created `public/stickers/autonomous-seal.svg` and `components/landing/TactileSticker.tsx` with physical die-cut styling and hover tilt physics.
+  - *Target Files:* `public/stickers/autonomous-seal.svg`, `components/landing/TactileSticker.tsx`, `app/page.tsx`
+  - *Done When:* Tactile stickers render on hero and product proof sections.
+- [x] **Task 3.3: Total Emoji & Vendor Corner Name Purge**
+  - *Action:* Removed third-party AI vendor names from top-right corner marquee and front page. Removed all emojis (`🔥`, `📩`, `🚀`, `⚡`) across all pages and mockups.
+  - *Target Files:* `app/page.tsx`, `components/landing/InstantAuditSandbox.tsx`
+  - *Done When:* Front page contains zero emojis and zero vendor names in right corner.
+
+## Phase 4: Production Verification & Git Sync
+- [ ] **Task 4.1: TypeScript & Next.js Build Verification**
   - *Action:* Run `npm run typecheck` and `npm run build` to verify 0 errors across all 57 routes.
   - *Target Files:* `app/page.tsx`
   - *Done When:* Build exits with code 0.
-- [ ] **Task 3.2: Git Commit & Remote Synchronization**
+- [ ] **Task 4.2: Git Commit & Remote Synchronization**
   - *Action:* Stage and commit all redesigned UI assets, push to `origin/main` on GitHub.
   - *Target Files:* Git workspace
   - *Done When:* Remote `origin/main` is up to date with new commit hash.

@@ -5,34 +5,26 @@ import Link from 'next/link';
 import {
   Bot,
   ShieldAlert,
-  FolderLock,
-  CalendarClock,
   Radio,
   ArrowRight,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
   Search,
-  FileText,
   Zap,
   Check,
   ShieldCheck,
-  Clock,
   Cpu,
   Layers,
   Instagram,
-  Palette,
-  MessageSquare,
-  TrendingUp,
   Copy,
-  Sliders,
-  Volume2,
-  Lock,
   ExternalLink,
   Film,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { TactileSticker } from '@/components/landing/TactileSticker';
 import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
 
 export default function LandingPage() {
@@ -45,7 +37,7 @@ export default function LandingPage() {
   // Standalone Instagram Reel Sandbox Tester
   const [testerReelUrl, setTesterReelUrl] = useState('https://instagram.com/reel/C8qwenton123');
   const [testerKeyword, setTesterKeyword] = useState('GROWTH');
-  const [testerComment, setTesterComment] = useState('Love this breakdown! Send me the GROWTH blueprint please 🔥');
+  const [testerComment, setTesterComment] = useState('Send me the GROWTH blueprint please');
   const [testerSimulating, setTesterSimulating] = useState(false);
   const [testerResult, setTesterResult] = useState<{
     matched: boolean;
@@ -54,22 +46,13 @@ export default function LandingPage() {
     latencyMs: number;
   } | null>({
     matched: true,
-    publicReply: 'Sent directly to your inbox! Check your DMs 📩',
-    privateDm: 'Hey there! Thanks for watching our Reel. Here is your direct access link: https://qwenton.com/access 🔥',
+    publicReply: 'Sent directly to your inbox. Check your DMs.',
+    privateDm: 'Hey there. Thanks for watching our Reel. Here is your direct access link: https://qwenton.com/access',
     latencyMs: 340,
   });
 
   // FAQ Accordion State
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [copiedBadge, setCopiedBadge] = useState<string | null>(null);
-
-  const handleCopyText = (text: string, label: string) => {
-    if (navigator?.clipboard) {
-      navigator.clipboard.writeText(text);
-      setCopiedBadge(label);
-      setTimeout(() => setCopiedBadge(null), 2000);
-    }
-  };
 
   const handleSimulateReel = () => {
     setTesterSimulating(true);
@@ -78,8 +61,8 @@ export default function LandingPage() {
       if (isMatch) {
         setTesterResult({
           matched: true,
-          publicReply: 'Sent directly to your inbox! Check your DMs 📩',
-          privateDm: `Hey there! Thanks for commenting "${testerKeyword}" on our Reel. Here is your exclusive access link: https://qwenton.com/access 🔥`,
+          publicReply: 'Sent directly to your inbox. Check your DMs.',
+          privateDm: `Hey there. Thanks for commenting "${testerKeyword}" on our Reel. Here is your direct access link: https://qwenton.com/access`,
           latencyMs: 380,
         });
       } else {
@@ -91,7 +74,7 @@ export default function LandingPage() {
         });
       }
       setTesterSimulating(false);
-    }, 450);
+    }, 420);
   };
 
   const cockpitPresets = {
@@ -107,8 +90,8 @@ export default function LandingPage() {
       },
       actionSummary: `Trigger keyword "${cockpitTriggerKeyword}" matched. Preparing public comment reply and sending private direct message to @growth_founder.`,
       deliverable: {
-        publicReply: 'Check your DM! Just sent you the complete growth guide 🚀',
-        privateDm: `Hey! Thanks for commenting "${cockpitTriggerKeyword}". Here is the private roadmap link you requested: https://qwenton.com/growth-guide 🔥`,
+        publicReply: 'Check your DM. Just sent you the complete growth guide.',
+        privateDm: `Hey! Thanks for commenting "${cockpitTriggerKeyword}". Here is the private roadmap link you requested: https://qwenton.com/growth-guide`,
       },
       metrics: { executionTier: 'Tier 1 (HTTP Graph API)', latency: '340ms', jitterGuard: '4.2s delay' },
     },
@@ -125,7 +108,7 @@ export default function LandingPage() {
         'Parsed 14 competitor public pricing routes. Calculated unit margin delta (+18.4%) and compiled executive briefing dossier.',
       deliverable: {
         publicReply: 'Executive Intelligence Briefing v3.4 compiled.',
-        privateDm: 'Dossier ready: Identified 3 tier expansion opportunities. Margins optimized at ₹299/mo with zero customer churn risk.',
+        privateDm: 'Dossier ready: Identified 3 tier expansion opportunities. Margins optimized at INR 299/mo with zero customer churn risk.',
       },
       metrics: { executionTier: 'Serverless Worker', latency: '680ms', jitterGuard: 'Stealth UA Rotation' },
     },
@@ -142,7 +125,7 @@ export default function LandingPage() {
         'Account is currently in Busy Mode. Evaluating customer inquiry against trained knowledge base and dispatching automated triage.',
       deliverable: {
         publicReply: 'Away status active.',
-        privateDm: 'Hi! We are currently offline, but yes: Qwenton supports custom API keys, webhooks, and enterprise routing. Check out our specs at https://qwenton.com/specs or reply with your use-case!',
+        privateDm: 'Hi. We are currently offline, but yes: Qwenton supports custom API keys, webhooks, and enterprise routing. Check our specs at https://qwenton.com/specs or reply with your use-case.',
       },
       metrics: { executionTier: 'Webhook Listener', latency: '210ms', jitterGuard: 'Anti-Spam Throttling' },
     },
@@ -173,7 +156,7 @@ export default function LandingPage() {
       a: 'When a follower comments your configured trigger keyword (such as GROWTH, PRICE, or VIP) on your Reel, Meta sends a real-time webhook payload to Qwenton. Our engine matches the keyword, applies humanized anti-ban jitter delays, and uses Meta Graph API v20.0 to post a public comment reply and dispatch a private 1-to-1 direct message directly to their inbox within seconds.',
     },
     {
-      q: 'Does Qwenton protect my accounts from Instagram or Meta algorithmic flags?',
+      q: 'Does Qwenton protect my accounts from Instagram algorithmic flags?',
       a: 'Yes. Qwenton enforces a 3-tier safety guard: (1) Dynamic rotating spintax templates so comments never repeat identical text, (2) 3-7 second randomized delay jitter mimicking human typing speed, and (3) hard hourly rate limits (capped at 150 DMs/hour) ensuring your account operates safely within Meta developer guidelines.',
     },
     {
@@ -182,55 +165,61 @@ export default function LandingPage() {
     },
     {
       q: 'Do I need Docker or expensive cloud virtual machines to run Qwenton?',
-      a: 'No. Unlike competitors that force users to pay $20/month per agent for heavy Linux cloud containers, Qwenton is cloud-native and serverless. It runs locally with zero setup using embedded datastore persistence, and deploys seamlessly to Vercel and Firebase in production.',
+      a: 'No. Unlike platforms that force users to pay $20/month per agent for heavy Linux cloud containers, Qwenton is cloud-native and serverless. It runs locally with zero setup using embedded datastore persistence, and deploys seamlessly to Vercel and Firebase in production.',
     },
     {
-      q: 'Can I connect my own AI keys (Groq, Google Gemini, OpenAI, or Local LLMs)?',
-      a: 'Yes. Qwenton supports single-key cloud inference through Groq LPU, Google Gemini 1.5 Flash, OpenAI GPT-4o, or local Ollama/LM Studio endpoints. You can configure global model defaults or assign individual model overrides per agent in the Integrations Vault.',
+      q: 'Can I connect custom API keys and multi-provider models?',
+      a: 'Yes. Qwenton supports flexible model routing with single-key cloud inference or local endpoints. You can configure global model defaults or assign individual model overrides per agent in the Integrations Vault.',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-canvas text-ink selection:bg-primary/20 selection:text-primary font-sans">
+    <div className="min-h-screen bg-canvas text-ink selection:bg-primary/20 selection:text-primary font-sans transition-colors duration-200">
       {/* ----------------------------------------------------
-          TOP TECHNICAL TELEMETRY TICKER (No AI Slop Marquee)
+          TOP TECHNICAL TELEMETRY TICKER (Zero Vendor AI Names in Corner)
           ---------------------------------------------------- */}
-      <div className="bg-ink text-white text-xs py-2 px-4 border-b border-border/80 select-none">
+      <div className="bg-ink text-white text-xs py-2 px-4 border-b border-border select-none">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4 font-mono text-[11px]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
             <span className="text-white font-bold tracking-wider uppercase">Qwenton Fleet Architecture</span>
             <span className="text-ink-light hidden sm:inline">|</span>
-            <span className="text-ink-light hidden sm:inline">v0.5.0 Production Ready</span>
+            <span className="text-ink-light hidden sm:inline">v0.6.0 Production Core</span>
           </div>
           <div className="flex items-center gap-4 text-ink-light">
-            <span className="hidden md:inline">META_GRAPH_API: <strong className="text-white font-semibold">v20.0 Active</strong></span>
-            <span>HUMAN_GATE: <strong className="text-approval-amber font-semibold">100% Enforced</strong></span>
-            <span className="hidden sm:inline">INFERENCE: <strong className="text-white font-semibold">Groq / Gemini Flash</strong></span>
+            <span className="hidden md:inline">
+              META_GRAPH_API: <strong className="text-white font-semibold">v20.0 Active</strong>
+            </span>
+            <span>
+              HUMAN_GATE: <strong className="text-primary font-semibold">100% Enforced</strong>
+            </span>
+            <span className="hidden sm:inline">
+              TELEMETRY: <strong className="text-white font-semibold">99.98% Operational</strong>
+            </span>
           </div>
         </div>
       </div>
 
       {/* ----------------------------------------------------
-          ARCHITECTURAL NAVIGATION HEADER (Zero Gradients)
+          ARCHITECTURAL NAVIGATION HEADER (With Light/Dark Switch)
           ---------------------------------------------------- */}
       <header className="sticky top-0 z-40 bg-canvas/95 backdrop-blur-md border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-control bg-ink text-white flex items-center justify-center font-black text-sm border border-border shadow-clay-button-subtle">
+            <div className="w-9 h-9 rounded-control bg-ink text-white dark:bg-surface dark:text-ink flex items-center justify-center font-black text-sm border border-border shadow-clay-button-subtle">
               Q
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-lg font-black text-ink tracking-tight">QWENTON</span>
-                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-ink text-white font-bold">
-                  Agents
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-ink text-white dark:bg-surface dark:text-ink font-bold border border-border">
+                  Fleet
                 </span>
               </div>
             </div>
           </Link>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5">
             <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-ink-muted uppercase tracking-wider">
               <a href="#cockpit" className="hover:text-ink transition-colors">
                 Live Cockpit
@@ -253,7 +242,13 @@ export default function LandingPage() {
             </nav>
 
             <div className="flex items-center gap-3">
-              <Link href="/login" className="text-xs font-bold text-ink-muted hover:text-ink px-3 py-1.5 transition-colors">
+              {/* THE LIGHT & DARK MODE SWITCH BUTTON */}
+              <ThemeToggle />
+
+              <Link
+                href="/login"
+                className="hidden sm:inline-block text-xs font-bold text-ink-muted hover:text-ink px-3 py-1.5 transition-colors"
+              >
                 Sign In
               </Link>
               <Link href="/signup">
@@ -267,49 +262,61 @@ export default function LandingPage() {
       </header>
 
       {/* ----------------------------------------------------
-          HERO SECTION: THE COMMAND-CENTER & COCKPIT
+          HERO SECTION: THE COMMAND-CENTER & PHYSICAL STICKERS
           ---------------------------------------------------- */}
-      <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 w-full">
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-ink text-white font-mono text-[11px] mb-5 font-medium border border-border">
-            <span className="w-2 h-2 rounded-full bg-primary" />
-            <span>AUTONOMOUS WORKFORCE • ZERO GRADIENTS • TRI-COLOR OKLCH</span>
+      <section className="max-w-6xl mx-auto px-6 pt-14 pb-12 w-full relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+          {/* Hero Copy (8 cols) */}
+          <div className="lg:col-span-8 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-[11px] font-medium border border-border">
+              <span className="w-2 h-2 rounded-full bg-primary" />
+              <span>AUTONOMOUS WORKFORCE • SOLID NON-PRIMARY OKLCH • ZERO GRADIENTS</span>
+            </div>
+
+            <h1 className="font-fluid-hero font-black text-ink tracking-tight">
+              Autonomous Coworkers for Web, Leads & Social Growth.
+            </h1>
+
+            <p className="text-base sm:text-lg text-ink-muted leading-relaxed font-normal max-w-2xl">
+              Deploy specialized coworkers that execute real work: turn Instagram comments into instant direct messages, crawl competitor intelligence, and automate 24/7 routines with a strict human approval firewall.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+              <Link href="/signup">
+                <Button size="lg" className="w-full sm:w-auto font-bold px-8 py-3.5 text-sm gap-2 bg-primary text-white hover:bg-primary-deep shadow-clay-button">
+                  <span>Deploy 2 Free Agents</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+              <a href="#reels-tester">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto font-bold px-6 py-3.5 text-sm border-border">
+                  <Film className="w-4 h-4 text-primary mr-1" />
+                  <span>Test Live Reels Engine</span>
+                </Button>
+              </a>
+            </div>
           </div>
 
-          <h1 className="font-fluid-hero font-black text-ink tracking-tight mb-5">
-            Autonomous Coworkers for Web, Leads & Social Growth.
-          </h1>
+          {/* Hero Tactile Stickers & Physical Badges (4 cols) */}
+          <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col items-center lg:items-end justify-center gap-4 pt-2">
+            {/* Holographic Rotating Technical Seal Sticker */}
+            <TactileSticker variant="seal" rotation={-3.5} />
 
-          <p className="text-base sm:text-lg text-ink-muted leading-relaxed font-normal max-w-2xl mb-8">
-            Deploy specialized AI teammates that execute real work: turn Instagram comments into instant direct messages, crawl competitor intelligence, and automate 24/7 routines with a strict human approval firewall.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-            <Link href="/signup">
-              <Button size="lg" className="w-full sm:w-auto font-bold px-8 py-3.5 text-sm gap-2 bg-primary text-white hover:bg-primary-deep shadow-clay-button">
-                <span>Deploy 2 Free Agents</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-            <a href="#reels-tester">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto font-bold px-6 py-3.5 text-sm border-border">
-                <Film className="w-4 h-4 text-primary mr-1" />
-                <span>Test Live Reels Engine</span>
-              </Button>
-            </a>
+            {/* QA Hardware Serial Badge Sticker */}
+            <TactileSticker variant="badge" rotation={2} />
           </div>
         </div>
 
         {/* ----------------------------------------------------
             THE HERO WOW FACTOR: LIVE INTERACTIVE AGENT COCKPIT
             ---------------------------------------------------- */}
-        <div id="cockpit" className="clay-surface border-2 border-border p-5 sm:p-7 relative overflow-hidden bg-white shadow-clay-card">
-          {/* Header Bar */}
+        <div id="cockpit" className="clay-surface border-2 border-border p-5 sm:p-7 relative overflow-hidden bg-surface shadow-clay-card">
+          {/* Cockpit Sub-Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border mb-6">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-danger inline-block border border-border" />
-                <span className="w-3 h-3 rounded-full bg-approval-amber inline-block border border-border" />
+                <span className="w-3 h-3 rounded-full bg-amber-approval inline-block border border-border" />
                 <span className="w-3 h-3 rounded-full bg-success inline-block border border-border" />
               </div>
               <div className="h-4 w-px bg-border mx-1" />
@@ -340,7 +347,7 @@ export default function LandingPage() {
                     }}
                     className={`px-3 py-1.5 rounded-control text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                       isActive
-                        ? 'bg-ink text-white shadow-clay-button'
+                        ? 'bg-ink text-white dark:bg-surface-inset dark:text-ink border border-primary shadow-clay-button'
                         : 'bg-canvas text-ink-muted hover:text-ink border border-border'
                     }`}
                   >
@@ -375,7 +382,7 @@ export default function LandingPage() {
                       type="text"
                       value={cockpitTriggerKeyword}
                       onChange={(e) => setCockpitTriggerKeyword(e.target.value.toUpperCase())}
-                      className="px-3 py-1 bg-white border border-border rounded-md font-mono text-xs font-bold text-primary uppercase focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="px-3 py-1 bg-surface border border-border rounded-md font-mono text-xs font-bold text-primary uppercase focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                     <span className="text-[11px] text-ink-muted">(Followers comment this word)</span>
                   </div>
@@ -383,7 +390,7 @@ export default function LandingPage() {
               </div>
 
               {/* Real-time Execution Steps Trace */}
-              <div className="p-4 rounded-card bg-white border border-border space-y-2.5 font-mono text-xs shadow-xs">
+              <div className="p-4 rounded-card bg-surface border border-border space-y-2.5 font-mono text-xs shadow-xs">
                 <div className="flex items-center justify-between text-[11px] text-ink-muted border-b border-border pb-1.5 font-bold">
                   <span>EXECUTION TELEMETRY TRACE</span>
                   <span className="text-success flex items-center gap-1">
@@ -405,7 +412,9 @@ export default function LandingPage() {
                   </div>
                   <div className="flex items-start gap-2 text-ink">
                     <span className="text-primary font-bold">[03]</span>
-                    <span>Apply anti-ban delay jitter: <strong className="text-ink">{currentOp.metrics.jitterGuard}</strong></span>
+                    <span>
+                      Apply anti-ban delay jitter: <strong className="text-ink">{currentOp.metrics.jitterGuard}</strong>
+                    </span>
                   </div>
                   <div className="flex items-start gap-2 text-ink">
                     <span className="text-primary font-bold">[04]</span>
@@ -415,20 +424,20 @@ export default function LandingPage() {
               </div>
 
               {/* INTERACTIVE HUMAN-IN-THE-LOOP APPROVAL GATEWAY */}
-              <div className="p-4 rounded-card bg-ink text-white space-y-3 shadow-clay-button-subtle">
+              <div className="p-4 rounded-card bg-ink text-white dark:bg-surface dark:text-ink dark:border dark:border-border space-y-3 shadow-clay-button-subtle">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-approval-amber" />
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-approval-amber">
+                    <ShieldAlert className="w-4 h-4 text-primary" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-primary">
                       Human-in-the-Loop Approval Gate
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white font-bold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 dark:bg-primary/10 text-white dark:text-primary font-bold">
                     FIREWALL: ACTIVE
                   </span>
                 </div>
 
-                <p className="text-xs text-white/80 leading-relaxed font-sans">
+                <p className="text-xs text-white/80 dark:text-ink-muted leading-relaxed font-sans">
                   Action paused: Requires human operator sign-off before external Meta Graph API / Telegram dispatch.
                 </p>
 
@@ -454,7 +463,7 @@ export default function LandingPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => setCockpitApprovalState('rejected')}
-                        className="text-white border-white/20 hover:bg-white/10 font-bold text-xs"
+                        className="text-white dark:text-ink border-white/20 dark:border-border hover:bg-white/10 font-bold text-xs"
                       >
                         Reject
                       </Button>
@@ -467,7 +476,7 @@ export default function LandingPage() {
                       </span>
                       <button
                         onClick={() => setCockpitApprovalState('pending')}
-                        className="text-[10px] underline text-white hover:text-white/80"
+                        className="text-[10px] underline text-ink hover:opacity-80"
                       >
                         Reset
                       </button>
@@ -477,7 +486,7 @@ export default function LandingPage() {
                       <span>[REJECTED: MUTATION HALTED]</span>
                       <button
                         onClick={() => setCockpitApprovalState('pending')}
-                        className="text-[10px] underline text-white hover:text-white/80"
+                        className="text-[10px] underline text-ink hover:opacity-80"
                       >
                         Reset
                       </button>
@@ -526,7 +535,7 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                <div className="text-[11px] text-ink-muted leading-relaxed p-2.5 bg-white rounded-md border border-border">
+                <div className="text-[11px] text-ink-muted leading-relaxed p-2.5 bg-surface rounded-md border border-border">
                   <strong className="text-ink font-bold">Meta Graph API v20.0 Integration:</strong> Uses Meta&apos;s verified Private Replies endpoint (<code className="font-mono text-primary">POST /&#123;comment_id&#125;/private_replies</code>) allowing direct 1-to-1 messages without existing conversations.
                 </div>
               </div>
@@ -540,20 +549,24 @@ export default function LandingPage() {
           Interactive Product Proof: visitors test with own keyword
           ---------------------------------------------------- */}
       <section id="reels-tester" className="max-w-6xl mx-auto px-6 py-16 w-full border-t border-border">
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-canvas text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <Film className="w-3.5 h-3.5 text-primary" />
-            <span>INTERACTIVE PRODUCT PROOF • NO LOGIN REQUIRED</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-canvas text-ink font-mono text-xs font-bold mb-3 border border-border">
+              <Film className="w-3.5 h-3.5 text-primary" />
+              <span>INTERACTIVE PRODUCT PROOF • NO LOGIN REQUIRED</span>
+            </div>
+            <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
+              Test the Reel Comment-to-DM Engine Right Now
+            </h2>
+            <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
+              Enter your Reel link, choose a trigger word (e.g. GROWTH, PRICE, DEMO), type a test follower comment, and verify the instant automated direct message.
+            </p>
           </div>
-          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
-            Test the Reel Comment-to-DM Engine Right Now
-          </h2>
-          <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-            Enter your Reel link, choose a trigger word (e.g. GROWTH, PRICE, DEMO), type a test follower comment, and verify the instant automated direct message.
-          </p>
+
+          <TactileSticker variant="hardware" rotation={1.5} className="shrink-0" />
         </div>
 
-        <div className="clay-surface p-6 sm:p-8 bg-white border border-border shadow-clay-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="clay-surface p-6 sm:p-8 bg-surface border border-border shadow-clay-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Form (6 cols) */}
           <div className="lg:col-span-6 space-y-4">
             <div>
@@ -642,7 +655,7 @@ export default function LandingPage() {
                   </div>
                 </>
               ) : (
-                <div className="p-4 rounded bg-approval-amber/10 border border-approval-amber/30 text-approval-amber text-xs font-sans">
+                <div className="p-4 rounded bg-amber-approval/15 border border-amber-approval/30 text-amber-approval text-xs font-sans">
                   The comment does not contain the trigger keyword &quot;{testerKeyword}&quot;. Type a comment with the keyword to test the auto-DM.
                 </div>
               )}
@@ -684,7 +697,7 @@ export default function LandingPage() {
           ---------------------------------------------------- */}
       <section id="architecture" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border space-y-16">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-ink text-white font-mono text-xs font-bold mb-3 border border-border">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-xs font-bold mb-3 border border-border">
             <Layers className="w-3.5 h-3.5 text-primary" />
             <span>TECHNICAL SPECIFICATIONS</span>
           </div>
@@ -697,7 +710,7 @@ export default function LandingPage() {
         </div>
 
         {/* Pillar 01: Instagram Reels Comment-to-DM */}
-        <div className="clay-surface p-8 bg-white border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
+        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
           <div className="lg:col-span-7 space-y-4">
             <Badge variant="outline" className="font-mono text-xs font-bold">
               PILLAR 01 • SOCIAL VIRALITY
@@ -730,19 +743,19 @@ export default function LandingPage() {
         </div>
 
         {/* Pillar 02: Human-in-the-Loop Safeguard Firewall */}
-        <div className="clay-surface p-8 bg-white border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
+        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
           <div className="lg:col-span-5 bg-ink p-5 rounded-card text-white space-y-3 font-mono text-xs border border-border order-2 lg:order-1">
-            <div className="text-[10px] text-approval-amber border-b border-white/10 pb-2 flex items-center justify-between">
+            <div className="text-[10px] text-primary border-b border-white/10 pb-2 flex items-center justify-between">
               <span>FIREWALL PROTOCOL</span>
               <span>GATE: ENFORCED</span>
             </div>
             <div className="text-white font-bold">Mutating Actions Intercepted:</div>
             <div className="space-y-1 text-white/80 text-[11px]">
               <div>• Publishing ad creatives to Meta Ads Manager</div>
-              <div>• Sending client emails or bulk Telegram blasts</div>
+              <div>• Sending client emails or bulk Telegram broadcasts</div>
               <div>• Modifying live application code or database records</div>
             </div>
-            <div className="pt-2 text-approval-amber text-[11px] font-bold">● Zero unsupervised mutations</div>
+            <div className="pt-2 text-primary text-[11px] font-bold">● Zero unsupervised mutations</div>
           </div>
           <div className="lg:col-span-7 space-y-4 order-1 lg:order-2">
             <Badge variant="outline" className="font-mono text-xs font-bold">
@@ -752,7 +765,7 @@ export default function LandingPage() {
               Strict Human-in-the-Loop Governance Firewall
             </h3>
             <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-              Unlike dangerous fully autonomous agents that can hallucinate and publish errant campaigns or spam clients, Qwenton isolates read operations from write operations. Any action that communicates externally pauses for explicit human sign-off via your desktop dashboard or Telegram push notification.
+              Unlike fully autonomous agents that can hallucinate and publish errant campaigns or spam clients, Qwenton isolates read operations from write operations. Any action that communicates externally pauses for explicit human sign-off via your desktop dashboard or Telegram push notification.
             </p>
             <div className="pt-1">
               <Link href="/approvals" className="text-xs font-bold text-primary hover:underline font-mono">
@@ -763,7 +776,7 @@ export default function LandingPage() {
         </div>
 
         {/* Pillar 03: 24/7 Mobile Operations via Telegram */}
-        <div className="clay-surface p-8 bg-white border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
+        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
           <div className="lg:col-span-7 space-y-4">
             <Badge variant="outline" className="font-mono text-xs font-bold">
               PILLAR 03 • MOBILE COMMAND
@@ -789,17 +802,17 @@ export default function LandingPage() {
             <div className="text-[10px] text-white/50 border-b border-white/10 pb-2">TELEGRAM WEBHOOK GATEWAY</div>
             <div className="text-primary font-bold">Live Push Telemetry</div>
             <p className="text-white/80 font-sans text-xs leading-relaxed">
-              &quot;Founder approved: Dispatching scheduled Instagram carousel and updating Q3 competitive briefing in Firestore database.&quot;
+              &quot;Founder approved: Dispatching scheduled Instagram carousel and updating Q3 competitive briefing in datastore.&quot;
             </p>
             <div className="pt-2 text-success text-[11px] font-bold">● Connected: 1 Telegram Bot (Normal) / 5 (Ultra)</div>
           </div>
         </div>
 
         {/* Pillar 04: Zero-Docker Architecture */}
-        <div className="clay-surface p-8 bg-white border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
+        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
           <div className="lg:col-span-5 bg-ink p-5 rounded-card text-white space-y-3 font-mono text-xs border border-border order-2 lg:order-1">
             <div className="text-[10px] text-white/50 border-b border-white/10 pb-2">DUAL-MODE PERSISTENCE</div>
-            <div className="text-white font-bold">Local Datastore + Firebase Cloud Sync</div>
+            <div className="text-white font-bold">Local Datastore + Cloud Sync</div>
             <p className="text-white/80 font-sans text-xs leading-relaxed">
               Zero Docker setup. Zero required databases during local development. Automatic cloud synchronization when deploying to Vercel and Firebase in production.
             </p>
@@ -813,7 +826,7 @@ export default function LandingPage() {
               Zero-Docker Cloud Native Infrastructure
             </h3>
             <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-              Competitor platforms mandate complicated Docker daemon environments or charge $20/month per agent for slow Linux sandbox containers. Qwenton is completely serverless: fast HTTP Route Handlers on Vercel, lightweight JSON datastores for edge execution, and single-key cloud AI routing.
+              Legacy platforms mandate complicated Docker daemon environments or charge $20/month per agent for slow Linux sandbox containers. Qwenton is completely serverless: fast HTTP Route Handlers on Vercel, lightweight JSON datastores for edge execution, and single-key cloud routing.
             </p>
             <div className="pt-1">
               <Link href="/integrations" className="text-xs font-bold text-primary hover:underline font-mono">
@@ -841,12 +854,12 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="clay-surface bg-white border border-border overflow-x-auto shadow-clay-card">
+        <div className="clay-surface bg-surface border border-border overflow-x-auto shadow-clay-card">
           <table className="w-full text-left text-xs font-mono">
             <thead className="bg-canvas border-b border-border text-ink uppercase tracking-wider font-bold">
               <tr>
                 <th className="py-3 px-4">Feature Dimension</th>
-                <th className="py-3 px-4 text-primary">Qwenton Agents</th>
+                <th className="py-3 px-4 text-primary">Qwenton Fleet</th>
                 <th className="py-3 px-4 text-ink-muted">Skydive.com</th>
                 <th className="py-3 px-4 text-ink-muted">Generic AI Wrappers</th>
               </tr>
@@ -863,7 +876,7 @@ export default function LandingPage() {
               <tr>
                 <td className="py-3.5 px-4 font-bold">Infrastructure Cost</td>
                 <td className="py-3.5 px-4 text-success font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> ₹0 / mo Serverless
+                  <CheckCircle2 className="w-3.5 h-3.5" /> INR 0 / mo Serverless
                 </td>
                 <td className="py-3.5 px-4 text-danger font-medium">$20+ / mo per Linux sandbox</td>
                 <td className="py-3.5 px-4 text-ink-muted">$19–$49 / mo</td>
@@ -879,15 +892,15 @@ export default function LandingPage() {
               <tr>
                 <td className="py-3.5 px-4 font-bold">Multi-Model Support</td>
                 <td className="py-3.5 px-4 text-success font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Groq, Gemini, OpenAI, Custom
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Flexible Multi-Provider Routing
                 </td>
-                <td className="py-3.5 px-4 text-ink-muted">Frontier models (locked)</td>
+                <td className="py-3.5 px-4 text-ink-muted">Locked frontier models</td>
                 <td className="py-3.5 px-4 text-ink-muted">Single provider lock-in</td>
               </tr>
               <tr>
                 <td className="py-3.5 px-4 font-bold">Design Aesthetics</td>
                 <td className="py-3.5 px-4 text-primary font-bold">
-                  Tri-Color 60-30-10 OKLCH (0 Gradients)
+                  Tri-Color 60-30-10 Solid (0 Gradients)
                 </td>
                 <td className="py-3.5 px-4 text-ink-muted">Generic dark template</td>
                 <td className="py-3.5 px-4 text-ink-muted">Overused AI purple glows</td>
@@ -902,7 +915,7 @@ export default function LandingPage() {
           ---------------------------------------------------- */}
       <section id="pricing" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-ink text-white font-mono text-xs font-bold mb-3 border border-border">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-xs font-bold mb-3 border border-border">
             <span className="w-2 h-2 rounded-full bg-primary" />
             <span>TRANSPARENT 4-TIER SUBSCRIPTION ARCHITECTURE</span>
           </div>
@@ -916,7 +929,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Tier 1: Normal (Free Forever) */}
-          <div className="clay-surface p-6 bg-white border border-border flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
+          <div className="clay-surface p-6 bg-surface border border-border flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-ink-muted uppercase">TIER 01</span>
@@ -926,7 +939,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <h3 className="text-xl font-black text-ink">Normal Plan</h3>
-                <div className="text-2xl font-black text-ink mt-1">₹0</div>
+                <div className="text-2xl font-black text-ink mt-1">INR 0</div>
                 <p className="text-xs text-ink-muted mt-1">Free forever for solo founders</p>
               </div>
               <div className="space-y-2 text-xs font-mono border-t border-border pt-4">
@@ -962,7 +975,7 @@ export default function LandingPage() {
           </div>
 
           {/* Tier 2: Lite Coworker */}
-          <div className="clay-surface p-6 bg-white border border-border flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
+          <div className="clay-surface p-6 bg-surface border border-border flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-ink-muted uppercase">TIER 02</span>
@@ -973,7 +986,7 @@ export default function LandingPage() {
               <div>
                 <h3 className="text-xl font-black text-ink">Lite Coworker</h3>
                 <div className="text-2xl font-black text-ink mt-1">
-                  ₹99 <span className="text-xs font-normal text-ink-muted">/ mo</span>
+                  INR 99 <span className="text-xs font-normal text-ink-muted">/ mo</span>
                 </div>
                 <p className="text-xs text-ink-muted mt-1">For active content creators</p>
               </div>
@@ -1010,7 +1023,7 @@ export default function LandingPage() {
           </div>
 
           {/* Tier 3: Pro Coworker */}
-          <div className="clay-surface p-6 bg-white border-2 border-primary flex flex-col justify-between hover:shadow-clay-card-hover transition-all relative">
+          <div className="clay-surface p-6 bg-surface border-2 border-primary flex flex-col justify-between hover:shadow-clay-card-hover transition-all relative">
             <div className="absolute -top-3 right-4 bg-primary text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded shadow-xs">
               MOST POPULAR
             </div>
@@ -1024,7 +1037,7 @@ export default function LandingPage() {
               <div>
                 <h3 className="text-xl font-black text-ink">Pro Coworker</h3>
                 <div className="text-2xl font-black text-ink mt-1">
-                  ₹299 <span className="text-xs font-normal text-ink-muted">/ mo</span>
+                  INR 299 <span className="text-xs font-normal text-ink-muted">/ mo</span>
                 </div>
                 <p className="text-xs text-ink-muted mt-1">For boutique agencies</p>
               </div>
@@ -1061,7 +1074,7 @@ export default function LandingPage() {
           </div>
 
           {/* Tier 4: Ultra Business */}
-          <div className="clay-surface p-6 bg-white border border-border flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
+          <div className="clay-surface p-6 bg-surface border border-border flex flex-col justify-between hover:shadow-clay-card-hover transition-all">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-ink-muted uppercase">TIER 04</span>
@@ -1072,7 +1085,7 @@ export default function LandingPage() {
               <div>
                 <h3 className="text-xl font-black text-ink">Ultra Business</h3>
                 <div className="text-2xl font-black text-ink mt-1">
-                  ₹599 <span className="text-xs font-normal text-ink-muted">/ mo</span>
+                  INR 599 <span className="text-xs font-normal text-ink-muted">/ mo</span>
                 </div>
                 <p className="text-xs text-ink-muted mt-1">For high-velocity operations</p>
               </div>
@@ -1127,7 +1140,7 @@ export default function LandingPage() {
           {faqs.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
-              <div key={idx} className="clay-surface bg-white border border-border overflow-hidden">
+              <div key={idx} className="clay-surface bg-surface border border-border overflow-hidden">
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
@@ -1155,15 +1168,15 @@ export default function LandingPage() {
           SECTION 8: CLOSING CONVERSION BANNER & LEGAL FOOTER
           ---------------------------------------------------- */}
       <section className="max-w-6xl mx-auto px-6 py-12 w-full">
-        <div className="p-8 sm:p-12 rounded-hero bg-ink text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-clay-card border border-border">
+        <div className="p-8 sm:p-12 rounded-hero bg-ink text-white dark:bg-surface dark:text-ink flex flex-col md:flex-row items-center justify-between gap-8 shadow-clay-card border border-border">
           <div className="space-y-3 max-w-xl">
-            <Badge variant="outline" className="text-white border-white/20 font-mono text-[10px]">
+            <Badge variant="outline" className="text-white dark:text-ink border-white/20 dark:border-border font-mono text-[10px]">
               GET STARTED IN 60 SECONDS
             </Badge>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black text-white dark:text-ink tracking-tight">
               Deploy Your First Autonomous Coworker Today
             </h2>
-            <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-white/70 dark:text-ink-muted leading-relaxed font-normal">
               Activate your free Normal plan. Automate 2 Instagram Reels, connect a private Telegram bot, and run 50 autonomous workflows per month with full human-in-the-loop protection.
             </p>
           </div>
@@ -1178,11 +1191,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Clean Technical Footer with Legal Links */}
-      <footer className="border-t border-border bg-white py-12 px-6">
+      {/* Clean Technical Footer with Legal Links & Theme Toggle */}
+      <footer className="border-t border-border bg-surface py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-ink-muted font-mono">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-ink text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-6 h-6 rounded-md bg-ink text-white dark:bg-canvas dark:text-ink flex items-center justify-center font-bold text-xs border border-border">
               Q
             </div>
             <span>© {new Date().getFullYear()} Qwenton Inc. All rights reserved.</span>

@@ -113,27 +113,27 @@ export function InstantAuditSandbox() {
   return (
     <div className="w-full max-w-5xl mx-auto my-8">
       {/* Outer Tactile Card */}
-      <div className="clay-card border-2 border-primary/20 bg-white/95 rounded-2xl p-6 sm:p-8 shadow-clay-card relative overflow-hidden">
+      <div className="clay-card border-2 border-border bg-surface rounded-2xl p-6 sm:p-8 shadow-clay-card relative overflow-hidden">
         {/* Top Header Badge */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping inline-block" />
-              <Badge variant="info" className="font-bold text-xs">
-                ⚡ 5-Second Instant Growth Sandbox • No Login Required
+              <span className="w-2.5 h-2.5 rounded-full bg-success animate-pulse inline-block" />
+              <Badge variant="outline" className="font-bold text-xs">
+                5-Second Instant Growth Sandbox • No Login Required
               </Badge>
             </div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight">
               Test Drive Your Autonomous Coworker Fleet Right Now
             </h2>
             <p className="text-xs sm:text-sm text-ink-muted mt-1">
-              Enter any real local business. Groq-powered AI specialists will run a live competitive gap audit in ~1.2 seconds.
+              Enter any real local business. Autonomous research specialists will run a live competitive gap audit in ~1.2 seconds.
             </p>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 shrink-0 bg-cloud-blue px-3.5 py-2 rounded-xl border border-primary/20 text-xs font-semibold text-primary-deep">
+          <div className="hidden md:flex items-center gap-2 shrink-0 bg-primary/10 px-3.5 py-2 rounded-xl border border-primary/20 text-xs font-semibold text-primary">
             <Zap className="w-4 h-4 text-primary" />
-            <span>Sub-second Cloud LPU Engine</span>
+            <span>High-Speed Edge Execution</span>
           </div>
         </div>
 
@@ -188,7 +188,7 @@ export function InstantAuditSandbox() {
                 key={preset.name}
                 type="button"
                 onClick={() => handleRunAudit(preset)}
-                className="text-xs font-medium px-2.5 py-1 rounded-full bg-canvas hover:bg-cloud-blue text-ink-muted hover:text-primary-deep border border-border transition-all flex items-center gap-1 select-none"
+                className="text-xs font-medium px-2.5 py-1 rounded-full bg-canvas hover:bg-surface text-ink-muted hover:text-ink border border-border transition-all flex items-center gap-1 select-none"
               >
                 <span>{preset.name}</span>
                 <span className="text-[10px] text-ink-light">({preset.location.split(',')[0]})</span>
@@ -208,7 +208,7 @@ export function InstantAuditSandbox() {
               {isLoading ? (
                 <>
                   <Zap className="w-4 h-4 animate-spin text-white" />
-                  <span>AI Coworker Fleet Auditing Competitors (~1.2s)...</span>
+                  <span>Coworker Fleet Auditing Competitors (~1.2s)...</span>
                 </>
               ) : (
                 <>
@@ -223,7 +223,7 @@ export function InstantAuditSandbox() {
 
         {/* Live Loading Pulse Animation */}
         {isLoading && (
-          <div className="mt-8 p-8 rounded-xl bg-cloud-blue/50 border border-primary/20 flex flex-col items-center justify-center text-center space-y-3 animate-pulse">
+          <div className="mt-8 p-8 rounded-xl bg-surface border border-border flex flex-col items-center justify-center text-center space-y-3 animate-pulse">
             <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-clay-button">
               <Bot className="w-6 h-6 animate-bounce" />
             </div>
@@ -231,23 +231,23 @@ export function InstantAuditSandbox() {
               Analyzing local Google Maps competitors & review sentiment for {businessName || 'target business'}...
             </div>
             <p className="text-xs text-ink-muted max-w-md">
-              Extracting top review complaints, formulating 5-slide viral Instagram carousel, and personalizing cold acquisition outreach via Groq LPU.
+              Extracting top review complaints, formulating 5-slide viral Instagram carousel, and personalizing cold acquisition outreach.
             </p>
           </div>
         )}
 
         {/* Live Audit Output Window */}
         {result && !isLoading && (
-          <div className="mt-8 pt-6 border-t border-border/80">
+          <div className="mt-8 pt-6 border-t border-border">
             {/* Scorecard Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-cloud-blue border border-primary/20 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-canvas border border-border mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary text-white flex flex-col items-center justify-center font-black shadow-xs">
                   <span className="text-sm leading-none">{result.growthScore}</span>
                   <span className="text-[9px] uppercase tracking-tighter opacity-80">/100</span>
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-primary-deep uppercase tracking-wider">
+                  <div className="text-xs font-bold text-primary uppercase tracking-wider">
                     Opportunity Score • {result.businessName} ({result.location})
                   </div>
                   <div className="text-sm font-semibold text-ink line-clamp-1">
@@ -273,7 +273,7 @@ export function InstantAuditSandbox() {
                 onClick={() => setActiveTab('maps')}
                 className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold border-b-2 transition-all select-none ${
                   activeTab === 'maps'
-                    ? 'border-primary text-primary-deep bg-cloud-blue/50 rounded-t-lg'
+                    ? 'border-primary text-primary bg-surface rounded-t-lg'
                     : 'border-transparent text-ink-muted hover:text-ink'
                 }`}
               >
@@ -286,7 +286,7 @@ export function InstantAuditSandbox() {
                 onClick={() => setActiveTab('carousel')}
                 className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold border-b-2 transition-all select-none ${
                   activeTab === 'carousel'
-                    ? 'border-primary text-primary-deep bg-cloud-blue/50 rounded-t-lg'
+                    ? 'border-primary text-primary bg-surface rounded-t-lg'
                     : 'border-transparent text-ink-muted hover:text-ink'
                 }`}
               >
@@ -299,7 +299,7 @@ export function InstantAuditSandbox() {
                 onClick={() => setActiveTab('email')}
                 className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold border-b-2 transition-all select-none ${
                   activeTab === 'email'
-                    ? 'border-primary text-primary-deep bg-cloud-blue/50 rounded-t-lg'
+                    ? 'border-primary text-primary bg-surface rounded-t-lg'
                     : 'border-transparent text-ink-muted hover:text-ink'
                 }`}
               >
@@ -332,10 +332,10 @@ export function InstantAuditSandbox() {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-4">
+                <div className="p-4 rounded-xl bg-surface border border-border flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
-                    <div className="text-xs text-emerald-900 font-medium">
+                    <ShieldCheck className="w-5 h-5 text-success shrink-0" />
+                    <div className="text-xs text-ink font-medium">
                       Marcus (Market Intelligence Agent) can monitor these competitor review shifts automatically every 24 hours.
                     </div>
                   </div>
@@ -350,7 +350,7 @@ export function InstantAuditSandbox() {
                     }
                     className="shrink-0 text-xs font-bold gap-1.5"
                   >
-                    {copiedSection === 'maps' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedSection === 'maps' ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedSection === 'maps' ? 'Copied' : 'Copy Audit'}</span>
                   </Button>
                 </div>
@@ -373,7 +373,7 @@ export function InstantAuditSandbox() {
                         className={`w-6 h-6 rounded-full text-[11px] font-bold flex items-center justify-center transition-all ${
                           carouselIndex === idx
                             ? 'bg-primary text-white shadow-xs'
-                            : 'bg-canvas text-ink-muted hover:bg-black/5'
+                            : 'bg-canvas text-ink-muted hover:bg-surface'
                         }`}
                       >
                         {idx + 1}
@@ -384,9 +384,9 @@ export function InstantAuditSandbox() {
 
                 {/* Active Slide Card */}
                 {result.socialCarousel.slides[carouselIndex] && (
-                  <div className="p-6 rounded-xl bg-canvas border-2 border-primary/20 relative shadow-sm">
+                  <div className="p-6 rounded-xl bg-canvas border-2 border-border relative shadow-sm">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                      <span className="text-xs font-bold text-primary uppercase tracking-wider font-mono">
                         Slide {carouselIndex + 1} of {result.socialCarousel.slides.length}
                       </span>
                       <span className="text-[11px] text-ink-muted font-mono">1080 x 1080 Square</span>
@@ -410,7 +410,7 @@ export function InstantAuditSandbox() {
                       onClick={() => handleCopy(`${result.socialCarousel.caption}\n\n${result.socialCarousel.hashtags.join(' ')}`, 'caption')}
                       className="text-xs font-bold gap-1.5 h-7"
                     >
-                      {copiedSection === 'caption' ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                      {copiedSection === 'caption' ? <Check className="w-3 h-3 text-success" /> : <Copy className="w-3 h-3" />}
                       <span>{copiedSection === 'caption' ? 'Copied' : 'Copy Caption'}</span>
                     </Button>
                   </div>
@@ -419,7 +419,7 @@ export function InstantAuditSandbox() {
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {result.socialCarousel.hashtags.map((tag) => (
-                      <span key={tag} className="text-[11px] font-semibold text-primary-deep bg-cloud-blue px-2 py-0.5 rounded-md">
+                      <span key={tag} className="text-[11px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
                         {tag}
                       </span>
                     ))}
@@ -451,7 +451,7 @@ export function InstantAuditSandbox() {
                     onClick={() => handleCopy(`Subject: ${result.coldOutreach.subject}\n\n${result.coldOutreach.pitch}`, 'email')}
                     className="text-xs font-bold gap-1.5"
                   >
-                    {copiedSection === 'email' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedSection === 'email' ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedSection === 'email' ? 'Copied Email' : 'Copy Full Email Draft'}</span>
                   </Button>
                 </div>
