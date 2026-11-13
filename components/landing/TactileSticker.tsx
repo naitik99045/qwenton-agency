@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { ShieldCheck, Cpu } from 'lucide-react';
+import { ShieldCheck, Cpu, Terminal } from 'lucide-react';
 
 interface TactileStickerProps {
   className?: string;
-  variant?: 'seal' | 'badge' | 'hardware';
+  variant?: 'seal' | 'badge' | 'hardware' | 'animated-bot';
   rotation?: number;
 }
 
@@ -16,6 +16,43 @@ export function TactileSticker({
   rotation = -2.5,
 }: TactileStickerProps) {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Live Animated Bot Sticker from Online Asset Search
+  if (variant === 'animated-bot') {
+    return (
+      <div
+        className={`relative inline-block cursor-pointer select-none group ${className}`}
+        style={{
+          transform: isHovered ? 'scale(1.05) rotate(0deg)' : `rotate(${rotation}deg)`,
+          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="relative rounded-2xl p-2.5 bg-surface border border-primary/30 shadow-clay-card flex flex-col items-center gap-1.5 backdrop-blur-md">
+          {/* Animated GIF Container */}
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-canvas/80 border border-border flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/stickers/coding-agent.gif"
+              alt="Autonomous Coding Agent Working"
+              className="w-full h-full object-contain pointer-events-none select-none"
+            />
+            {/* Online Live Status Pulse */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/70 border border-primary/40 text-[9px] font-mono font-bold text-primary">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span>ACTIVE</span>
+            </div>
+          </div>
+          <div className="text-[10px] font-mono text-ink-muted flex items-center gap-1">
+            <Terminal className="w-3 h-3 text-primary" />
+            <span className="font-bold text-ink">COWORKER #01</span>
+            <span>• RUNNING</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (variant === 'seal') {
     return (
@@ -38,7 +75,7 @@ export function TactileSticker({
             priority
           />
           {/* Holographic Sheen Pill */}
-          <div className="absolute -bottom-2 px-2 py-0.5 rounded-full bg-primary text-white font-mono text-[9px] font-black uppercase tracking-wider shadow-xs border border-white/20">
+          <div className="absolute -bottom-2 px-2 py-0.5 rounded-full bg-primary text-black font-mono text-[9px] font-black uppercase tracking-wider shadow-xs border border-white/20">
             SPEC. 2026
           </div>
         </div>
@@ -58,7 +95,7 @@ export function TactileSticker({
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="tactile-sticker rounded-xl px-3.5 py-2.5 font-mono text-xs flex items-center gap-3">
-          <div className="w-7 h-7 rounded-lg bg-ink text-white flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-surface-inset text-primary flex items-center justify-center shrink-0 border border-border">
             <Cpu className="w-4 h-4 text-primary" />
           </div>
           <div>
@@ -103,7 +140,7 @@ export function TactileSticker({
             HUMAN FIREWALL ACTIVE
           </div>
           <div className="text-[9px] text-ink-muted flex items-center gap-1.5 pt-0.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
             <span>0% UNAPPROVED MUTATIONS</span>
           </div>
         </div>

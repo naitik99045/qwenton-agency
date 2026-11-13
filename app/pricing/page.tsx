@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Sparkles, Check, ArrowLeft } from 'lucide-react';
+import { Bot, Check, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function PricingPage() {
@@ -55,7 +55,7 @@ export default function PricingPage() {
       maxAgents: '2 Agents for Free Work',
       features: [
         '2 AI Agents for Free Work',
-        'Cloud Groq & Gemini AI Models',
+        'Autonomous Multi-Model Cloud Engine',
         'Safe Web Research Tool',
         'Human Approval Inbox',
         '1 Connected Telegram Bot',
@@ -93,7 +93,7 @@ export default function PricingPage() {
       maxAgents: '9 Active AI Agents',
       features: [
         '9 Active AI Agents',
-        'Google Gemini & OpenAI Cloud Access',
+        'Priority Neural Model Routing',
         'Automated Scheduled Routines',
         '500MB Document Extraction',
         'FAM Gateway Checkout',

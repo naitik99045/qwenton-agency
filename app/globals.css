@@ -3,83 +3,52 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  .dark {
     /* ----------------------------------------------------
-       60-30-10 TRI-COLOR SOLID OKLCH DESIGN SYSTEM (LIGHT)
-       Strictly Zero Gradients • Zero Primary Colors (No Blue, No Red, No Yellow)
+       QWENTON-UI 60-30-10 TRI-COLOR ARCHITECTURE
+       90% Dark Shades + 10% Light / Saturated Contrast
+       Strictly Zero Gradients • Zero Orange • Zero Primary Colors
        ---------------------------------------------------- */
 
-    /* 60% Dominant Base: Tactile Linen Alabaster & Solid Clean Surfaces */
-    --canvas-cream: oklch(97.8% 0.008 85);          /* Pure warm alabaster linen */
-    --surface-white: oklch(100% 0 0);              /* Solid clean card surface */
-    --surface-inset: oklch(95.5% 0.008 85);        /* Tactile inset panel */
-    --surface-panel: oklch(96.5% 0.008 85);        /* Architectural sub-panel */
-    --border-subtle: oklch(88.5% 0.008 85);        /* Crisp hairline border */
-    --border-strong: oklch(80% 0.015 85);          /* High-definition border */
+    /* 60% Dominant Canvas (Deep Obsidian Carbon) */
+    --canvas-cream: oklch(14.5% 0.015 250);        /* Deep carbon base */
+    --surface-white: oklch(19.5% 0.018 250);       /* Elevated graphite panel */
+    --surface-inset: oklch(16% 0.015 250);         /* Recessed telemetry well */
+    --surface-panel: oklch(22% 0.02 250);          /* Structural sub-panel */
+    --border-subtle: oklch(27% 0.018 250);         /* Crisp wireframe hairline border */
+    --border-strong: oklch(35% 0.025 250);         /* High-definition structural boundary */
 
-    /* 30% Structural Ink & Typography (Stark Architectural Basalt) */
-    --ink: oklch(18% 0.018 260);                   /* Deep architectural basalt */
-    --ink-muted: oklch(42% 0.022 260);             /* High-contrast readable secondary text */
-    --ink-light: oklch(60% 0.015 260);             /* Metadata / subtle labels */
+    /* 30% Structure & High-Contrast Typography (Crisp Platinum Chalk) */
+    --ink: oklch(96% 0.005 90);                    /* Softened platinum chalk text */
+    --ink-muted: oklch(74% 0.012 250);             /* Slate readability secondary text */
+    --ink-light: oklch(54% 0.01 250);              /* Metadata & telemetry labels */
 
-    /* 10% High-Energy Non-Primary Accent: Signal Burnt Ochre / Ember */
-    --brand-primary: oklch(62% 0.19 45);           /* Tactile Signal Ember/Amber */
-    --brand-primary-deep: oklch(53% 0.18 45);      /* Deep interactive hover state */
-    --brand-primary-light: oklch(95% 0.035 45);    /* Soft signal amber tint */
-    --brand-primary-glow: oklch(62% 0.19 45 / 0.18);
+    /* 10% Light / Focal Accent: Electric Mint / Cyber Jade (Zero Orange, Zero Primary) */
+    --brand-primary: oklch(78% 0.16 158);          /* High-voltage focal mint */
+    --brand-primary-deep: oklch(70% 0.17 158);     /* Active interactive state */
+    --brand-primary-light: oklch(22% 0.04 158);    /* Deep mint tint badge background */
+    --brand-primary-glow: oklch(78% 0.16 158 / 0.28);
 
-    /* Functional Accents (Earthy & Non-Primary) */
-    --approval-amber: oklch(62% 0.15 75);          /* Earth amber approval gate */
-    --approval-amber-bg: oklch(96% 0.03 75);
-    --success: oklch(55% 0.13 155);                /* Muted forest emerald */
-    --success-bg: oklch(95% 0.03 155);
-    --danger: oklch(52% 0.18 25);                  /* Earth carmine */
-    --danger-bg: oklch(95% 0.03 25);
+    /* Functional Semantic Accents (Non-Primary & Subtle) */
+    --approval-amber: oklch(76% 0.12 95);          /* Technical brass amber */
+    --approval-amber-bg: oklch(22% 0.03 95);
+    --success: oklch(78% 0.16 158);                /* Unified electric mint */
+    --success-bg: oklch(22% 0.04 158);
+    --danger: oklch(62% 0.16 28);                  /* Muted carmine warning */
+    --danger-bg: oklch(22% 0.04 28);
 
-    /* Tactile Clay Shadows (Light Mode) */
-    --shadow-clay-card: 10px 10px 24px rgba(82, 78, 70, 0.07), -6px -6px 18px rgba(255, 255, 255, 0.95);
-    --shadow-clay-card-hover: 14px 14px 30px rgba(82, 78, 70, 0.11), -8px -8px 20px rgba(255, 255, 255, 0.98);
-    --shadow-clay-button-subtle: 4px 4px 12px rgba(82, 78, 70, 0.06), -3px -3px 8px rgba(255, 255, 255, 0.85);
-    --shadow-clay-inset: inset 2px 2px 6px rgba(82, 78, 70, 0.06), inset -2px -2px 6px rgba(255, 255, 255, 0.85);
-  }
+    /* Programmatic Relative Color Tokens */
+    --brand-hover: oklch(84% 0.15 158);
+    --brand-active: oklch(72% 0.17 158);
+    --brand-soft: oklch(22% 0.04 158);
+    --brand-border: oklch(38% 0.08 158);
 
-  /* ----------------------------------------------------
-     60-30-10 TRI-COLOR SOLID OKLCH DESIGN SYSTEM (DARK)
-     Deep Obsidian Basalt Canvas + High Contrast Chalk & Signal Ember
-     ---------------------------------------------------- */
-  .dark {
-    /* 60% Dominant Base: Pitch Obsidian Basalt & Dark Surface Layers */
-    --canvas-cream: oklch(13.5% 0.01 250);         /* Pure deep obsidian basalt */
-    --surface-white: oklch(18% 0.012 250);         /* Elevated slate card surface */
-    --surface-inset: oklch(14.8% 0.01 250);        /* Recessed telemetry well */
-    --surface-panel: oklch(16.5% 0.012 250);       /* Sub-panel */
-    --border-subtle: oklch(26% 0.015 250);         /* Crisp dark wireframe border */
-    --border-strong: oklch(34% 0.018 250);         /* Accent boundary */
-
-    /* 30% Structural Ink & Typography: Crisp Warm Alabaster Chalk */
-    --ink: oklch(96% 0.006 85);                    /* Crisp chalk text */
-    --ink-muted: oklch(74% 0.012 85);              /* Warm readable secondary text */
-    --ink-light: oklch(56% 0.01 85);               /* Subtle metadata */
-
-    /* 10% High-Energy Non-Primary Accent: Glowing Signal Amber / Ember */
-    --brand-primary: oklch(66% 0.20 45);           /* High-contrast amber glow */
-    --brand-primary-deep: oklch(59% 0.19 45);      /* Hover state */
-    --brand-primary-light: oklch(24% 0.05 45);     /* Dark amber badge backing */
-    --brand-primary-glow: oklch(66% 0.20 45 / 0.30);
-
-    /* Functional Accents */
-    --approval-amber: oklch(68% 0.16 75);
-    --approval-amber-bg: oklch(24% 0.04 75);
-    --success: oklch(62% 0.14 155);
-    --success-bg: oklch(22% 0.04 155);
-    --danger: oklch(58% 0.18 25);
-    --danger-bg: oklch(22% 0.05 25);
-
-    /* Tactile Basalt Shadows (Dark Mode) */
-    --shadow-clay-card: 0 12px 32px -4px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
-    --shadow-clay-card-hover: 0 18px 40px -4px rgba(0, 0, 0, 0.70), 0 0 0 1px rgba(255, 255, 255, 0.10);
-    --shadow-clay-button-subtle: 0 4px 12px rgba(0, 0, 0, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    --shadow-clay-inset: inset 0 2px 6px rgba(0, 0, 0, 0.60);
+    /* Deep Architectural Shadows */
+    --shadow-clay-card: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.07);
+    --shadow-clay-card-hover: 0 24px 48px -6px rgba(0, 0, 0, 0.80), 0 0 0 1px oklch(78% 0.16 158 / 0.35);
+    --shadow-clay-button-subtle: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    --shadow-clay-inset: inset 0 2px 6px rgba(0, 0, 0, 0.70);
   }
 
   body {
@@ -89,7 +58,99 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.011em;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+@layer components {
+  /* Tactile Solid Surfaces (Strictly No Gradients) */
+  .clay-surface {
+    background-color: var(--surface-white);
+    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-clay-card);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .clay-surface-interactive {
+    background-color: var(--surface-white);
+    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-clay-card);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .clay-surface-interactive:hover {
+    box-shadow: var(--shadow-clay-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .clay-control {
+    background-color: var(--surface-white);
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-clay-button-subtle);
+    transition: all 0.15s ease-in-out;
+  }
+
+  .clay-control:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--brand-primary-glow);
+  }
+
+  .clay-inset-panel {
+    background-color: var(--surface-inset);
+    border-radius: 16px;
+    box-shadow: var(--shadow-clay-inset);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Tactile Physical Sticker Badge Styling */
+  .tactile-sticker {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    border: 1.5px dashed var(--border-strong);
+    background-color: var(--surface-white);
+    color: var(--ink);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.50);
+    user-select: none;
+    transform-origin: center;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  }
+
+  .tactile-sticker:hover {
+    transform: rotate(0deg) scale(1.03);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.70), 0 0 0 1px oklch(78% 0.16 158 / 0.4);
+  }
+
+  /* Fluid Headline Rules */
+  .font-fluid-hero {
+    font-size: clamp(2.4rem, 5.2vw, 4.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+  }
+
+  .font-fluid-section {
+    font-size: clamp(1.85rem, 3.8vw, 2.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-light);
   }
 }
 

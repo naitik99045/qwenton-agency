@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Sparkles, ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
+import { Bot, ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { loginWithEmail, loginWithGoogle } from '@/lib/auth/firebase-client-auth';
@@ -60,7 +60,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full clay-surface p-8">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-[16px] bg-primary text-white flex items-center justify-center mx-auto mb-4 shadow-clay-button border border-primary-deep/30">
-            <Sparkles className="w-6 h-6" />
+            <Bot className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-ink">Welcome back</h1>
           <p className="text-xs text-ink-muted mt-1">Sign in to access your AI coworker workspace</p>

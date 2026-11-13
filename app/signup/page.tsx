@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
+import { Bot, ArrowRight, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { signUpWithEmail, loginWithGoogle } from '@/lib/auth/firebase-client-auth';
@@ -65,7 +65,7 @@ export default function SignupPage() {
       <div className="max-w-md w-full clay-surface p-8">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-[16px] bg-primary text-white flex items-center justify-center mx-auto mb-4 shadow-clay-button border border-primary-deep/30">
-            <Sparkles className="w-6 h-6" />
+            <Bot className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-ink">Create your workspace</h1>
           <p className="text-xs text-ink-muted mt-1">Start with 2 free AI coworkers on the Normal plan</p>

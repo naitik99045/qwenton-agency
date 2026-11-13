@@ -1,49 +1,51 @@
 # Project State & Context
-**Last Updated:** November 13, 2026, 12:05 IST (v0.7.0 Seamless Light/Dark Mode, Tactile Engineering Stickers, Anti-Slop & Zero Primary Tri-Color Architecture)
+**Last Updated:** November 13, 2026, 12:28 IST (v0.8.0 90% Dark Carbon + 10% Cyber Mint UI, Online Animated Sticker & Total Vendor/Orange Purge)
 
 ---
 
 ## 1. Project Overview
 
-**Qwenton** (`qwenton-agents`) is an autonomous AI coworker platform, marketing automation engine, and agency operating system. It features real-time **Instagram Reel Comment-to-DM lead generation**, multi-agent swarms, Telegram mobile push approvals, single-key cloud AI inference, and zero-Docker serverless deployment on Vercel and Firebase.
+**Qwenton** (`qwenton-agents`) is an autonomous AI coworker platform, marketing automation engine, and agency operating system. It features real-time **Instagram Reel Comment-to-DM lead generation**, multi-agent swarms, Telegram mobile push approvals, and zero-Docker serverless deployment on Vercel and Firebase.
 
 ### Operating Standards & Non-Negotiable Directives:
-- **Strictly Non-Primary Tri-Color Architecture (60-30-10 Solid OKLCH)**:
-  - **Light Mode**: Warm Tactile Alabaster Linen (`oklch(97.8% 0.008 85)`), Solid White Cards, Stark Architectural Basalt (`oklch(18% 0.018 260)`), and Signal Burnt Ochre/Ember (`oklch(62% 0.19 45)`).
-  - **Dark Mode**: Deep Pitch Obsidian Basalt (`oklch(13.5% 0.01 250)`), Elevated Slate Layers (`oklch(18% 0.012 250)`), Crisp Chalk Text (`oklch(96% 0.006 85)`), and Luminous Signal Amber (`oklch(66% 0.20 45)`).
-  - **Zero Primary Colors**: Completely purged of pure Blue (#0000FF, Cobalt #4667B1), pure Red (#FF0000), and pure Yellow (#FFFF00), as well as any shades of primary colors.
+- **Strictly Non-Primary Tri-Color Architecture (qwenton-ui 60-30-10 Solid OKLCH)**:
+  - **90% Dark Shades Hierarchy**:
+    - **60% Dominant Base**: Deep Obsidian Carbon (`oklch(14.5% 0.015 250)`).
+    - **30% Structure & High-Contrast Typography**: Elevated Graphite Slate (`oklch(19.5% 0.018 250)`), Hairline Wireframe Borders (`oklch(27% 0.018 250)`), and Softened Platinum Chalk Text (`oklch(96% 0.005 90)`).
+  - **10% Light / High-Contrast Accent**:
+    - High-Voltage Cyber Mint / Electric Jade (`oklch(78% 0.16 158)`).
+    - Capable of extreme value contrast against deep carbon ($>11:1$ with black typography on buttons).
+  - **Zero Orange & Zero Primary Colors**: Completely purged of orange, pure blue, pure red, and pure yellow.
   - **Strictly Zero Gradients**: Zero `bg-linear-*`, zero `bg-gradient-*`, zero radial glows, zero purple/neon haze.
-- **Anti-AI Slop Enforcement**:
-  - Eliminated all emojis (`🔥`, `📩`, `🚀`, `⚡`), Bento grids, 3-card rows, sparkle/star icons, decorative terminal windows, and hype vendor names.
-  - Placed **Product-First Interactive Sandboxes** and tactile engineering stamps front and center.
+- **Total Purge of AI Vendor Hype & Emojis**:
+  - Zero mentions of "Groq", "Grok", "Gemini", or "OpenAI" on the user-facing landing page, pricing page, and billing portal.
+  - Zero emojis (`🔥`, `📩`, `🚀`, `⚡`, `🤖`) across all pages and mockups.
 
 ---
 
 ## 2. Brainstormed Upgrades & Architectural Decisions
 
 ### Top 3 Brainstormed Upgrades:
-1. **Seamless Light / Dark Mode Architecture & Interactive Toggle**:
-   - Built a tactile `ThemeToggle` component mounted directly in the navigation header.
-   - Initialized via zero-FOUC inline script in `app/layout.tsx` with automatic persistence in `localStorage` and OS preference synchronization.
-   - Comprehensive OKLCH color token inversion ensuring high-contrast readability without primary color contamination.
-2. **Tactile Hardware Badges & Animated Vector Seal Stickers**:
-   - Engineered authentic die-cut physical stickers with interactive tilt physics (`components/landing/TactileSticker.tsx`).
-   - Created an animated vector engineering disc (`public/stickers/autonomous-seal.svg`) with counter-rotating gears, coordinate stamps, and pulsing geometric aperture core.
-3. **Purge of AI Slop & Vendor Corner Names**:
-   - Removed all vendor AI names from the front page and top corner marquee, replacing them with deterministic verification telemetry (`META_GRAPH_API: v20.0 Active`, `HUMAN_GATE: 100% Enforced`, `TELEMETRY: 99.98% Operational`).
-   - Cleaned all comment and message text of emojis, converting to clean, professional developer copy.
+1. **90% Dark Carbon + 10% Cyber Mint UI (qwenton-ui Solid Tri-Color)**:
+   - Completely replaced orange and warm palettes with an architectural dark carbon workstation aesthetic.
+   - 90% dark surfaces provide depth and calmness, while the 10% light Electric Mint (`oklch(78% 0.16 158)`) commands instant visual hierarchy for primary CTAs and verification seals.
+2. **Online-Sourced Live Animated Coding Agent Sticker**:
+   - Downloaded and self-hosted an animated coding robot sticker at [`public/stickers/coding-agent.gif`](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/public/stickers/coding-agent.gif).
+   - Embedded with physical tactile hover tilt and active pulse telemetry in [`components/landing/TactileSticker.tsx`](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/TactileSticker.tsx), rendered directly in the hero section.
+3. **Comprehensive User Page Anti-Slop & Vendor Purge**:
+   - Cleaned all user-facing pages (`app/page.tsx`, `app/pricing/page.tsx`, `app/billing/page.tsx`, `app/dashboard/page.tsx`, `app/login/page.tsx`, `app/signup/page.tsx`).
+   - Replaced all vendor names with generic, production-ready system terminology ("Autonomous Multi-Model Cloud Engine", "Priority Neural Model Routing").
 
 ---
 
 ## 3. Current Progress Audit
 
 ### Completed Milestones:
-- **Theme Switcher (`components/ui/ThemeToggle.tsx`)**: Zero layout shift, smooth Sun/Moon icon transitions, and localStorage persistence.
-- **Engineering Stickers (`public/stickers/autonomous-seal.svg` & `components/landing/TactileSticker.tsx`)**: Interactive physical hover tilt, verified serial stamps (#QW-8821), and dual-mode contrast borders.
-- **Landing Page Redesign (`app/page.tsx`)**: Purged vendor AI names from header corner, purged all emojis, integrated stickers and theme toggle, and verified dark/light mode across all 8 page sections.
-- **Instant Audit Sandbox (`components/landing/InstantAuditSandbox.tsx`)**: Stripped of emojis and vendor AI names, converted to adaptive dual-mode surfaces.
-- **Global Design Tokens (`app/globals.css` & `tailwind.config.ts`)**: Enabled `darkMode: 'class'`, defined solid OKLCH values for `:root` and `.dark`.
-- **TypeScript Typecheck**: Exited with code 0.
+- **Design Tokens (`app/globals.css` & `tailwind.config.ts`)**: 90% Dark Carbon + 10% Cyber Mint, zero orange, zero primary colors.
+- **Hero & Landing Page (`app/page.tsx`)**: Sourced animated bot sticker mounted, buttons updated to high-contrast black on mint, zero vendor names.
+- **User Pricing & Billing (`app/pricing/page.tsx` & `app/billing/page.tsx`)**: Cleaned of Groq and Gemini mentions.
+- **User Dashboard & Auth (`app/dashboard/page.tsx`, `app/login/page.tsx`, `app/signup/page.tsx`)**: Replaced `Sparkles` decorative icons with functional `Bot` and `Zap` icons.
+- **Animated Seals (`public/stickers/autonomous-seal.svg`)**: Updated with Electric Mint vector accents.
 
 ---
 

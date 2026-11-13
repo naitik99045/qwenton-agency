@@ -29,37 +29,37 @@
   </defs>
 
   <!-- Background Die-Cut Disc -->
-  <circle cx="120" cy="120" r="112" fill="#17191E" stroke="#333742" stroke-width="2.5" />
-  <circle cx="120" cy="120" r="108" fill="none" stroke="#D96B27" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
+  <circle cx="120" cy="120" r="112" fill="#14171C" stroke="#2B303C" stroke-width="2.5" />
+  <circle cx="120" cy="120" r="108" fill="none" stroke="#10E599" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
 
   <!-- Rotating Outer Technical Scale -->
   <g class="rotor-outer">
-    <circle cx="120" cy="120" r="98" stroke="#D96B27" stroke-width="1.5" stroke-dasharray="2 10" opacity="0.8" />
-    <circle cx="120" cy="120" r="92" stroke="#686F7E" stroke-width="1" stroke-dasharray="1 6" opacity="0.5" />
+    <circle cx="120" cy="120" r="98" stroke="#10E599" stroke-width="1.5" stroke-dasharray="2 10" opacity="0.8" />
+    <circle cx="120" cy="120" r="92" stroke="#687284" stroke-width="1" stroke-dasharray="1 6" opacity="0.5" />
     
     <!-- Coordinate / Degree Markers -->
-    <text x="120" y="28" fill="#D96B27" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">000° PROTOCOL</text>
-    <text x="212" y="123" fill="#D96B27" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">090°</text>
-    <text x="120" y="217" fill="#D96B27" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">180° VERIFIED</text>
-    <text x="28" y="123" fill="#D96B27" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">270°</text>
+    <text x="120" y="28" fill="#10E599" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">000° PROTOCOL</text>
+    <text x="212" y="123" fill="#10E599" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">090°</text>
+    <text x="120" y="217" fill="#10E599" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">180° VERIFIED</text>
+    <text x="28" y="123" fill="#10E599" font-family="monospace" font-size="7" font-weight="bold" text-anchor="middle" letter-spacing="1">270°</text>
   </g>
 
   <!-- Rotating Counter Dial Teeth -->
   <g class="rotor-inner">
-    <circle cx="120" cy="120" r="76" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.3" />
-    <path d="M120 48 L120 54 M192 120 L186 120 M120 192 L120 186 M48 120 L54 120" stroke="#D96B27" stroke-width="2" stroke-linecap="round" />
-    <path d="M69 69 L74 74 M171 69 L166 74 M171 171 L166 166 M69 171 L74 166" stroke="#A0A6B2" stroke-width="1.5" stroke-linecap="round" />
+    <circle cx="120" cy="120" r="76" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.25" />
+    <path d="M120 48 L120 54 M192 120 L186 120 M120 192 L120 186 M48 120 L54 120" stroke="#10E599" stroke-width="2" stroke-linecap="round" />
+    <path d="M69 69 L74 74 M171 69 L166 74 M171 171 L166 166 M69 171 L74 166" stroke="#8A94A6" stroke-width="1.5" stroke-linecap="round" />
   </g>
 
   <!-- Inner Tactile Chamber -->
-  <circle cx="120" cy="120" r="62" fill="#101114" stroke="#252932" stroke-width="2" />
+  <circle cx="120" cy="120" r="62" fill="#0E1013" stroke="#252A34" stroke-width="2" />
   
   <!-- Central Emblem with Pulse -->
   <g class="core-pulse">
     <!-- Geometric Aperture -->
-    <polygon points="120,72 158,94 158,146 120,168 82,146 82,94" fill="#1C1F26" stroke="#D96B27" stroke-width="2" />
-    <circle cx="120" cy="120" r="22" fill="#D96B27" opacity="0.15" />
-    <circle cx="120" cy="120" r="12" fill="#D96B27" />
+    <polygon points="120,72 158,94 158,146 120,168 82,146 82,94" fill="#181B22" stroke="#10E599" stroke-width="2" />
+    <circle cx="120" cy="120" r="22" fill="#10E599" opacity="0.15" />
+    <circle cx="120" cy="120" r="12" fill="#10E599" />
     
     <!-- Precision Crosshairs -->
     <line x1="120" y1="92" x2="120" y2="148" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" />
@@ -70,12 +70,12 @@
   <path id="curve-top" d="M 46 120 A 74 74 0 0 1 194 120" fill="none" />
   <path id="curve-bottom" d="M 194 120 A 74 74 0 0 1 46 120" fill="none" />
   
-  <text font-family="monospace" font-size="7.5" font-weight="900" fill="#F4F4EE" letter-spacing="2">
+  <text font-family="monospace" font-size="7.5" font-weight="900" fill="#F4F4F0" letter-spacing="2">
     <textPath href="#curve-top" startOffset="50%" text-anchor="middle">
       QWENTON AUTONOMOUS CORE
     </textPath>
   </text>
-  <text font-family="monospace" font-size="7" font-weight="800" fill="#D96B27" letter-spacing="2">
+  <text font-family="monospace" font-size="7" font-weight="800" fill="#10E599" letter-spacing="2">
     <textPath href="#curve-bottom" startOffset="50%" text-anchor="middle">
       • SPEC 2026 • ZERO CRON FAIL •
     </textPath>

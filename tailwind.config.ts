@@ -56,7 +56,7 @@ const config: Config = {
       boxShadow: {
         'clay-card': 'var(--shadow-clay-card)',
         'clay-card-hover': 'var(--shadow-clay-card-hover)',
-        'clay-button': '0 4px 12px rgba(217, 107, 39, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
+        'clay-button': '0 4px 12px rgba(16, 229, 153, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
         'clay-button-subtle': 'var(--shadow-clay-button-subtle)',
         'clay-inset': 'var(--shadow-clay-inset)',
       },

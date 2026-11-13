@@ -11,7 +11,7 @@ import {
   ShieldAlert,
   Play,
   ArrowRight,
-  Sparkles,
+  Zap,
   CheckCircle2,
   Plus,
 } from 'lucide-react';
@@ -198,7 +198,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold text-ink-muted uppercase tracking-wider">Plan & Usage</span>
               <div className="w-8 h-8 rounded-[10px] bg-soft-lavender text-[#523E8C] flex items-center justify-center">
-                <Sparkles className="w-4 h-4" />
+                <Zap className="w-4 h-4" />
               </div>
             </div>
             <div>

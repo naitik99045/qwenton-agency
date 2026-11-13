@@ -224,7 +224,7 @@ export default function LandingPage() {
               <a href="#cockpit" className="hover:text-ink transition-colors">
                 Live Cockpit
               </a>
-              <a href="#reels-tester" className="text-primary hover:text-primary-deep transition-colors">
+              <a href="#reels-tester" className="text-primary hover:text-primary/80 transition-colors">
                 Reels Engine
               </a>
               <a href="#instant-audit" className="hover:text-ink transition-colors">
@@ -252,7 +252,7 @@ export default function LandingPage() {
                 Sign In
               </Link>
               <Link href="/signup">
-                <Button size="sm" className="font-bold shadow-clay-button text-xs px-4 py-2 bg-primary text-white hover:bg-primary-deep">
+                <Button size="sm" className="font-extrabold shadow-clay-button text-xs px-4 py-2 bg-primary text-black hover:bg-brand-hover">
                   Deploy Free Agents →
                 </Button>
               </Link>
@@ -269,8 +269,8 @@ export default function LandingPage() {
           {/* Hero Copy (8 cols) */}
           <div className="lg:col-span-8 space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-[11px] font-medium border border-border">
-              <span className="w-2 h-2 rounded-full bg-primary" />
-              <span>AUTONOMOUS WORKFORCE • SOLID NON-PRIMARY OKLCH • ZERO GRADIENTS</span>
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span>AUTONOMOUS WORKFORCE • 90% DARK CARBON + 10% CYBER MINT • ZERO GRADIENTS</span>
             </div>
 
             <h1 className="font-fluid-hero font-black text-ink tracking-tight">
@@ -283,9 +283,9 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
               <Link href="/signup">
-                <Button size="lg" className="w-full sm:w-auto font-bold px-8 py-3.5 text-sm gap-2 bg-primary text-white hover:bg-primary-deep shadow-clay-button">
+                <Button size="lg" className="w-full sm:w-auto font-extrabold px-8 py-3.5 text-sm gap-2 bg-primary text-black hover:bg-brand-hover shadow-clay-button">
                   <span>Deploy 2 Free Agents</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-black" />
                 </Button>
               </Link>
               <a href="#reels-tester">
@@ -297,13 +297,13 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Hero Tactile Stickers & Physical Badges (4 cols) */}
+          {/* Hero Tactile Stickers & Online-Sourced Animated Bot Sticker (4 cols) */}
           <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col items-center lg:items-end justify-center gap-4 pt-2">
-            {/* Holographic Rotating Technical Seal Sticker */}
-            <TactileSticker variant="seal" rotation={-3.5} />
+            {/* Live Animated Coding Bot Sticker from Online Asset Search */}
+            <TactileSticker variant="animated-bot" rotation={-2} />
 
-            {/* QA Hardware Serial Badge Sticker */}
-            <TactileSticker variant="badge" rotation={2} />
+            {/* Holographic Rotating Technical Seal Sticker */}
+            <TactileSticker variant="seal" rotation={2.5} />
           </div>
         </div>
 
@@ -454,9 +454,9 @@ export default function LandingPage() {
                           }, 300);
                         }}
                         isLoading={cockpitExecuting}
-                        className="bg-primary hover:bg-primary-deep text-white font-bold text-xs px-4 shadow-clay-button"
+                        className="bg-primary hover:bg-brand-hover text-black font-extrabold text-xs px-4 shadow-clay-button"
                       >
-                        <Check className="w-3.5 h-3.5 mr-1" />
+                        <Check className="w-3.5 h-3.5 mr-1 text-black" />
                         <span>Authorize & Dispatch</span>
                       </Button>
                       <Button
@@ -612,9 +612,9 @@ export default function LandingPage() {
               type="button"
               onClick={handleSimulateReel}
               isLoading={testerSimulating}
-              className="w-full py-3 bg-primary hover:bg-primary-deep text-white font-bold text-xs uppercase tracking-wider shadow-clay-button gap-2"
+              className="w-full py-3 bg-primary hover:bg-brand-hover text-black font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2"
             >
-              <Zap className="w-3.5 h-3.5" />
+              <Zap className="w-3.5 h-3.5 text-black" />
               <span>Simulate Meta Webhook Dispatch</span>
             </Button>
           </div>
@@ -900,7 +900,7 @@ export default function LandingPage() {
               <tr>
                 <td className="py-3.5 px-4 font-bold">Design Aesthetics</td>
                 <td className="py-3.5 px-4 text-primary font-bold">
-                  Tri-Color 60-30-10 Solid (0 Gradients)
+                  Tri-Color 60-30-10 Solid (90% Carbon Slate + 10% Cyber Mint)
                 </td>
                 <td className="py-3.5 px-4 text-ink-muted">Generic dark template</td>
                 <td className="py-3.5 px-4 text-ink-muted">Overused AI purple glows</td>
@@ -1024,7 +1024,7 @@ export default function LandingPage() {
 
           {/* Tier 3: Pro Coworker */}
           <div className="clay-surface p-6 bg-surface border-2 border-primary flex flex-col justify-between hover:shadow-clay-card-hover transition-all relative">
-            <div className="absolute -top-3 right-4 bg-primary text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded shadow-xs">
+            <div className="absolute -top-3 right-4 bg-primary text-black font-mono text-[10px] font-black px-2 py-0.5 rounded shadow-xs">
               MOST POPULAR
             </div>
             <div className="space-y-4">
@@ -1066,7 +1066,7 @@ export default function LandingPage() {
             </div>
             <div className="pt-6">
               <Link href="/billing">
-                <Button size="sm" className="w-full font-bold text-xs bg-primary text-white hover:bg-primary-deep shadow-clay-button">
+                <Button size="sm" className="w-full font-extrabold text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button">
                   Upgrade to Pro
                 </Button>
               </Link>
@@ -1183,7 +1183,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full md:w-auto">
             <Link href="/signup" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto font-bold px-8 py-3.5 text-xs bg-primary text-white hover:bg-primary-deep shadow-clay-button uppercase tracking-wider">
+              <Button size="lg" className="w-full sm:w-auto font-extrabold px-8 py-3.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button uppercase tracking-wider">
                 Deploy 2 Free Agents →
               </Button>
             </Link>
@@ -1208,7 +1208,7 @@ export default function LandingPage() {
             <Link href="/privacy" className="hover:text-ink hover:underline transition-colors">
               Privacy Policy
             </Link>
-            <span className="text-primary font-bold">● Solid OKLCH Tri-Color</span>
+            <span className="text-primary font-bold">● 90% Dark Carbon + 10% Cyber Mint</span>
           </div>
         </div>
       </footer>

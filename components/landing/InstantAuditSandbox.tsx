@@ -203,18 +203,18 @@ export function InstantAuditSandbox() {
               onClick={() => handleRunAudit()}
               disabled={isLoading || (!businessName.trim() && !location.trim())}
               size="lg"
-              className="w-full sm:w-auto font-bold gap-2 shadow-clay-button px-8 text-sm"
+              className="w-full sm:w-auto font-bold gap-2 shadow-clay-button px-8 text-sm bg-primary text-black hover:bg-brand-hover"
             >
               {isLoading ? (
                 <>
-                  <Zap className="w-4 h-4 animate-spin text-white" />
+                  <Zap className="w-4 h-4 animate-spin text-black" />
                   <span>Coworker Fleet Auditing Competitors (~1.2s)...</span>
                 </>
               ) : (
                 <>
-                  <Zap className="w-4 h-4 text-white" />
+                  <Zap className="w-4 h-4 text-black" />
                   <span>Generate 5-Second Agency Audit Free</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-black" />
                 </>
               )}
             </Button>
@@ -224,7 +224,7 @@ export function InstantAuditSandbox() {
         {/* Live Loading Pulse Animation */}
         {isLoading && (
           <div className="mt-8 p-8 rounded-xl bg-surface border border-border flex flex-col items-center justify-center text-center space-y-3 animate-pulse">
-            <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-clay-button">
+            <div className="w-12 h-12 rounded-2xl bg-primary text-black flex items-center justify-center shadow-clay-button">
               <Bot className="w-6 h-6 animate-bounce" />
             </div>
             <div className="font-bold text-base text-ink">
@@ -242,7 +242,7 @@ export function InstantAuditSandbox() {
             {/* Scorecard Bar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-canvas border border-border mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-primary text-white flex flex-col items-center justify-center font-black shadow-xs">
+                <div className="w-12 h-12 rounded-xl bg-primary text-black flex flex-col items-center justify-center font-black shadow-xs">
                   <span className="text-sm leading-none">{result.growthScore}</span>
                   <span className="text-[9px] uppercase tracking-tighter opacity-80">/100</span>
                 </div>
@@ -474,9 +474,9 @@ export function InstantAuditSandbox() {
               </div>
 
               <Link href="/signup" className="shrink-0">
-                <Button size="md" className="font-bold gap-2 shadow-clay-button bg-primary text-white hover:bg-primary-deep w-full sm:w-auto">
+                <Button size="md" className="font-extrabold gap-2 shadow-clay-button bg-primary text-black hover:bg-brand-hover w-full sm:w-auto">
                   <span>Deploy 2 Free Agents Free</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-black" />
                 </Button>
               </Link>
             </div>

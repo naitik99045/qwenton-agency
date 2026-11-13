@@ -239,7 +239,7 @@ export default function BillingPage() {
       maxAgents: 2,
       maxInstagramReels: 2,
       description: 'Ideal for testing autonomous workflows and Reel auto-DMs.',
-      features: ['2 AI Agents for Free Work', '2 Connected Reels (Auto DM on Comment)', 'Away & Busy DM Assistant', 'Cloud Groq & Gemini AI Models', 'Human Approvals'],
+      features: ['2 AI Agents for Free Work', '2 Connected Reels (Auto DM on Comment)', 'Away & Busy DM Assistant', 'Autonomous Multi-Model Cloud Engine', 'Human Approvals'],
       highlighted: false,
     },
     {
@@ -263,7 +263,7 @@ export default function BillingPage() {
       maxAgents: 9,
       maxInstagramReels: 9,
       description: 'For teams requiring deep research, routines, and multi-reels.',
-      features: ['9 AI Agents', '9 Connected Reels for Auto DM', 'Multi-Keyword Comment Automation', 'Gemini & OpenAI Cloud Access', 'Automated Scheduled Routines', '500MB Storage'],
+      features: ['9 AI Agents', '9 Connected Reels for Auto DM', 'Multi-Keyword Comment Automation', 'Priority Neural Model Routing', 'Automated Scheduled Routines', '500MB Storage'],
       highlighted: true,
     },
     {
