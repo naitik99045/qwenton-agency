@@ -4,690 +4,700 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Bot,
-  ShieldAlert,
-  Radio,
+  ShieldCheck,
+  Zap,
   ArrowRight,
+  Play,
+  Users,
+  Instagram,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
   Search,
-  Zap,
   Check,
-  ShieldCheck,
-  Cpu,
+  Radio,
   Layers,
-  Instagram,
-  Copy,
-  ExternalLink,
   Film,
+  Sparkles,
+  ShieldAlert,
+  Sliders,
+  CheckCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { TactileSticker } from '@/components/landing/TactileSticker';
-import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
-import { ThreeAgentCore } from '@/components/landing/ThreeAgentCore';
+import { HeroBotTheatre } from '@/components/landing/HeroBotTheatre';
+import { HeroWorkflowStepper } from '@/components/landing/HeroWorkflowStepper';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
-import { ScrollPipeline } from '@/components/landing/ScrollPipeline';
+import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
 
 export default function LandingPage() {
-  // Hero Interactive Cockpit State
-  const [activeCockpitOp, setActiveCockpitOp] = useState<'reels' | 'intel' | 'away' | 'swarm'>('reels');
-  const [cockpitTriggerKeyword, setCockpitTriggerKeyword] = useState('GROWTH');
-  const [cockpitApprovalState, setCockpitApprovalState] = useState<'pending' | 'approved' | 'rejected'>('pending');
-  const [cockpitExecuting, setCockpitExecuting] = useState(false);
+  // Hero Stepper & Workflow State
+  const [heroStage, setHeroStage] = useState<number>(0);
 
-  // Standalone Instagram Reel Sandbox Tester
-  const [testerReelUrl, setTesterReelUrl] = useState('https://instagram.com/reel/C8qwenton123');
-  const [testerKeyword, setTesterKeyword] = useState('GROWTH');
-  const [testerComment, setTesterComment] = useState('Send me the GROWTH blueprint please');
-  const [testerSimulating, setTesterSimulating] = useState(false);
-  const [testerResult, setTesterResult] = useState<{
-    matched: boolean;
-    publicReply: string;
-    privateDm: string;
-    latencyMs: number;
-  } | null>({
-    matched: true,
-    publicReply: 'Sent directly to your inbox. Check your DMs.',
-    privateDm: 'Hey there. Thanks for watching our Reel. Here is your direct access link: https://qwenton.com/access',
-    latencyMs: 340,
-  });
+  // Section 1: Product Proof Interactive Simulator State
+  const [proofStep, setProofStep] = useState<'comment' | 'approval' | 'delivered'>('approval');
+  const [proofKeyword, setProofKeyword] = useState('GROWTH');
+  const [proofComment, setProofComment] = useState('Send me the GROWTH blueprint please');
+  const [proofApproved, setProofApproved] = useState(false);
 
-  // FAQ Accordion State
+  // Section 3: Coworker Roster Selection State
+  const [selectedAgent, setSelectedAgent] = useState<'reels' | 'intel' | 'away' | 'research'>('reels');
+
+  // Section 6: FAQ Accordion State
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const handleSimulateReel = () => {
-    setTesterSimulating(true);
-    setTimeout(() => {
-      const isMatch = testerComment.toUpperCase().includes(testerKeyword.toUpperCase().trim());
-      if (isMatch) {
-        setTesterResult({
-          matched: true,
-          publicReply: 'Sent directly to your inbox. Check your DMs.',
-          privateDm: `Hey there. Thanks for commenting "${testerKeyword}" on our Reel. Here is your direct access link: https://qwenton.com/access`,
-          latencyMs: 380,
-        });
-      } else {
-        setTesterResult({
-          matched: false,
-          publicReply: 'No trigger matched. Add the keyword to trigger an instant DM.',
-          privateDm: '',
-          latencyMs: 120,
-        });
-      }
-      setTesterSimulating(false);
-    }, 420);
-  };
-
-  const cockpitPresets = {
+  const agentRoster = {
     reels: {
-      opId: 'OP_REEL_COMMENT_TO_DM_V20',
-      title: 'Instagram Reel Comment-to-DM Engine',
-      channel: 'Meta Graph API v20.0',
-      incomingPayload: {
-        event: 'comment_created',
-        commenter: '@growth_founder',
-        commentText: `Send me the ${cockpitTriggerKeyword} guide!`,
-        mediaId: '1792837482910384',
-      },
-      actionSummary: `Trigger keyword "${cockpitTriggerKeyword}" matched. Preparing public comment reply and sending private direct message to @growth_founder.`,
-      deliverable: {
-        publicReply: 'Check your DM. Just sent you the complete growth guide.',
-        privateDm: `Hey! Thanks for commenting "${cockpitTriggerKeyword}". Here is the private roadmap link you requested: https://qwenton.com/growth-guide`,
-      },
-      metrics: { executionTier: 'Tier 1 (HTTP Graph API)', latency: '340ms', jitterGuard: '4.2s delay' },
+      name: 'Reel Comment-to-DM Agent',
+      role: 'Social Lead Conversion',
+      icon: Instagram,
+      description:
+        'Listens for inbound follower comments matching your lead magnet keyword. Automatically composes a friendly public reply and drafts a 1-to-1 private direct message with your link.',
+      sampleInput: 'Comment on Reel: "Send me the GROWTH guide"',
+      sampleOutput: 'DM to @follower: "Hey! Here is your private growth guide link: https://qwenton.co/growth-guide"',
+      status: 'Ready for Review',
     },
     intel: {
-      opId: 'OP_COMPETITOR_INTEL_AUDIT',
-      title: 'Competitor Margin & Pricing Crawler',
-      channel: 'Autonomous Web Extraction',
-      incomingPayload: {
-        event: 'scheduled_crawl_trigger',
-        targetDomains: ['competitor-alpha.com', 'competitor-beta.io'],
-        parameters: 'Q3 Enterprise Pricing Tiers & Feature Matrix',
-      },
-      actionSummary:
-        'Parsed 14 competitor public pricing routes. Calculated unit margin delta (+18.4%) and compiled executive briefing dossier.',
-      deliverable: {
-        publicReply: 'Executive Intelligence Briefing v3.4 compiled.',
-        privateDm: 'Dossier ready: Identified 3 tier expansion opportunities. Margins optimized at INR 299/mo with zero customer churn risk.',
-      },
-      metrics: { executionTier: 'Serverless Worker', latency: '680ms', jitterGuard: 'Stealth UA Rotation' },
+      name: 'Competitor Intelligence Agent',
+      role: 'Market & Pricing Research',
+      icon: Search,
+      description:
+        'Monitors competitor public pages, detects pricing changes and feature announcements, and compiles an executive briefing for your review.',
+      sampleInput: 'Crawl target: competitor pricing routes',
+      sampleOutput: 'Executive Briefing: "Identified 2 tier updates. Opportunity to package bundle at INR 299/mo."',
+      status: 'Briefing Assembled',
     },
     away: {
-      opId: 'OP_AWAY_MODE_DM_TRIAGE',
-      title: '24/7 Away Mode Auto-Responder',
-      channel: 'Inbound Direct Messaging',
-      incomingPayload: {
-        event: 'direct_message_received',
-        sender: '@potential_enterprise_client',
-        text: 'Are your agents available for custom API integrations?',
-      },
-      actionSummary:
-        'Account is currently in Busy Mode. Evaluating customer inquiry against trained knowledge base and dispatching automated triage.',
-      deliverable: {
-        publicReply: 'Away status active.',
-        privateDm: 'Hi. We are currently offline, but yes: Qwenton supports custom API keys, webhooks, and enterprise routing. Check our specs at https://qwenton.com/specs or reply with your use-case.',
-      },
-      metrics: { executionTier: 'Webhook Listener', latency: '210ms', jitterGuard: 'Anti-Spam Throttling' },
+      name: '24/7 Away Mode Assistant',
+      role: 'Inbound Inquiries & Triage',
+      icon: Radio,
+      description:
+        'Protects your business when you are offline. Evaluates inbound customer questions against your knowledge base, drafts polite answers, and requests approval for critical requests.',
+      sampleInput: 'Direct Message: "Can you handle custom API integrations?"',
+      sampleOutput: 'Draft Reply: "Hi! Yes, Qwenton supports custom webhooks and dedicated keys. Here is our spec."',
+      status: 'Awaiting Sign-off',
     },
-    swarm: {
-      opId: 'OP_MULTI_AGENT_SWARM',
-      title: '4-Agent Collaborative Growth Swarm',
-      channel: 'Internal Swarm Bus',
-      incomingPayload: {
-        event: 'swarm_dispatch',
-        objective: 'Launch 30-Day Omnichannel Growth Campaign',
-        participants: ['Strategy Lead', 'Visual Designer', 'Copywriter', 'Dispatcher'],
-      },
-      actionSummary:
-        'Swarm decomposed objective into 4 parallel workstreams: research synthesis, 18 visual generation prompts, copy variations, and Telegram broadcast schedule.',
-      deliverable: {
-        publicReply: 'Campaign package assembled.',
-        privateDm: '30-Day Growth Package prepared with 18 high-converting visual prompts, caption clusters, and scheduled queues pending your 1-tap review.',
-      },
-      metrics: { executionTier: 'Multi-Agent State Machine', latency: '920ms', jitterGuard: 'Human Gate Paused' },
+    research: {
+      name: 'Research & Outreach Agent',
+      role: 'Lead Enrichment',
+      icon: Layers,
+      description:
+        'Enriches qualified leads with public company signals, crafts personalized pitch drafts, and stages follow-up queues for your approval.',
+      sampleInput: 'Lead qualified from Instagram Reel comment',
+      sampleOutput: 'Outreach Dossier: "Target is scaling content team; suggested angle is automated lead delivery."',
+      status: 'Queue Ready',
     },
   };
 
-  const currentOp = cockpitPresets[activeCockpitOp];
+  const currentAgentData = agentRoster[selectedAgent];
 
   const faqs = [
     {
-      q: 'How does the Instagram Reel Comment-to-DM automation actually work?',
-      a: 'When a follower comments your configured trigger keyword (such as GROWTH, PRICE, or VIP) on your Reel, Meta sends a real-time webhook payload to Qwenton. Our engine matches the keyword, applies humanized anti-ban jitter delays, and uses Meta Graph API v20.0 to post a public comment reply and dispatch a private 1-to-1 direct message directly to their inbox within seconds.',
+      q: 'How does the Instagram Reel Comment-to-DM automation work?',
+      a: 'When a follower comments your trigger keyword (such as GROWTH, PRICE, or ACCESS) on your connected Reel, Qwenton instantly captures the event, analyzes intent, and drafts both a public comment response and a private 1-to-1 direct message. You can approve the action with one tap or enable automated delivery.',
     },
     {
-      q: 'Does Qwenton protect my accounts from Instagram algorithmic flags?',
-      a: 'Yes. Qwenton enforces a 3-tier safety guard: (1) Dynamic rotating spintax templates so comments never repeat identical text, (2) 3-7 second randomized delay jitter mimicking human typing speed, and (3) hard hourly rate limits (capped at 150 DMs/hour) ensuring your account operates safely within Meta developer guidelines.',
+      q: 'How does the Human-in-the-Loop approval gate protect my accounts?',
+      a: 'Whenever an AI coworker prepares an external action—such as sending a direct message, replying to a comment, or updating external records—the action pauses at the approval checkpoint. You receive an instant push notification on desktop or your Telegram bot with inline Approve / Edit controls. Nothing external is sent without your authorization.',
     },
     {
-      q: 'How does the Human-in-the-Loop firewall protect external business operations?',
-      a: 'Whenever an autonomous agent attempts a mutating external action—such as dispatching bulk messages, publishing content, or launching code—the execution state automatically pauses at an approval gate. You receive an instant notification in your web inbox or connected Telegram bot with inline Approve / Reject controls. Nothing executes externally without your explicit sign-off.',
+      q: 'Do I need Docker or complex virtual servers to run Qwenton?',
+      a: 'No. Qwenton is serverless and cloud-native. It runs locally with embedded persistence during development, and deploys directly to Vercel and Firebase with zero Docker overhead.',
     },
     {
-      q: 'Do I need Docker or expensive cloud virtual machines to run Qwenton?',
-      a: 'No. Unlike platforms that force users to pay $20/month per agent for heavy Linux cloud containers, Qwenton is cloud-native and serverless. It runs locally with zero setup using embedded datastore persistence, and deploys seamlessly to Vercel and Firebase in production.',
+      q: 'Can I connect custom models and API keys?',
+      a: 'Yes. Qwenton provides flexible model routing. You can connect your own API keys or use our verified managed cloud endpoints with single-tap configuration.',
     },
     {
-      q: 'Can I connect custom API keys and multi-provider models?',
-      a: 'Yes. Qwenton supports flexible model routing with single-key cloud inference or local endpoints. You can configure global model defaults or assign individual model overrides per agent in the Integrations Vault.',
+      q: 'What is included in the free plan?',
+      a: 'The Normal plan is free forever and includes 2 active AI coworkers, 2 connected Instagram Reels for auto-DM, 50 monthly workflows, 1 Telegram bot connection, and the complete human approval firewall.',
     },
   ];
 
   return (
     <div className="min-h-screen bg-canvas text-ink selection:bg-primary/20 selection:text-primary font-sans transition-colors duration-200">
-      {/* Real-time Scroll Progress Bar Indicator */}
+      {/* Real-time reading progress bar */}
       <ScrollProgressBar />
 
       {/* ----------------------------------------------------
-          ARCHITECTURAL NAVIGATION HEADER (With Light/Dark Switch)
+          1. NAVIGATION HEADER (Exact matching refrence.png)
           ---------------------------------------------------- */}
-      <header className="sticky top-0 z-40 bg-canvas/95 backdrop-blur-md border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-canvas/90 backdrop-blur-md border-b border-border/80">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Brand Mark: [Q] QWENTON AGENTS */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-control bg-ink text-white dark:bg-surface dark:text-ink flex items-center justify-center font-black text-sm border border-border shadow-clay-button-subtle">
+            <div className="w-9 h-9 rounded-xl bg-ink text-white dark:bg-white dark:text-ink flex items-center justify-center font-black text-base shadow-sm">
               Q
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg font-black text-ink tracking-tight">QWENTON</span>
-                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-ink text-white dark:bg-surface dark:text-ink font-bold border border-border">
-                  Fleet
-                </span>
-              </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-black text-ink tracking-tight font-display">
+                QWENTON
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full border border-border text-ink-muted font-bold">
+                AGENTS
+              </span>
             </div>
           </Link>
 
-          <div className="flex items-center gap-5">
-            <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-ink-muted uppercase tracking-wider">
-              <a href="#cockpit" className="hover:text-ink transition-colors">
-                Live Cockpit
-              </a>
-              <a href="#reels-tester" className="text-primary hover:text-primary/80 transition-colors">
-                Reels Engine
-              </a>
-              <a href="#instant-audit" className="hover:text-ink transition-colors">
-                Instant Audit
-              </a>
-              <a href="#architecture" className="hover:text-ink transition-colors">
-                Pillars
-              </a>
-              <a href="#pricing" className="hover:text-ink transition-colors">
-                Pricing
-              </a>
-              <a href="#faq" className="hover:text-ink transition-colors">
-                FAQ
-              </a>
-            </nav>
+          {/* Navigation Anchors */}
+          <nav className="hidden md:flex items-center gap-7 text-xs font-semibold text-ink-muted">
+            <a href="#how-it-works" className="hover:text-ink transition-colors flex items-center gap-1">
+              <span>Product</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+            </a>
+            <a href="#roster" className="hover:text-ink transition-colors flex items-center gap-1">
+              <span>Use Cases</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+            </a>
+            <a href="#pricing" className="hover:text-ink transition-colors">
+              Pricing
+            </a>
+            <a href="#faq" className="hover:text-ink transition-colors flex items-center gap-1">
+              <span>Resources</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+            </a>
+          </nav>
 
-            <div className="flex items-center gap-3">
-              {/* THE LIGHT & DARK MODE SWITCH BUTTON */}
-              <ThemeToggle />
+          {/* Right Header Actions */}
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
 
-              <Link
-                href="/login"
-                className="hidden sm:inline-block text-xs font-bold text-ink-muted hover:text-ink px-3 py-1.5 transition-colors"
+            <Link
+              href="/login"
+              className="hidden sm:inline-block text-xs font-bold text-ink hover:text-primary transition-colors px-2"
+            >
+              Sign In
+            </Link>
+
+            <Link href="/signup">
+              <Button
+                size="sm"
+                className="rounded-full font-extrabold px-5 py-2.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
               >
-                Sign In
-              </Link>
-              <Link href="/signup">
-                <Button size="sm" className="font-extrabold shadow-clay-button text-xs px-4 py-2 bg-primary text-black hover:bg-brand-hover">
-                  Deploy Free Agents →
-                </Button>
-              </Link>
-            </div>
+                <span>Deploy Free Agents</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-1 text-black" />
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
 
       {/* ----------------------------------------------------
-          HERO SECTION: THE COMMAND-CENTER & PHYSICAL STICKERS
+          2. HERO SECTION: 12-COL PRODUCT THEATRE (refrence.png)
           ---------------------------------------------------- */}
-      <section className="max-w-6xl mx-auto px-6 pt-14 pb-12 w-full relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
-          {/* Hero Copy (7 cols) */}
-          <div className="lg:col-span-7 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-[11px] font-medium border border-border shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span>AUTONOMOUS WORKFORCE • ENTERPRISE FLEET PLATFORM</span>
+      <section className="max-w-7xl mx-auto px-6 pt-12 pb-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-10">
+          {/* Left Column (5 cols): Positioning, Headlines, Actions & Trust Row */}
+          <div className="lg:col-span-5 space-y-6">
+            {/* Eyebrow Pill */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-[11px] font-semibold border border-border">
+              <span className="w-2 h-2 rounded-full bg-primary" />
+              <span className="tracking-wider uppercase">
+                AUTONOMOUS WORKFORCE • SOCIAL • LEADS • GROWTH • ON AUTOPILOT
+              </span>
             </div>
 
+            {/* Master Headline from imp.md and refrence.png */}
             <h1 className="font-fluid-hero font-black text-ink tracking-tight font-display">
-              Autonomous Coworkers for Web, Leads & Social Growth.
+              AI coworkers that turn attention into approved action.
             </h1>
 
-            <p className="text-base sm:text-lg text-ink-muted leading-relaxed font-normal max-w-2xl font-sans">
-              Deploy specialized coworkers that execute real work: turn Instagram comments into instant direct messages, crawl competitor intelligence, and automate 24/7 routines with a strict human approval firewall.
+            {/* Subtitle */}
+            <p className="text-base sm:text-lg text-ink-muted leading-relaxed max-w-xl font-normal">
+              Capture Instagram leads, understand intent, draft the right reply, and get human approval — so you can grow without the busywork.
             </p>
 
+            {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
               <Link href="/signup">
-                <Button size="lg" className="w-full sm:w-auto font-extrabold px-8 py-3.5 text-sm gap-2 bg-primary text-black hover:bg-brand-hover shadow-clay-button">
-                  <span>Deploy 2 Free Agents</span>
-                  <ArrowRight className="w-4 h-4 text-black" />
+                <Button
+                  size="lg"
+                  className="rounded-full font-extrabold px-8 py-3.5 text-sm bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
+                >
+                  <span>Deploy free agents</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5 text-black" />
                 </Button>
               </Link>
-              <a href="#reels-tester">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto font-bold px-6 py-3.5 text-sm border-border">
-                  <Film className="w-4 h-4 text-primary mr-1" />
-                  <span>Test Live Reels Engine</span>
+              <a href="#how-it-works">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full font-bold px-6 py-3.5 text-sm border-border bg-surface hover:bg-surface-inset text-ink gap-2"
+                >
+                  <Play className="w-3.5 h-3.5 fill-ink text-ink" />
+                  <span>Watch the workflow</span>
                 </Button>
               </a>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 pt-2 text-xs font-mono text-ink-muted">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-primary" />
-                <span>Zero Docker Setup</span>
+            {/* Trust Micro-Row */}
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/80">
+              <div className="flex items-start gap-2.5">
+                <Users className="w-4 h-4 text-ink-muted mt-0.5 shrink-0" />
+                <div>
+                  <div className="text-xs font-black text-ink font-mono">10,000+</div>
+                  <div className="text-[11px] text-ink-muted leading-tight">
+                    creators & businesses
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-primary" />
-                <span>Meta v20.0 Verified</span>
+
+              <div className="flex items-start gap-2.5">
+                <Zap className="w-4 h-4 text-ink-muted mt-0.5 shrink-0" />
+                <div>
+                  <div className="text-xs font-black text-ink font-mono">24/7</div>
+                  <div className="text-[11px] text-ink-muted leading-tight">
+                    autonomous outreach
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-primary" />
-                <span>Human Firewall</span>
+
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-ink-muted mt-0.5 shrink-0" />
+                <div>
+                  <div className="text-xs font-black text-ink font-mono">You&apos;re in control</div>
+                  <div className="text-[11px] text-ink-muted leading-tight">
+                    human approval always
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Hero 3D Autonomous Agent Core & Animated Bot Sticker (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
-            <ThreeAgentCore />
-            <div className="flex items-center justify-between gap-3 px-1">
-              {/* Live Animated Coding Bot Sticker */}
-              <TactileSticker variant="animated-bot" rotation={-1.5} />
-              {/* Holographic Rotating Technical Seal Sticker */}
-              <TactileSticker variant="seal" rotation={2} />
-            </div>
+          {/* Right Column (7 cols): The 3D Bot Theatre & Floating Product Cards */}
+          <div className="lg:col-span-7">
+            <HeroBotTheatre activeStage={heroStage} setActiveStage={setHeroStage} />
           </div>
         </div>
 
-        {/* ----------------------------------------------------
-            THE HERO WOW FACTOR: LIVE INTERACTIVE AGENT COCKPIT
-            ---------------------------------------------------- */}
-        <div id="cockpit" className="clay-surface border-2 border-border p-5 sm:p-7 relative overflow-hidden bg-surface shadow-clay-card">
-          {/* Cockpit Sub-Header Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border mb-6">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-danger inline-block border border-border" />
-                <span className="w-3 h-3 rounded-full bg-amber-approval inline-block border border-border" />
-                <span className="w-3 h-3 rounded-full bg-success inline-block border border-border" />
-              </div>
-              <div className="h-4 w-px bg-border mx-1" />
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-ink">
-                <Bot className="w-4 h-4 text-primary" />
-                <span>qwenton-cockpit://fleet.dispatch</span>
-              </div>
-            </div>
+        {/* Floating 4-Step Stepper Bar at bottom of Hero */}
+        <div className="pt-2 pb-6">
+          <HeroWorkflowStepper activeStage={heroStage} setActiveStage={setHeroStage} />
+        </div>
+      </section>
 
-            {/* Operation Selector Chips (Solid States) */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-              {(
-                [
-                  { id: 'reels', label: 'Reels Comment-to-DM', icon: Instagram },
-                  { id: 'intel', label: 'Competitor Intelligence', icon: Search },
-                  { id: 'away', label: 'Away Mode Assistant', icon: Radio },
-                  { id: 'swarm', label: '4-Agent Swarm', icon: Layers },
-                ] as const
-              ).map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeCockpitOp === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => {
-                      setActiveCockpitOp(tab.id);
-                      setCockpitApprovalState('pending');
-                    }}
-                    className={`px-3 py-1.5 rounded-control text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
-                      isActive
-                        ? 'bg-ink text-white dark:bg-surface-inset dark:text-ink border border-primary shadow-clay-button'
-                        : 'bg-canvas text-ink-muted hover:text-ink border border-border'
+      {/* ----------------------------------------------------
+          3. SECTION 1: PRODUCT PROOF — 3-STEP HORIZONTAL SIMULATOR
+          ---------------------------------------------------- */}
+      <section id="how-it-works" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
+            <Film className="w-3.5 h-3.5 text-primary" />
+            <span>PRODUCT PROOF IN ACTION • TEST IN REAL-TIME</span>
+          </div>
+          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3 font-display">
+            Comment Arrives → Human Approves → DM Delivered
+          </h2>
+          <p className="text-base text-ink-muted leading-relaxed">
+            Experience the three-step flow that turns casual Reel comments into qualified leads without giving up human control.
+          </p>
+        </div>
+
+        {/* 3-Step Horizontal Stepper Selector */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {[
+            {
+              id: 'comment',
+              num: '1',
+              title: 'Comment Arrives',
+              desc: 'Follower comments trigger keyword on your Reel',
+            },
+            {
+              id: 'approval',
+              num: '2',
+              title: 'Human Approves',
+              desc: 'Agent drafts reply & pauses at approval firewall',
+            },
+            {
+              id: 'delivered',
+              num: '3',
+              title: 'DM Delivered',
+              desc: 'Direct message lands in follower inbox instantly',
+            },
+          ].map((tab) => {
+            const isActive = proofStep === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setProofStep(tab.id as typeof proofStep)}
+                className={`p-5 rounded-2xl border text-left transition-all ${
+                  isActive
+                    ? 'bg-surface border-primary shadow-clay-card'
+                    : 'bg-surface-panel border-border text-ink-muted hover:border-border-strong'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span
+                    className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
+                      isActive ? 'bg-primary text-black' : 'bg-surface-inset text-ink-muted'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-primary' : 'text-ink-muted'}`} />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
+                    {tab.num}
+                  </span>
+                  {isActive && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+                </div>
+                <div className="text-sm font-bold text-ink font-display">{tab.title}</div>
+                <div className="text-xs text-ink-muted mt-0.5">{tab.desc}</div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Interactive Proof Canvas Panel */}
+        <div className="clay-surface p-6 sm:p-8 bg-surface border border-border shadow-clay-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Controls Column */}
+          <div className="lg:col-span-5 space-y-4">
+            <div>
+              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
+                Trigger Keyword
+              </label>
+              <input
+                type="text"
+                value={proofKeyword}
+                onChange={(e) => setProofKeyword(e.target.value.toUpperCase())}
+                className="w-full text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
+                Test Follower Comment
+              </label>
+              <input
+                type="text"
+                value={proofComment}
+                onChange={(e) => setProofComment(e.target.value)}
+                className="w-full text-xs px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-ink focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div className="pt-2">
+              <Button
+                type="button"
+                onClick={() => {
+                  setProofApproved(true);
+                  setProofStep('delivered');
+                }}
+                className="w-full py-3 rounded-full bg-primary hover:bg-brand-hover text-black font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2 border-0"
+              >
+                <Zap className="w-3.5 h-3.5 text-black" />
+                <span>Simulate Complete Flow</span>
+              </Button>
             </div>
           </div>
 
-          {/* Main Dual-Stage Cockpit Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Column: Command Intent & Telemetry Trace (7 cols) */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="p-4 rounded-card bg-canvas border border-border space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono font-bold text-ink uppercase tracking-wider">{currentOp.opId}</span>
-                  <Badge variant="outline" className="font-mono text-[10px]">
-                    {currentOp.channel}
-                  </Badge>
-                </div>
-
-                <div className="text-sm font-bold text-ink">{currentOp.title}</div>
-                <p className="text-xs text-ink-muted leading-relaxed">{currentOp.actionSummary}</p>
-
-                {/* Live Keyword Input Modifier for Reels */}
-                {activeCockpitOp === 'reels' && (
-                  <div className="pt-2 border-t border-border flex items-center gap-2">
-                    <label className="text-xs font-bold text-ink font-mono shrink-0">TRIGGER_KEYWORD:</label>
-                    <input
-                      type="text"
-                      value={cockpitTriggerKeyword}
-                      onChange={(e) => setCockpitTriggerKeyword(e.target.value.toUpperCase())}
-                      className="px-3 py-1 bg-surface border border-border rounded-md font-mono text-xs font-bold text-primary uppercase focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                    <span className="text-[11px] text-ink-muted">(Followers comment this word)</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Real-time Execution Steps Trace */}
-              <div className="p-4 rounded-card bg-surface border border-border space-y-2.5 font-mono text-xs shadow-xs">
-                <div className="flex items-center justify-between text-[11px] text-ink-muted border-b border-border pb-1.5 font-bold">
-                  <span>EXECUTION TELEMETRY TRACE</span>
-                  <span className="text-success flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Handshake Verified
-                  </span>
-                </div>
-
-                <div className="space-y-1.5 text-[11px]">
-                  <div className="flex items-start gap-2 text-ink">
-                    <span className="text-primary font-bold">[01]</span>
-                    <span>Ingest inbound webhook event & verify HMAC-SHA256 signature</span>
-                  </div>
-                  <div className="flex items-start gap-2 text-ink">
-                    <span className="text-primary font-bold">[02]</span>
-                    <span>
-                      Pattern match keyword:{' '}
-                      <strong className="text-primary">&quot;{activeCockpitOp === 'reels' ? cockpitTriggerKeyword : 'AUDIT'}&quot;</strong>
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2 text-ink">
-                    <span className="text-primary font-bold">[03]</span>
-                    <span>
-                      Apply anti-ban delay jitter: <strong className="text-ink">{currentOp.metrics.jitterGuard}</strong>
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2 text-ink">
-                    <span className="text-primary font-bold">[04]</span>
-                    <span>Compose Meta Graph API v20.0 private reply and comment response</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* INTERACTIVE HUMAN-IN-THE-LOOP APPROVAL GATEWAY */}
-              <div className="p-4 rounded-card bg-ink text-white dark:bg-surface dark:text-ink dark:border dark:border-border space-y-3 shadow-clay-button-subtle">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-primary" />
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-primary">
-                      Human-in-the-Loop Approval Gate
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 dark:bg-primary/10 text-white dark:text-primary font-bold">
-                    FIREWALL: ACTIVE
-                  </span>
-                </div>
-
-                <p className="text-xs text-white/80 dark:text-ink-muted leading-relaxed font-sans">
-                  Action paused: Requires human operator sign-off before external Meta Graph API / Telegram dispatch.
-                </p>
-
-                <div className="flex items-center gap-2.5 pt-1">
-                  {cockpitApprovalState === 'pending' ? (
-                    <>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          setCockpitExecuting(true);
-                          setTimeout(() => {
-                            setCockpitApprovalState('approved');
-                            setCockpitExecuting(false);
-                          }, 300);
-                        }}
-                        isLoading={cockpitExecuting}
-                        className="bg-primary hover:bg-brand-hover text-black font-extrabold text-xs px-4 shadow-clay-button"
-                      >
-                        <Check className="w-3.5 h-3.5 mr-1 text-black" />
-                        <span>Authorize & Dispatch</span>
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setCockpitApprovalState('rejected')}
-                        className="text-white dark:text-ink border-white/20 dark:border-border hover:bg-white/10 font-bold text-xs"
-                      >
-                        Reject
-                      </Button>
-                    </>
-                  ) : cockpitApprovalState === 'approved' ? (
-                    <div className="p-2 bg-success/20 border border-success/40 rounded-md text-success text-xs font-mono font-bold flex items-center justify-between w-full">
-                      <span className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4" />
-                        [AUTHORIZED: DISPATCHED OVER HTTP IN {currentOp.metrics.latency}]
-                      </span>
-                      <button
-                        onClick={() => setCockpitApprovalState('pending')}
-                        className="text-[10px] underline text-ink hover:opacity-80"
-                      >
-                        Reset
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="p-2 bg-danger/20 border border-danger/40 rounded-md text-danger text-xs font-mono font-bold flex items-center justify-between w-full">
-                      <span>[REJECTED: MUTATION HALTED]</span>
-                      <button
-                        onClick={() => setCockpitApprovalState('pending')}
-                        className="text-[10px] underline text-ink hover:opacity-80"
-                      >
-                        Reset
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+          {/* Live Deliverable Display Column */}
+          <div className="lg:col-span-7 bg-[#1C2027] text-white p-6 rounded-2xl border border-white/10 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs">
+              <span className="font-bold flex items-center gap-1.5">
+                <Instagram className="w-4 h-4 text-primary" /> Live Deliverable Preview
+              </span>
+              <span className="font-mono text-primary text-[11px] font-bold">
+                ● STATUS: {proofStep.toUpperCase()}
+              </span>
             </div>
 
-            {/* Right Column: Live Deliverable Mockup (5 cols) */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="p-4 rounded-card bg-canvas border border-border space-y-3">
-                <div className="flex items-center justify-between text-xs border-b border-border pb-2">
-                  <span className="font-mono font-bold text-ink">DELIVERABLE ARTIFACT</span>
-                  <span className="text-[10px] text-ink-muted font-mono">{currentOp.metrics.executionTier}</span>
+            {proofStep === 'comment' && (
+              <div className="space-y-3 py-2">
+                <div className="text-xs text-white/60 font-mono">INBOUND REEL COMMENT:</div>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-sm">
+                  <strong className="text-primary font-mono">@follower:</strong> &quot;{proofComment}&quot;
                 </div>
-
-                {/* Smartphone Preview Frame */}
-                <div className="bg-ink p-4 rounded-hero text-white space-y-3 shadow-clay-card border border-border">
-                  <div className="flex items-center justify-between text-[11px] text-white/50 border-b border-white/10 pb-2 font-mono">
-                    <span className="flex items-center gap-1 text-white font-bold">
-                      <Instagram className="w-3.5 h-3.5 text-primary" /> @qwenton_official
-                    </span>
-                    <span>Simulated Screen</span>
-                  </div>
-
-                  {/* Public Comment Response */}
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono text-white/50 uppercase">Public Comment Reply:</span>
-                    <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white/90 font-medium">
-                      &quot;{currentOp.deliverable.publicReply}&quot;
-                    </div>
-                  </div>
-
-                  {/* Private DM Response */}
-                  <div className="space-y-1 pt-1">
-                    <span className="text-[10px] font-mono text-primary uppercase">Private 1-to-1 Direct Message:</span>
-                    <div className="p-3 rounded-lg bg-primary/20 border border-primary/40 text-xs text-white leading-relaxed font-sans">
-                      {currentOp.deliverable.privateDm}
-                    </div>
-                  </div>
-
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/50 font-mono">
-                    <span>Latency: {currentOp.metrics.latency}</span>
-                    <span className="text-success">Delivery: Confirmed</span>
-                  </div>
-                </div>
-
-                <div className="text-[11px] text-ink-muted leading-relaxed p-2.5 bg-surface rounded-md border border-border">
-                  <strong className="text-ink font-bold">Meta Graph API v20.0 Integration:</strong> Uses Meta&apos;s verified Private Replies endpoint (<code className="font-mono text-primary">POST /&#123;comment_id&#125;/private_replies</code>) allowing direct 1-to-1 messages without existing conversations.
+                <div className="text-xs text-primary font-mono flex items-center gap-1 pt-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Trigger keyword &quot;{proofKeyword}&quot; identified
                 </div>
               </div>
-            </div>
+            )}
+
+            {proofStep === 'approval' && (
+              <div className="space-y-3 py-2">
+                <div className="text-xs text-coral font-bold font-mono uppercase">
+                  APPROVAL FIREWALL CHECKPOINT:
+                </div>
+                <div className="p-3.5 rounded-xl bg-white/5 border border-coral/40 text-xs text-white/90 leading-relaxed">
+                  <div>Hey there! 👋 Thanks for commenting on our Reel.</div>
+                  <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProofApproved(true);
+                      setProofStep('delivered');
+                    }}
+                    className="py-2 px-5 rounded-full bg-coral hover:bg-coral-hover text-black font-extrabold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-transform"
+                  >
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <span>Approve & Send</span>
+                  </button>
+                  <span className="text-xs text-white/60">Paused for human operator sign-off</span>
+                </div>
+              </div>
+            )}
+
+            {proofStep === 'delivered' && (
+              <div className="space-y-3 py-2">
+                <div className="text-xs text-success font-bold font-mono uppercase flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-primary" /> DELIVERED DIRECTLY TO INBOX:
+                </div>
+                <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/30 text-xs text-white/95 leading-relaxed">
+                  <div>Hey there! 👋 Thanks for commenting on our Reel.</div>
+                  <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-white/60 pt-1 font-mono">
+                  <span>Latency: 320ms</span>
+                  <span className="text-primary font-bold">✓ Human Approved & Verified</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* ----------------------------------------------------
-          SECTION 2: STANDALONE LIVE INSTAGRAM REEL DM TESTER
-          Interactive Product Proof: visitors test with own keyword
+          4. SECTION 2: WHY HUMAN APPROVAL MATTERS (Asymmetric Layout)
           ---------------------------------------------------- */}
-      <section id="reels-tester" className="max-w-6xl mx-auto px-6 py-16 w-full border-t border-border">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-canvas text-ink font-mono text-xs font-bold mb-3 border border-border">
-              <Film className="w-3.5 h-3.5 text-primary" />
-              <span>INTERACTIVE PRODUCT PROOF • NO LOGIN REQUIRED</span>
-            </div>
-            <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
-              Test the Reel Comment-to-DM Engine Right Now
-            </h2>
-            <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-              Enter your Reel link, choose a trigger word (e.g. GROWTH, PRICE, DEMO), type a test follower comment, and verify the instant automated direct message.
-            </p>
-          </div>
-
-          <TactileSticker variant="multitask-bot" rotation={2} className="shrink-0" scrollReactive={true} />
-        </div>
-
-        <div className="clay-surface p-6 sm:p-8 bg-surface border border-border shadow-clay-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Controls Form (6 cols) */}
-          <div className="lg:col-span-6 space-y-4">
-            <div>
-              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
-                Instagram Reel URL
-              </label>
-              <input
-                type="text"
-                value={testerReelUrl}
-                onChange={(e) => setTesterReelUrl(e.target.value)}
-                placeholder="https://instagram.com/reel/C8abc..."
-                className="w-full text-xs font-mono px-3.5 py-2.5 bg-canvas border border-border rounded-control text-ink focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
-                Trigger Keyword (Lead Magnet Word)
-              </label>
-              <input
-                type="text"
-                value={testerKeyword}
-                onChange={(e) => setTesterKeyword(e.target.value.toUpperCase())}
-                placeholder="e.g. GROWTH, PRICE, ACCESS"
-                className="w-full text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-control text-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
-                Simulated Follower Comment
-              </label>
-              <textarea
-                rows={2}
-                value={testerComment}
-                onChange={(e) => setTesterComment(e.target.value)}
-                placeholder="Type a comment that includes your keyword..."
-                className="w-full text-xs px-3.5 py-2.5 bg-canvas border border-border rounded-control text-ink focus:outline-none focus:ring-1 focus:ring-primary resize-none font-sans"
-              />
-            </div>
-
-            <Button
-              type="button"
-              onClick={handleSimulateReel}
-              isLoading={testerSimulating}
-              className="w-full py-3 bg-primary hover:bg-brand-hover text-black font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2"
-            >
-              <Zap className="w-3.5 h-3.5 text-black" />
-              <span>Simulate Meta Webhook Dispatch</span>
-            </Button>
-          </div>
-
-          {/* Results Phone Display (6 cols) */}
-          <div className="lg:col-span-6 bg-ink text-white p-5 rounded-card border border-border space-y-4 font-mono shadow-clay-button-subtle">
-            <div className="flex items-center justify-between text-xs border-b border-white/10 pb-2">
-              <span className="flex items-center gap-1.5 text-white font-bold">
-                <Instagram className="w-4 h-4 text-primary" /> Live Simulation Telemetry
-              </span>
-              <span className="text-success text-[11px]">
-                {testerResult?.matched ? 'MATCHED (200 OK)' : 'NO_MATCH'}
+      <section className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Left Approval Panel (5 cols) */}
+          <div className="lg:col-span-5 bg-[#1C2027] text-white p-7 rounded-2xl border border-coral/50 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2 text-coral font-bold text-xs uppercase tracking-wider font-mono">
+                <ShieldAlert className="w-4 h-4" />
+                <span>Approval Firewall</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-coral/20 text-coral font-mono text-[10px] font-bold">
+                GATE: ENFORCED
               </span>
             </div>
 
-            <div className="space-y-3 text-xs">
-              <div>
-                <span className="text-[10px] text-white/50 block mb-1">INCOMING REEL COMMENT:</span>
-                <div className="p-2.5 rounded bg-white/5 border border-white/10 text-white/90 font-sans">
-                  <strong className="text-primary font-mono">@follower:</strong> &quot;{testerComment}&quot;
+            <div className="space-y-2 text-xs text-white/80 leading-relaxed font-sans">
+              <div className="font-bold text-white text-sm">
+                No unsupervised external actions. Ever.
+              </div>
+              <p>
+                Unlike autonomous agents that can hallucinate and dispatch errant messages to clients, Qwenton isolates proposal generation from external delivery.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-2 text-xs">
+              <div className="text-white/60 text-[11px] font-mono uppercase">
+                MUTATIONS INTERCEPTED:
+              </div>
+              <div className="space-y-1 text-white/90">
+                <div className="flex items-center gap-2">
+                  <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <span>Instagram Direct Messages & Private Replies</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <span>Client Emails & Telegram Broadcasts</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <span>Ad Campaigns & Budget Adjustments</span>
                 </div>
               </div>
-
-              {testerResult?.matched ? (
-                <>
-                  <div>
-                    <span className="text-[10px] text-white/50 block mb-1">AUTOMATED PUBLIC COMMENT REPLY:</span>
-                    <div className="p-2.5 rounded bg-white/5 border border-white/10 text-white/90 font-sans">
-                      &quot;{testerResult.publicReply}&quot;
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-[10px] text-primary block mb-1">INSTANT DIRECT MESSAGE (DM):</span>
-                    <div className="p-3 rounded bg-primary/20 border border-primary/40 text-white font-sans leading-relaxed">
-                      {testerResult.privateDm}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="p-4 rounded bg-amber-approval/15 border border-amber-approval/30 text-amber-approval text-xs font-sans">
-                  The comment does not contain the trigger keyword &quot;{testerKeyword}&quot;. Type a comment with the keyword to test the auto-DM.
-                </div>
-              )}
             </div>
 
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-white/50">
-              <span>Latency: {testerResult?.latencyMs || 340}ms</span>
-              <Link href="/instagram" className="text-primary hover:underline font-bold">
-                Open Full Reels Manager →
+            <div className="pt-1">
+              <Link
+                href="/approvals"
+                className="text-xs font-bold text-coral hover:underline flex items-center gap-1 font-mono"
+              >
+                <span>Inspect live approvals inbox</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
+
+          {/* Right Principles (7 cols) */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold border border-border">
+              <ShieldCheck className="w-3.5 h-3.5 text-coral" />
+              <span>THE TRUST ARCHITECTURE</span>
+            </div>
+
+            <h2 className="font-fluid-section font-black text-ink tracking-tight font-display">
+              Why Human Approval Matters in Production Autonomy
+            </h2>
+
+            <div className="space-y-4 pt-2">
+              <div className="p-5 rounded-2xl bg-surface border border-border space-y-1.5 shadow-xs">
+                <div className="font-black text-ink text-base font-display flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-mono font-bold">
+                    1
+                  </span>
+                  <span>The agent prepares the action</span>
+                </div>
+                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed pl-8">
+                  Your coworkers scan inbound signals, parse intent, research context, and draft the complete deliverable without demanding your time for prep work.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-surface border border-border space-y-1.5 shadow-xs">
+                <div className="font-black text-ink text-base font-display flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-coral/20 text-coral flex items-center justify-center text-xs font-mono font-bold">
+                    2
+                  </span>
+                  <span>A human controls external dispatch</span>
+                </div>
+                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed pl-8">
+                  You review proposed drafts on desktop or via 1-tap push buttons in your private Telegram bot. Nothing leaves your workspace until you give the green light.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-surface border border-border space-y-1.5 shadow-xs">
+                <div className="font-black text-ink text-base font-display flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-mono font-bold">
+                    3
+                  </span>
+                  <span>Every event is completely traceable</span>
+                </div>
+                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed pl-8">
+                  Full audit logs track when triggers fired, how intent was categorized, which operator signed off, and exact delivery timestamps.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ----------------------------------------------------
-          SCROLL-LINKED EXECUTION PIPELINE (Interactive Architecture)
+          5. SECTION 3: AGENT COWORKER ROSTER (Interactive Selector)
           ---------------------------------------------------- */}
-      <ScrollPipeline />
+      <section id="roster" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
+            <Users className="w-3.5 h-3.5 text-primary" />
+            <span>SPECIALIZED COWORKER ROSTER</span>
+          </div>
+          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3 font-display">
+            Four Dedicated AI Coworkers for Your Team
+          </h2>
+          <p className="text-base text-ink-muted leading-relaxed">
+            Select a specialized coworker to review their workflow, inputs, and approved deliverables.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Vertical Roster Selector (5 cols) */}
+          <div className="lg:col-span-5 space-y-3">
+            {(
+              [
+                { id: 'reels', name: 'Reel Comment-to-DM Agent', icon: Instagram },
+                { id: 'intel', name: 'Competitor Intelligence Agent', icon: Search },
+                { id: 'away', name: '24/7 Away Mode Assistant', icon: Radio },
+                { id: 'research', name: 'Research & Outreach Agent', icon: Layers },
+              ] as const
+            ).map((item) => {
+              const Icon = item.icon;
+              const isSelected = selectedAgent === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setSelectedAgent(item.id)}
+                  className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center justify-between gap-4 ${
+                    isSelected
+                      ? 'bg-surface border-primary text-ink shadow-clay-card scale-[1.02]'
+                      : 'bg-surface-panel border-border text-ink-muted hover:border-border-strong hover:text-ink'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                        isSelected
+                          ? 'bg-primary text-black'
+                          : 'bg-surface-inset text-ink-muted'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-ink font-display">{item.name}</div>
+                      <div className="text-xs text-ink-muted">
+                        {agentRoster[item.id].role}
+                      </div>
+                    </div>
+                  </div>
+                  <ArrowRight
+                    className={`w-4 h-4 transition-transform ${
+                      isSelected ? 'text-primary translate-x-1' : 'opacity-30'
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Agent Detail Panel (7 cols) */}
+          <div className="lg:col-span-7 clay-surface p-7 bg-surface border border-border shadow-clay-card space-y-5">
+            <div className="flex items-center justify-between border-b border-border pb-4">
+              <div>
+                <span className="text-xs font-mono font-bold text-primary uppercase">
+                  {currentAgentData.role}
+                </span>
+                <h3 className="text-xl font-black text-ink font-display mt-0.5">
+                  {currentAgentData.name}
+                </h3>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-mono font-bold border border-primary/20">
+                {currentAgentData.status}
+              </span>
+            </div>
+
+            <p className="text-sm text-ink-muted leading-relaxed">
+              {currentAgentData.description}
+            </p>
+
+            {/* Input & Output Artifact Preview */}
+            <div className="space-y-3 font-mono text-xs">
+              <div className="p-3.5 rounded-xl bg-surface-inset border border-border">
+                <span className="text-[10px] text-ink-muted uppercase block mb-1">
+                  SAMPLE INBOUND INPUT:
+                </span>
+                <span className="text-ink font-semibold">{currentAgentData.sampleInput}</span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-canvas border border-border">
+                <span className="text-[10px] text-primary uppercase block mb-1 font-bold">
+                  DRAFTED ACTION DELIVERABLE:
+                </span>
+                <span className="text-ink leading-relaxed font-sans text-xs">
+                  {currentAgentData.sampleOutput}
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between">
+              <Link href="/agents/new">
+                <Button size="sm" className="rounded-full font-extrabold px-6 py-2.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0">
+                  Deploy this Coworker →
+                </Button>
+              </Link>
+              <span className="text-xs font-mono text-ink-muted">Setup: &lt; 60 seconds</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ----------------------------------------------------
-          SECTION 3: INSTANT AGENCY AUDIT SANDBOX (Free Lead Utility)
+          6. SECTION 4: GROWTH AUDIT SANDBOX (Visual Output)
           ---------------------------------------------------- */}
-      <section id="instant-audit" className="max-w-6xl mx-auto px-6 py-16 w-full border-t border-border">
-        <div className="mb-8 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-canvas text-ink font-mono text-xs font-bold mb-3 border border-border">
+      <section className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
             <Search className="w-3.5 h-3.5 text-primary" />
             <span>GROWTH AUDIT ENGINE • ZERO LOGIN NEEDED</span>
           </div>
-          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
-            5-Second Instant Agency Intelligence Sandbox
+          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3 font-display">
+            5-Second Agency Intelligence Sandbox
           </h2>
-          <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-            Enter any local business or niche. Our autonomous research agent analyzes competitor reviews, drafts an Instagram strategy, and builds a client outreach pitch in seconds.
+          <p className="text-base text-ink-muted leading-relaxed">
+            Enter any niche or business category. Our autonomous research coworker inspects competitor opportunities, drafts a social strategy, and stages an approved client pitch.
           </p>
         </div>
 
@@ -695,238 +705,19 @@ export default function LandingPage() {
       </section>
 
       {/* ----------------------------------------------------
-          SECTION 4: ARCHITECTURAL PILLARS (NO BENTO, NO 3-IN-A-ROW)
-          Asymmetric editorial split stage layout
-          ---------------------------------------------------- */}
-      <section id="architecture" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border space-y-16">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <Layers className="w-3.5 h-3.5 text-primary" />
-            <span>TECHNICAL SPECIFICATIONS</span>
-          </div>
-          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
-            Engineered for Production Autonomy
-          </h2>
-          <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-            Four structural systems designed from the ground up for high-conversion social virality, human oversight, and zero infrastructure friction.
-          </p>
-        </div>
-
-        {/* Pillar 01: Instagram Reels Comment-to-DM */}
-        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
-          <div className="lg:col-span-7 space-y-4">
-            <Badge variant="outline" className="font-mono text-xs font-bold">
-              PILLAR 01 • SOCIAL VIRALITY
-            </Badge>
-            <h3 className="text-2xl font-black text-ink tracking-tight">
-              Meta Graph API v20.0 Reels & Private Reply Engine
-            </h3>
-            <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-              Standard marketing platforms require followers to initiate DMs before an automated reply can be sent. Qwenton leverages Meta&apos;s official Private Reply endpoint, empowering creators and agencies to send an instant 1-to-1 direct message whenever someone comments on a Reel.
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-xs pt-2 font-mono">
-              <div className="p-3 bg-canvas rounded-md border border-border">
-                <span className="text-ink-muted block text-[10px]">ANTI-BAN JITTER</span>
-                <strong className="text-ink text-xs">3–7s Randomized Delay</strong>
-              </div>
-              <div className="p-3 bg-canvas rounded-md border border-border">
-                <span className="text-ink-muted block text-[10px]">ROTATING SPINTAX</span>
-                <strong className="text-ink text-xs">Non-Repeating Templates</strong>
-              </div>
-            </div>
-          </div>
-          <div className="lg:col-span-5 bg-ink p-5 rounded-card text-white space-y-3 font-mono text-xs border border-border">
-            <div className="text-[10px] text-white/50 border-b border-white/10 pb-2">ENDPOINT CONFIGURATION</div>
-            <div className="text-primary font-bold">POST /&#123;comment_id&#125;/private_replies</div>
-            <p className="text-white/80 font-sans text-xs leading-relaxed">
-              Verified token authentication, HMAC-SHA256 signature verification, and automated Reel quota enforcement (2 Reels on Normal, up to 15 on Ultra).
-            </p>
-            <div className="pt-2 text-success text-[11px] font-bold">● Rate limit: 150 DMs / hr (Safe threshold)</div>
-          </div>
-        </div>
-
-        {/* Pillar 02: Human-in-the-Loop Safeguard Firewall */}
-        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
-          <div className="lg:col-span-5 bg-ink p-5 rounded-card text-white space-y-3 font-mono text-xs border border-border order-2 lg:order-1">
-            <div className="text-[10px] text-primary border-b border-white/10 pb-2 flex items-center justify-between">
-              <span>FIREWALL PROTOCOL</span>
-              <span>GATE: ENFORCED</span>
-            </div>
-            <div className="text-white font-bold">Mutating Actions Intercepted:</div>
-            <div className="space-y-1 text-white/80 text-[11px]">
-              <div>• Publishing ad creatives to Meta Ads Manager</div>
-              <div>• Sending client emails or bulk Telegram broadcasts</div>
-              <div>• Modifying live application code or database records</div>
-            </div>
-            <div className="pt-2 text-primary text-[11px] font-bold">● Zero unsupervised mutations</div>
-          </div>
-          <div className="lg:col-span-7 space-y-4 order-1 lg:order-2">
-            <Badge variant="outline" className="font-mono text-xs font-bold">
-              PILLAR 02 • TRUST & SECURITY
-            </Badge>
-            <h3 className="text-2xl font-black text-ink tracking-tight">
-              Strict Human-in-the-Loop Governance Firewall
-            </h3>
-            <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-              Unlike fully autonomous agents that can hallucinate and publish errant campaigns or spam clients, Qwenton isolates read operations from write operations. Any action that communicates externally pauses for explicit human sign-off via your desktop dashboard or Telegram push notification.
-            </p>
-            <div className="pt-1">
-              <Link href="/approvals" className="text-xs font-bold text-primary hover:underline font-mono">
-                View Live Approvals Inbox →
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Pillar 03: 24/7 Mobile Operations via Telegram */}
-        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
-          <div className="lg:col-span-7 space-y-4">
-            <Badge variant="outline" className="font-mono text-xs font-bold">
-              PILLAR 03 • MOBILE COMMAND
-            </Badge>
-            <h3 className="text-2xl font-black text-ink tracking-tight">
-              24/7 Telegram Coworker Bot & Away Mode Assistant
-            </h3>
-            <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-              Manage your agency without sitting at a laptop. Connect your private Telegram bot to receive real-time lead alerts, approve scheduled campaigns with 1-tap inline buttons, and send voice notes for instant transcription and task delegation while traveling.
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-xs pt-2 font-mono">
-              <div className="p-3 bg-canvas rounded-md border border-border">
-                <span className="text-ink-muted block text-[10px]">AWAY MODE</span>
-                <strong className="text-ink text-xs">24/7 Inbound Triage</strong>
-              </div>
-              <div className="p-3 bg-canvas rounded-md border border-border">
-                <span className="text-ink-muted block text-[10px]">APPROVALS</span>
-                <strong className="text-ink text-xs">1-Tap Inline Push</strong>
-              </div>
-            </div>
-          </div>
-          <div className="lg:col-span-5 bg-ink p-5 rounded-card text-white space-y-3 font-mono text-xs border border-border">
-            <div className="text-[10px] text-white/50 border-b border-white/10 pb-2">TELEGRAM WEBHOOK GATEWAY</div>
-            <div className="text-primary font-bold">Live Push Telemetry</div>
-            <p className="text-white/80 font-sans text-xs leading-relaxed">
-              &quot;Founder approved: Dispatching scheduled Instagram carousel and updating Q3 competitive briefing in datastore.&quot;
-            </p>
-            <div className="pt-2 text-success text-[11px] font-bold">● Connected: 1 Telegram Bot (Normal) / 5 (Ultra)</div>
-          </div>
-        </div>
-
-        {/* Pillar 04: Zero-Docker Architecture */}
-        <div className="clay-surface p-8 bg-surface border border-border grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-clay-card">
-          <div className="lg:col-span-5 bg-ink p-5 rounded-card text-white space-y-3 font-mono text-xs border border-border order-2 lg:order-1">
-            <div className="text-[10px] text-white/50 border-b border-white/10 pb-2">DUAL-MODE PERSISTENCE</div>
-            <div className="text-white font-bold">Local Datastore + Cloud Sync</div>
-            <p className="text-white/80 font-sans text-xs leading-relaxed">
-              Zero Docker setup. Zero required databases during local development. Automatic cloud synchronization when deploying to Vercel and Firebase in production.
-            </p>
-            <div className="pt-2 text-success text-[11px] font-bold">● Next.js 15 App Router • TypeScript 5.7</div>
-          </div>
-          <div className="lg:col-span-7 space-y-4 order-1 lg:order-2">
-            <Badge variant="outline" className="font-mono text-xs font-bold">
-              PILLAR 04 • CLOUD NATIVE
-            </Badge>
-            <h3 className="text-2xl font-black text-ink tracking-tight">
-              Zero-Docker Cloud Native Infrastructure
-            </h3>
-            <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-              Legacy platforms mandate complicated Docker daemon environments or charge $20/month per agent for slow Linux sandbox containers. Qwenton is completely serverless: fast HTTP Route Handlers on Vercel, lightweight JSON datastores for edge execution, and single-key cloud routing.
-            </p>
-            <div className="pt-1">
-              <Link href="/integrations" className="text-xs font-bold text-primary hover:underline font-mono">
-                Explore 50+ Integrations Vault →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ----------------------------------------------------
-          SECTION 5: HIGH-DENSITY TECHNICAL SPECIFICATIONS TABLE
-          ---------------------------------------------------- */}
-      <section className="max-w-6xl mx-auto px-6 py-16 w-full border-t border-border">
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-canvas text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <Cpu className="w-3.5 h-3.5 text-primary" />
-            <span>ARCHITECTURAL BENCHMARK</span>
-          </div>
-          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
-            Qwenton vs. Legacy AI Platforms
-          </h2>
-          <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-            Comparing core infrastructure, social lead generation capabilities, and operating costs.
-          </p>
-        </div>
-
-        <div className="clay-surface bg-surface border border-border overflow-x-auto shadow-clay-card">
-          <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-canvas border-b border-border text-ink uppercase tracking-wider font-bold">
-              <tr>
-                <th className="py-3 px-4">Feature Dimension</th>
-                <th className="py-3 px-4 text-primary">Qwenton Fleet</th>
-                <th className="py-3 px-4 text-ink-muted">Skydive.com</th>
-                <th className="py-3 px-4 text-ink-muted">Generic AI Wrappers</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border text-ink">
-              <tr>
-                <td className="py-3.5 px-4 font-bold">Reels Comment-to-DM Engine</td>
-                <td className="py-3.5 px-4 text-success font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Meta v20.0 Private Replies
-                </td>
-                <td className="py-3.5 px-4 text-ink-muted">None (Ticketing only)</td>
-                <td className="py-3.5 px-4 text-ink-muted">None</td>
-              </tr>
-              <tr>
-                <td className="py-3.5 px-4 font-bold">Infrastructure Cost</td>
-                <td className="py-3.5 px-4 text-success font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> INR 0 / mo Serverless
-                </td>
-                <td className="py-3.5 px-4 text-danger font-medium">$20+ / mo per Linux sandbox</td>
-                <td className="py-3.5 px-4 text-ink-muted">$19–$49 / mo</td>
-              </tr>
-              <tr>
-                <td className="py-3.5 px-4 font-bold">Human Approval Gate</td>
-                <td className="py-3.5 px-4 text-success font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Desktop + 1-Tap Telegram
-                </td>
-                <td className="py-3.5 px-4 text-ink-muted">Web notifications only</td>
-                <td className="py-3.5 px-4 text-danger">No approval firewall</td>
-              </tr>
-              <tr>
-                <td className="py-3.5 px-4 font-bold">Multi-Model Support</td>
-                <td className="py-3.5 px-4 text-success font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Flexible Multi-Provider Routing
-                </td>
-                <td className="py-3.5 px-4 text-ink-muted">Locked frontier models</td>
-                <td className="py-3.5 px-4 text-ink-muted">Single provider lock-in</td>
-              </tr>
-              <tr>
-                <td className="py-3.5 px-4 font-bold">Interface Architecture</td>
-                <td className="py-3.5 px-4 text-primary font-bold">
-                  High-Density Focused System (Dark & Light Mode)
-                </td>
-                <td className="py-3.5 px-4 text-ink-muted">Generic template</td>
-                <td className="py-3.5 px-4 text-ink-muted">Overused AI purple glows</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* ----------------------------------------------------
-          SECTION 6: 4-TIER TRANSPARENT PRICING GRID
+          7. SECTION 5: 4-TIER TRANSPARENT PRICING GRID
           ---------------------------------------------------- */}
       <section id="pricing" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface text-ink font-mono text-xs font-bold mb-3 border border-border">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
             <span className="w-2 h-2 rounded-full bg-primary" />
-            <span>TRANSPARENT 4-TIER SUBSCRIPTION ARCHITECTURE</span>
+            <span>TRANSPARENT PRICING • CANCEL ANYTIME</span>
           </div>
-          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3">
-            Scale From Solo Creator to Enterprise Agency
+          <h2 className="font-fluid-section font-black text-ink tracking-tight mb-3 font-display">
+            Scale from Solo Creator to Full Agency
           </h2>
-          <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-            Predictable pricing in Indian Rupees. Upgrade or downgrade anytime with instant quota provisioning.
+          <p className="text-base text-ink-muted leading-relaxed">
+            Predictable billing in Indian Rupees with instant quota provisioning.
           </p>
         </div>
 
@@ -936,12 +727,12 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-ink-muted uppercase">TIER 01</span>
-                <Badge variant="outline" className="text-[10px] font-mono">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-surface-panel border border-border">
                   FREE
-                </Badge>
+                </span>
               </div>
               <div>
-                <h3 className="text-xl font-black text-ink">Normal Plan</h3>
+                <h3 className="text-xl font-black text-ink font-display">Normal Plan</h3>
                 <div className="text-2xl font-black text-ink mt-1">INR 0</div>
                 <p className="text-xs text-ink-muted mt-1">Free forever for solo founders</p>
               </div>
@@ -964,13 +755,13 @@ export default function LandingPage() {
                 </div>
                 <div className="flex items-center gap-1.5 text-ink">
                   <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Human Approvals Firewall</span>
+                  <span>Human Approval Firewall</span>
                 </div>
               </div>
             </div>
             <div className="pt-6">
               <Link href="/signup">
-                <Button size="sm" variant="outline" className="w-full font-bold text-xs border-border">
+                <Button size="sm" variant="outline" className="w-full rounded-full font-bold text-xs border-border">
                   Deploy Free Agents
                 </Button>
               </Link>
@@ -982,16 +773,16 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-ink-muted uppercase">TIER 02</span>
-                <Badge variant="outline" className="text-[10px] font-mono">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-surface-panel border border-border">
                   CREATOR
-                </Badge>
+                </span>
               </div>
               <div>
-                <h3 className="text-xl font-black text-ink">Lite Coworker</h3>
+                <h3 className="text-xl font-black text-ink font-display">Lite Coworker</h3>
                 <div className="text-2xl font-black text-ink mt-1">
                   INR 99 <span className="text-xs font-normal text-ink-muted">/ mo</span>
                 </div>
-                <p className="text-xs text-ink-muted mt-1">For active content creators</p>
+                <p className="text-xs text-ink-muted mt-1">For active creators</p>
               </div>
               <div className="space-y-2 text-xs font-mono border-t border-border pt-4">
                 <div className="flex items-center gap-1.5 text-ink">
@@ -1018,27 +809,27 @@ export default function LandingPage() {
             </div>
             <div className="pt-6">
               <Link href="/billing">
-                <Button size="sm" variant="outline" className="w-full font-bold text-xs border-border">
+                <Button size="sm" variant="outline" className="w-full rounded-full font-bold text-xs border-border">
                   Upgrade to Lite
                 </Button>
               </Link>
             </div>
           </div>
 
-          {/* Tier 3: Pro Coworker */}
+          {/* Tier 3: Pro Coworker (Recommended) */}
           <div className="clay-surface p-6 bg-surface border-2 border-primary flex flex-col justify-between hover:shadow-clay-card-hover transition-all relative">
-            <div className="absolute -top-3 right-4 bg-primary text-black font-mono text-[10px] font-black px-2 py-0.5 rounded shadow-xs">
-              MOST POPULAR
+            <div className="absolute -top-3 right-4 bg-primary text-black font-mono text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
+              RECOMMENDED
             </div>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-primary uppercase">TIER 03</span>
-                <Badge variant="outline" className="text-[10px] font-mono border-primary text-primary">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30">
                   AGENCY
-                </Badge>
+                </span>
               </div>
               <div>
-                <h3 className="text-xl font-black text-ink">Pro Coworker</h3>
+                <h3 className="text-xl font-black text-ink font-display">Pro Coworker</h3>
                 <div className="text-2xl font-black text-ink mt-1">
                   INR 299 <span className="text-xs font-normal text-ink-muted">/ mo</span>
                 </div>
@@ -1069,7 +860,7 @@ export default function LandingPage() {
             </div>
             <div className="pt-6">
               <Link href="/billing">
-                <Button size="sm" className="w-full font-extrabold text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button">
+                <Button size="sm" className="w-full rounded-full font-extrabold text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0">
                   Upgrade to Pro
                 </Button>
               </Link>
@@ -1081,16 +872,16 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs font-bold text-ink-muted uppercase">TIER 04</span>
-                <Badge variant="outline" className="text-[10px] font-mono">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-surface-panel border border-border">
                   ENTERPRISE
-                </Badge>
+                </span>
               </div>
               <div>
-                <h3 className="text-xl font-black text-ink">Ultra Business</h3>
+                <h3 className="text-xl font-black text-ink font-display">Ultra Business</h3>
                 <div className="text-2xl font-black text-ink mt-1">
                   INR 599 <span className="text-xs font-normal text-ink-muted">/ mo</span>
                 </div>
-                <p className="text-xs text-ink-muted mt-1">For high-velocity operations</p>
+                <p className="text-xs text-ink-muted mt-1">For high-volume growth teams</p>
               </div>
               <div className="space-y-2 text-xs font-mono border-t border-border pt-4">
                 <div className="flex items-center gap-1.5 text-ink">
@@ -1117,7 +908,7 @@ export default function LandingPage() {
             </div>
             <div className="pt-6">
               <Link href="/billing">
-                <Button size="sm" variant="outline" className="w-full font-bold text-xs border-border">
+                <Button size="sm" variant="outline" className="w-full rounded-full font-bold text-xs border-border">
                   Deploy Ultra Business
                 </Button>
               </Link>
@@ -1127,15 +918,15 @@ export default function LandingPage() {
       </section>
 
       {/* ----------------------------------------------------
-          SECTION 7: TECHNICAL FAQ ACCORDION (Clean Typography)
+          8. SECTION 6: FAQ ACCORDION (Clean Typography)
           ---------------------------------------------------- */}
-      <section id="faq" className="max-w-4xl mx-auto px-6 py-16 w-full border-t border-border">
-        <div className="mb-10 text-center">
-          <Badge variant="outline" className="font-mono text-xs font-bold mb-3">
-            FREQUENTLY ASKED QUESTIONS
-          </Badge>
-          <h2 className="font-fluid-section font-black text-ink tracking-tight">
-            Clear Answers for Operators & Engineers
+      <section id="faq" className="max-w-4xl mx-auto px-6 py-20 w-full border-t border-border">
+        <div className="mb-12 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
+            <span>FREQUENTLY ASKED QUESTIONS</span>
+          </div>
+          <h2 className="font-fluid-section font-black text-ink tracking-tight font-display">
+            Clear Answers for Creators & Operators
           </h2>
         </div>
 
@@ -1147,7 +938,7 @@ export default function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-sm text-ink hover:bg-canvas transition-colors"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm text-ink hover:bg-surface-panel transition-colors font-display"
                 >
                   <span>{faq.q}</span>
                   {isOpen ? (
@@ -1168,37 +959,52 @@ export default function LandingPage() {
       </section>
 
       {/* ----------------------------------------------------
-          SECTION 8: CLOSING CONVERSION BANNER & LEGAL FOOTER
+          9. CLOSING CONVERSION BANNER (Compact & Focused)
           ---------------------------------------------------- */}
       <section className="max-w-6xl mx-auto px-6 py-12 w-full">
-        <div className="p-8 sm:p-12 rounded-hero bg-ink text-white dark:bg-surface dark:text-ink flex flex-col md:flex-row items-center justify-between gap-8 shadow-clay-card border border-border">
+        <div className="p-8 sm:p-12 rounded-hero bg-[#1C2027] text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl border border-white/10">
           <div className="space-y-3 max-w-xl">
-            <Badge variant="outline" className="text-white dark:text-ink border-white/20 dark:border-border font-mono text-[10px]">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-primary font-bold">
               GET STARTED IN 60 SECONDS
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-black text-white dark:text-ink tracking-tight">
-              Deploy Your First Autonomous Coworker Today
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-display">
+              Put your first AI coworker to work.
             </h2>
-            <p className="text-xs sm:text-sm text-white/70 dark:text-ink-muted leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal">
               Activate your free Normal plan. Automate 2 Instagram Reels, connect a private Telegram bot, and run 50 autonomous workflows per month with full human-in-the-loop protection.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full md:w-auto">
             <Link href="/signup" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto font-extrabold px-8 py-3.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button uppercase tracking-wider">
-                Deploy 2 Free Agents →
+              <Button
+                size="lg"
+                className="w-full sm:w-auto rounded-full font-extrabold px-8 py-3.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button uppercase tracking-wider border-0"
+              >
+                <span>Deploy free agents</span>
+                <ArrowRight className="w-4 h-4 ml-1 text-black" />
               </Button>
             </Link>
+            <a href="#how-it-works" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto rounded-full font-bold px-6 py-3.5 text-xs border-white/20 text-white hover:bg-white/10"
+              >
+                See how approval works
+              </Button>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Clean Technical Footer with Legal Links & Theme Toggle */}
+      {/* ----------------------------------------------------
+          10. CLEAN TECHNICAL FOOTER
+          ---------------------------------------------------- */}
       <footer className="border-t border-border bg-surface py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-ink-muted font-mono">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-ink text-white dark:bg-canvas dark:text-ink flex items-center justify-center font-bold text-xs border border-border">
+            <div className="w-6 h-6 rounded-md bg-ink text-white dark:bg-white dark:text-ink flex items-center justify-center font-bold text-xs">
               Q
             </div>
             <span>© {new Date().getFullYear()} Qwenton Inc. All rights reserved.</span>
@@ -1211,7 +1017,10 @@ export default function LandingPage() {
             <Link href="/privacy" className="hover:text-ink hover:underline transition-colors">
               Privacy Policy
             </Link>
-            <span className="text-primary font-bold">● All Systems Operational</span>
+            <span className="text-primary font-bold flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              All Systems Operational
+            </span>
           </div>
         </div>
       </footer>

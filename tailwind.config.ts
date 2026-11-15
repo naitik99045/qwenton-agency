@@ -20,6 +20,7 @@ const config: Config = {
           DEFAULT: 'var(--surface-white)',
           inset: 'var(--surface-inset)',
           panel: 'var(--surface-panel)',
+          dark: 'var(--surface-dark)',
         },
         'cloud-blue': 'var(--brand-primary-light)',
         ink: {
@@ -31,6 +32,11 @@ const config: Config = {
           DEFAULT: 'var(--brand-primary)',
           deep: 'var(--brand-primary-deep)',
           light: 'var(--brand-primary-light)',
+        },
+        coral: {
+          DEFAULT: 'var(--coral-approval)',
+          hover: 'var(--coral-approval-hover)',
+          light: 'var(--coral-approval-bg)',
         },
         success: {
           DEFAULT: 'var(--success)',
@@ -51,14 +57,14 @@ const config: Config = {
         },
       },
       borderRadius: {
-        control: '16px',
-        card: '22px',
+        control: '14px',
+        card: '20px',
         hero: '28px',
       },
       boxShadow: {
         'clay-card': 'var(--shadow-clay-card)',
         'clay-card-hover': 'var(--shadow-clay-card-hover)',
-        'clay-button': '0 4px 12px rgba(16, 229, 153, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
+        'clay-button': '0 4px 14px rgba(43, 228, 156, 0.35)',
         'clay-button-subtle': 'var(--shadow-clay-button-subtle)',
         'clay-inset': 'var(--shadow-clay-inset)',
       },

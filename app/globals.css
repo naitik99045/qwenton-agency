@@ -4,93 +4,98 @@
 
 @layer base {
   /* ----------------------------------------------------
-     QWENTON-UI 60-30-10 TRI-COLOR ARCHITECTURE
+     QWENTON EDITORIAL PRODUCT THEATRE (imp.md & refrence.png)
      Light Mode Default (:root)
-     Strictly Zero Gradients • Zero Orange • Zero Primary Colors
+     Warm Paper Canvas • Deep Graphite Ink • Mint Action • Approval Coral
+     Strictly Zero Gradients • Zero Primary Red/Blue/Yellow
      ---------------------------------------------------- */
   :root {
-    /* 60% Dominant Canvas (Architectural Porcelain) */
-    --canvas-cream: oklch(97.6% 0.005 250);        /* Crisp porcelain base */
-    --surface-white: oklch(100% 0 0);              /* Elevated pure chalk panel */
-    --surface-inset: oklch(95.2% 0.008 250);       /* Recessed telemetry well */
-    --surface-panel: oklch(98.6% 0.004 250);       /* Subtle structural card */
-    --border-subtle: oklch(88% 0.012 250);         /* Hairline wireframe border */
-    --border-strong: oklch(78% 0.016 250);         /* High-definition boundary */
+    /* Canvas & Surfaces */
+    --canvas-cream: oklch(97% 0.012 90);          /* Warm paper canvas #F8F6F1 */
+    --surface-white: oklch(100% 0 0);             /* Pure chalk card panel #FFFFFF */
+    --surface-inset: oklch(95% 0.014 90);         /* Warm inset well */
+    --surface-panel: oklch(98.5% 0.008 90);       /* Sub-panel surface */
+    --surface-dark: oklch(27% 0.03 255);          /* Softened graphite product card #1E2229 */
+    --border-subtle: oklch(90% 0.01 90);          /* Quiet hairline border #E6E2D8 */
+    --border-strong: oklch(80% 0.015 90);         /* High-definition boundary */
 
-    /* 30% Structure & High-Contrast Typography */
-    --ink: oklch(18% 0.02 250);                    /* Deep obsidian ink (13:1 contrast) */
-    --ink-muted: oklch(44% 0.025 250);             /* Balanced slate copy (>5.5:1) */
-    --ink-light: oklch(58% 0.02 250);              /* Metadata & telemetry labels */
+    /* Typography */
+    --ink: oklch(21% 0.025 255);                  /* Deep graphite ink #16191F */
+    --ink-muted: oklch(50% 0.025 255);            /* Muted slate text #647082 */
+    --ink-light: oklch(65% 0.02 255);             /* Metadata labels */
 
-    /* 10% Focal Light Accent: Signal Cyber Mint (Zero Orange, Zero Primary) */
-    --brand-primary: oklch(76% 0.16 160);          /* High-voltage focal mint (with dark text) */
-    --brand-primary-deep: oklch(44% 0.16 160);     /* Deep emerald tone for text/icons on light */
-    --brand-primary-light: oklch(94% 0.03 160);    /* Clean mint surface tint */
-    --brand-primary-glow: oklch(44% 0.16 160 / 0.18);
+    /* Primary Mint Accent */
+    --brand-primary: oklch(76% 0.16 165);         /* Mint action colour #2BE49C / #10E599 */
+    --brand-primary-deep: oklch(44% 0.16 165);    /* Emerald deep tone */
+    --brand-primary-light: oklch(94% 0.04 165);   /* Mint surface tint */
+    --brand-primary-glow: oklch(76% 0.16 165 / 0.28);
 
-    /* Functional Semantic Accents (Subtle & Non-Primary) */
-    --approval-amber: oklch(56% 0.14 85);          /* Brass amber */
+    /* Human Approval Coral */
+    --coral-approval: oklch(65% 0.17 28);         /* Warm approval coral #FF7A66 */
+    --coral-approval-hover: oklch(60% 0.18 28);   /* Darker coral hover */
+    --coral-approval-bg: oklch(95% 0.03 28);      /* Light coral tint */
+
+    /* Functional Semantic Accents */
+    --approval-amber: oklch(56% 0.14 85);
     --approval-amber-bg: oklch(94% 0.04 85);
-    --success: oklch(46% 0.16 158);                /* Emerald success */
-    --success-bg: oklch(94% 0.03 158);
-    --danger: oklch(52% 0.18 28);                  /* Carmine warning */
-    --danger-bg: oklch(94% 0.04 28);
+    --success: oklch(76% 0.16 165);               /* Unified mint */
+    --success-bg: oklch(94% 0.04 165);
+    --danger: oklch(65% 0.17 28);                 /* Coral */
+    --danger-bg: oklch(95% 0.03 28);
 
     /* Programmatic Relative Color Tokens */
-    --brand-hover: oklch(70% 0.17 160);
-    --brand-active: oklch(64% 0.18 160);
-    --brand-soft: oklch(94% 0.03 160);
-    --brand-border: oklch(82% 0.06 160);
+    --brand-hover: oklch(72% 0.17 165);
+    --brand-active: oklch(66% 0.18 165);
+    --brand-soft: oklch(94% 0.04 165);
+    --brand-border: oklch(84% 0.06 165);
 
-    /* Tactile Architectural Light Shadows */
-    --shadow-clay-card: 0 8px 24px -4px rgba(15, 23, 42, 0.07), 0 0 0 1px rgba(15, 23, 42, 0.06);
-    --shadow-clay-card-hover: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 0 0 1px oklch(44% 0.16 160 / 0.40);
-    --shadow-clay-button-subtle: 0 2px 6px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.90);
-    --shadow-clay-inset: inset 0 2px 4px rgba(15, 23, 42, 0.06);
+    /* Architectural Restrained Shadows */
+    --shadow-clay-card: 0 10px 30px -6px rgba(22, 25, 31, 0.08), 0 0 0 1px rgba(22, 25, 31, 0.06);
+    --shadow-clay-card-hover: 0 18px 42px -6px rgba(22, 25, 31, 0.14), 0 0 0 1px oklch(76% 0.16 165 / 0.35);
+    --shadow-clay-button-subtle: 0 2px 6px rgba(22, 25, 31, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    --shadow-clay-inset: inset 0 2px 4px rgba(22, 25, 31, 0.05);
   }
 
   /* ----------------------------------------------------
      Dark Mode Inversion (.dark)
-     90% Dark Shades + 10% High-Contrast Cyber Mint
-     Strictly Zero Gradients • Zero Orange • Zero Primary Colors
+     Warm Deep Graphite Stage • Soft Platinum Chalk Text • Mint & Coral
      ---------------------------------------------------- */
   .dark {
-    /* 60% Dominant Canvas (Deep Obsidian Carbon) */
-    --canvas-cream: oklch(14.5% 0.015 250);        /* Deep carbon base */
-    --surface-white: oklch(19.5% 0.018 250);       /* Elevated graphite panel */
-    --surface-inset: oklch(16% 0.015 250);         /* Recessed telemetry well */
-    --surface-panel: oklch(22% 0.02 250);          /* Structural sub-panel */
-    --border-subtle: oklch(27% 0.018 250);         /* Crisp wireframe hairline border */
-    --border-strong: oklch(35% 0.025 250);         /* High-definition structural boundary */
+    --canvas-cream: oklch(16% 0.02 255);          /* Deep graphite stage #14171D */
+    --surface-white: oklch(21% 0.025 255);        /* Elevated graphite panel #1B1E26 */
+    --surface-inset: oklch(14% 0.015 255);        /* Recessed well */
+    --surface-panel: oklch(24% 0.025 255);        /* Sub-panel */
+    --surface-dark: oklch(19% 0.025 255);
+    --border-subtle: oklch(29% 0.02 255);         /* Crisp wireframe hairline */
+    --border-strong: oklch(37% 0.025 255);
 
-    /* 30% Structure & High-Contrast Typography (Crisp Platinum Chalk) */
-    --ink: oklch(96% 0.005 90);                    /* Softened platinum chalk text (13:1 contrast) */
-    --ink-muted: oklch(74% 0.012 250);             /* Slate readability secondary text */
-    --ink-light: oklch(54% 0.01 250);              /* Metadata & telemetry labels */
+    --ink: oklch(96% 0.005 90);                   /* Soft platinum chalk text */
+    --ink-muted: oklch(74% 0.015 255);            /* Readable slate */
+    --ink-light: oklch(56% 0.01 255);             /* Metadata labels */
 
-    /* 10% Light / Focal Accent: Electric Mint / Cyber Jade */
-    --brand-primary: oklch(78% 0.16 158);          /* High-voltage focal mint */
-    --brand-primary-deep: oklch(70% 0.17 158);     /* Active interactive state */
-    --brand-primary-light: oklch(22% 0.04 158);    /* Deep mint tint badge background */
-    --brand-primary-glow: oklch(78% 0.16 158 / 0.28);
+    --brand-primary: oklch(78% 0.16 165);         /* Mint action */
+    --brand-primary-deep: oklch(70% 0.17 165);
+    --brand-primary-light: oklch(24% 0.04 165);
+    --brand-primary-glow: oklch(78% 0.16 165 / 0.28);
 
-    /* Functional Semantic Accents (Subtle & Non-Primary) */
-    --approval-amber: oklch(76% 0.12 95);          /* Technical brass amber */
+    --coral-approval: oklch(68% 0.18 28);         /* Bright approval coral */
+    --coral-approval-hover: oklch(62% 0.19 28);
+    --coral-approval-bg: oklch(24% 0.04 28);
+
+    --approval-amber: oklch(76% 0.12 95);
     --approval-amber-bg: oklch(22% 0.03 95);
-    --success: oklch(78% 0.16 158);                /* Unified electric mint */
-    --success-bg: oklch(22% 0.04 158);
-    --danger: oklch(62% 0.16 28);                  /* Muted carmine warning */
-    --danger-bg: oklch(22% 0.04 28);
+    --success: oklch(78% 0.16 165);
+    --success-bg: oklch(22% 0.04 165);
+    --danger: oklch(68% 0.18 28);
+    --danger-bg: oklch(24% 0.04 28);
 
-    /* Programmatic Relative Color Tokens */
-    --brand-hover: oklch(84% 0.15 158);
-    --brand-active: oklch(72% 0.17 158);
-    --brand-soft: oklch(22% 0.04 158);
-    --brand-border: oklch(38% 0.08 158);
+    --brand-hover: oklch(84% 0.15 165);
+    --brand-active: oklch(72% 0.17 165);
+    --brand-soft: oklch(22% 0.04 165);
+    --brand-border: oklch(38% 0.08 165);
 
-    /* Deep Architectural Carbon Shadows */
     --shadow-clay-card: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.07);
-    --shadow-clay-card-hover: 0 24px 48px -6px rgba(0, 0, 0, 0.80), 0 0 0 1px oklch(78% 0.16 158 / 0.35);
+    --shadow-clay-card-hover: 0 24px 48px -6px rgba(0, 0, 0, 0.80), 0 0 0 1px oklch(78% 0.16 165 / 0.35);
     --shadow-clay-button-subtle: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.10);
     --shadow-clay-inset: inset 0 2px 6px rgba(0, 0, 0, 0.70);
   }
@@ -101,16 +106,16 @@
     font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.015em;
     transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
 @layer components {
-  /* Tactile Solid Clay Surfaces (Strictly No Gradients) */
+  /* Tactile Surfaces */
   .clay-surface {
     background-color: var(--surface-white);
-    border-radius: 22px;
+    border-radius: 20px;
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-clay-card);
     transition: all 0.2s ease-in-out;
@@ -118,7 +123,7 @@
 
   .clay-surface-interactive {
     background-color: var(--surface-white);
-    border-radius: 22px;
+    border-radius: 20px;
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-clay-card);
     transition: all 0.2s ease-in-out;
@@ -131,7 +136,7 @@
 
   .clay-control {
     background-color: var(--surface-white);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-clay-button-subtle);
     transition: all 0.15s ease-in-out;
@@ -145,61 +150,24 @@
 
   .clay-inset-panel {
     background-color: var(--surface-inset);
-    border-radius: 16px;
+    border-radius: 14px;
     box-shadow: var(--shadow-clay-inset);
     border: 1px solid var(--border-subtle);
   }
 
-  /* Tactile Physical Sticker Badge Styling */
-  .tactile-sticker {
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-    border: 2px dashed var(--border-strong);
-    background-color: var(--surface-white);
-    color: var(--ink);
-    box-shadow: 4px 6px 0px rgba(0, 0, 0, 0.08);
-    user-select: none;
-    transform-origin: center;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
-  }
-
-  .tactile-sticker:hover {
-    transform: rotate(0deg) scale(1.03);
-    box-shadow: 6px 10px 0px rgba(0, 0, 0, 0.14);
-  }
-
-  .dark .tactile-sticker {
-    box-shadow: 4px 6px 0px rgba(0, 0, 0, 0.60);
-    border-color: var(--border-strong);
-  }
-
-  .dark .tactile-sticker:hover {
-    box-shadow: 6px 10px 0px rgba(0, 0, 0, 0.85);
-  }
-
-  /* Fluid Headline Rules */
+  /* Responsive Type Rules from imp.md */
   .font-fluid-hero {
-    font-size: clamp(2.4rem, 5.2vw, 4.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.04em;
+    font-size: clamp(2.8rem, 4.8vw, 4.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
     font-family: var(--font-display), var(--font-sans), sans-serif;
   }
 
   .font-fluid-section {
-    font-size: clamp(1.85rem, 3.8vw, 2.75rem);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 3.4vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
     font-family: var(--font-display), var(--font-sans), sans-serif;
-  }
-
-  /* 3D Perspective Card Tilt utilities */
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .transform-style-3d {
-    transform-style: preserve-3d;
   }
 
   /* Custom scrollbar */
