@@ -22,7 +22,6 @@ const config: Config = {
           panel: 'var(--surface-panel)',
           dark: 'var(--surface-dark)',
         },
-        'cloud-blue': 'var(--brand-primary-light)',
         ink: {
           DEFAULT: 'var(--ink)',
           muted: 'var(--ink-muted)',
@@ -32,6 +31,21 @@ const config: Config = {
           DEFAULT: 'var(--brand-primary)',
           deep: 'var(--brand-primary-deep)',
           light: 'var(--brand-primary-light)',
+        },
+        pine: {
+          DEFAULT: '#163A29',
+          deep: '#0E261B',
+          light: '#1F523A',
+        },
+        alabaster: {
+          DEFAULT: '#F6F3EB',
+          light: '#FDFAF6',
+          dark: '#EDE7DC',
+        },
+        mint: {
+          DEFAULT: '#12E896',
+          hover: '#0FD287',
+          soft: '#E2FAF0',
         },
         coral: {
           DEFAULT: 'var(--coral-approval)',
@@ -64,7 +78,7 @@ const config: Config = {
       boxShadow: {
         'clay-card': 'var(--shadow-clay-card)',
         'clay-card-hover': 'var(--shadow-clay-card-hover)',
-        'clay-button': '0 4px 14px rgba(43, 228, 156, 0.35)',
+        'clay-button': '0 4px 14px rgba(18, 232, 150, 0.35)',
         'clay-button-subtle': 'var(--shadow-clay-button-subtle)',
         'clay-inset': 'var(--shadow-clay-inset)',
       },

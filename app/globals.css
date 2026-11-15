@@ -4,100 +4,103 @@
 
 @layer base {
   /* ----------------------------------------------------
-     QWENTON EDITORIAL PRODUCT THEATRE (imp.md & refrence.png)
-     Light Mode Default (:root)
-     Warm Paper Canvas • Deep Graphite Ink • Mint Action • Approval Coral
-     Strictly Zero Gradients • Zero Primary Red/Blue/Yellow
+     QWENTON-UI TRI-COLOR SYSTEM (60-30-10 Solid Contract)
+     Strictly Zero Black • Zero Black Shades • Zero Primary Colors
+     1. Base (60%): Warm Alabaster Oat / Linen (#F6F3EB)
+     2. Structure & Ink (30%): Deep Forest Pine (#163A29)
+     3. Focal Accent (10%): Signal Cyber Mint (#12E896)
+     Strictly Zero Gradients • Zero Pure Red/Blue/Yellow
      ---------------------------------------------------- */
   :root {
-    /* Canvas & Surfaces */
-    --canvas-cream: oklch(97% 0.012 90);          /* Warm paper canvas #F8F6F1 */
-    --surface-white: oklch(100% 0 0);             /* Pure chalk card panel #FFFFFF */
-    --surface-inset: oklch(95% 0.014 90);         /* Warm inset well */
-    --surface-panel: oklch(98.5% 0.008 90);       /* Sub-panel surface */
-    --surface-dark: oklch(27% 0.03 255);          /* Softened graphite product card #1E2229 */
-    --border-subtle: oklch(90% 0.01 90);          /* Quiet hairline border #E6E2D8 */
-    --border-strong: oklch(80% 0.015 90);         /* High-definition boundary */
+    /* 60% Dominant Base Canvas & Panels */
+    --canvas-cream: oklch(96.5% 0.015 95);        /* Warm alabaster oat #F6F3EB */
+    --surface-white: oklch(99.5% 0.005 95);       /* Pure cream chalk #FDFAF6 */
+    --surface-inset: oklch(94% 0.02 95);          /* Muted biscuit well #EDE7DC */
+    --surface-panel: oklch(97.5% 0.012 95);       /* Sub-panel surface #F4EFE6 */
+    --surface-dark: oklch(29% 0.075 155);         /* Deep forest pine card #163A29 (NOT black) */
+    --border-subtle: oklch(88% 0.025 100);        /* Hairline oat border #DCD6C8 */
+    --border-strong: oklch(76% 0.035 110);        /* Defined boundary #C4BAA7 */
 
-    /* Typography */
-    --ink: oklch(21% 0.025 255);                  /* Deep graphite ink #16191F */
-    --ink-muted: oklch(50% 0.025 255);            /* Muted slate text #647082 */
-    --ink-light: oklch(65% 0.02 255);             /* Metadata labels */
+    /* 30% Structure & High-Contrast Typography (Deep Forest Pine - NOT black) */
+    --ink: oklch(29% 0.075 155);                  /* Deep forest pine #163A29 (>9:1 contrast) */
+    --ink-muted: oklch(48% 0.05 150);             /* Balanced sage moss #496C5A (>5.5:1 contrast) */
+    --ink-light: oklch(62% 0.04 150);             /* Sage metadata #6F907E */
 
-    /* Primary Mint Accent */
-    --brand-primary: oklch(76% 0.16 165);         /* Mint action colour #2BE49C / #10E599 */
-    --brand-primary-deep: oklch(44% 0.16 165);    /* Emerald deep tone */
-    --brand-primary-light: oklch(94% 0.04 165);   /* Mint surface tint */
-    --brand-primary-glow: oklch(76% 0.16 165 / 0.28);
+    /* 10% High-Contrast Focal Accent: Signal Cyber Mint */
+    --brand-primary: oklch(78% 0.17 162);         /* Signal mint #12E896 */
+    --brand-primary-deep: oklch(36% 0.10 155);    /* Pine emerald deep tone #1F543B */
+    --brand-primary-light: oklch(94% 0.04 162);   /* Mint surface tint #E2FAF0 */
+    --brand-primary-glow: oklch(78% 0.17 162 / 0.28);
 
-    /* Human Approval Coral */
-    --coral-approval: oklch(65% 0.17 28);         /* Warm approval coral #FF7A66 */
-    --coral-approval-hover: oklch(60% 0.18 28);   /* Darker coral hover */
-    --coral-approval-bg: oklch(95% 0.03 28);      /* Light coral tint */
+    /* Terracotta Copper Approval Gate (Non-Primary) */
+    --coral-approval: oklch(64% 0.14 42);         /* Warm terracotta copper #C86241 */
+    --coral-approval-hover: oklch(58% 0.15 42);   /* Deep copper hover */
+    --coral-approval-bg: oklch(94% 0.04 42);      /* Copper tint */
 
-    /* Functional Semantic Accents */
-    --approval-amber: oklch(56% 0.14 85);
-    --approval-amber-bg: oklch(94% 0.04 85);
-    --success: oklch(76% 0.16 165);               /* Unified mint */
-    --success-bg: oklch(94% 0.04 165);
-    --danger: oklch(65% 0.17 28);                 /* Coral */
-    --danger-bg: oklch(95% 0.03 28);
+    /* Semantic Accents (Subtle & Non-Primary) */
+    --approval-amber: oklch(64% 0.14 42);
+    --approval-amber-bg: oklch(94% 0.04 42);
+    --success: oklch(78% 0.17 162);               /* Mint */
+    --success-bg: oklch(94% 0.04 162);
+    --danger: oklch(64% 0.14 42);                 /* Copper */
+    --danger-bg: oklch(94% 0.04 42);
 
-    /* Programmatic Relative Color Tokens */
-    --brand-hover: oklch(72% 0.17 165);
-    --brand-active: oklch(66% 0.18 165);
-    --brand-soft: oklch(94% 0.04 165);
-    --brand-border: oklch(84% 0.06 165);
+    /* Relative Programmatic Tokens */
+    --brand-hover: oklch(72% 0.18 162);
+    --brand-active: oklch(66% 0.18 162);
+    --brand-soft: oklch(94% 0.04 162);
+    --brand-border: oklch(84% 0.07 162);
 
-    /* Architectural Restrained Shadows */
-    --shadow-clay-card: 0 10px 30px -6px rgba(22, 25, 31, 0.08), 0 0 0 1px rgba(22, 25, 31, 0.06);
-    --shadow-clay-card-hover: 0 18px 42px -6px rgba(22, 25, 31, 0.14), 0 0 0 1px oklch(76% 0.16 165 / 0.35);
-    --shadow-clay-button-subtle: 0 2px 6px rgba(22, 25, 31, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85);
-    --shadow-clay-inset: inset 0 2px 4px rgba(22, 25, 31, 0.05);
+    /* Restrained Architectural Shadows (Zero Black) */
+    --shadow-clay-card: 0 10px 28px -6px rgba(22, 58, 41, 0.09), 0 0 0 1px rgba(22, 58, 41, 0.07);
+    --shadow-clay-card-hover: 0 18px 40px -6px rgba(22, 58, 41, 0.15), 0 0 0 1px oklch(78% 0.17 162 / 0.40);
+    --shadow-clay-button-subtle: 0 2px 6px rgba(22, 58, 41, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    --shadow-clay-inset: inset 0 2px 4px rgba(22, 58, 41, 0.06);
   }
 
   /* ----------------------------------------------------
-     Dark Mode Inversion (.dark)
-     Warm Deep Graphite Stage • Soft Platinum Chalk Text • Mint & Coral
+     Dark Theme Mode (.dark)
+     Deep Forest Spruce • Alabaster Chalk Text • Mint Focal Accent
+     Strictly Zero Black • Zero Black Shades • Zero Primary Colors
      ---------------------------------------------------- */
   .dark {
-    --canvas-cream: oklch(16% 0.02 255);          /* Deep graphite stage #14171D */
-    --surface-white: oklch(21% 0.025 255);        /* Elevated graphite panel #1B1E26 */
-    --surface-inset: oklch(14% 0.015 255);        /* Recessed well */
-    --surface-panel: oklch(24% 0.025 255);        /* Sub-panel */
-    --surface-dark: oklch(19% 0.025 255);
-    --border-subtle: oklch(29% 0.02 255);         /* Crisp wireframe hairline */
-    --border-strong: oklch(37% 0.025 255);
+    --canvas-cream: oklch(23% 0.06 155);          /* Deep forest spruce #132B20 (NOT black) */
+    --surface-white: oklch(27% 0.065 155);        /* Elevated pine panel #173829 */
+    --surface-inset: oklch(20% 0.05 155);         /* Recessed spruce well #0E2218 */
+    --surface-panel: oklch(31% 0.07 155);         /* Sub-panel surface #1D4432 */
+    --surface-dark: oklch(19% 0.045 155);
+    --border-subtle: oklch(34% 0.05 155);         /* Sage hairline border #25543F */
+    --border-strong: oklch(42% 0.06 155);
 
-    --ink: oklch(96% 0.005 90);                   /* Soft platinum chalk text */
-    --ink-muted: oklch(74% 0.015 255);            /* Readable slate */
-    --ink-light: oklch(56% 0.01 255);             /* Metadata labels */
+    --ink: oklch(96% 0.015 95);                   /* Warm alabaster chalk text #F6F3EB */
+    --ink-muted: oklch(78% 0.03 150);             /* Soft sage copy #A8C6B6 */
+    --ink-light: oklch(64% 0.04 150);             /* Pine metadata #7FA490 */
 
-    --brand-primary: oklch(78% 0.16 165);         /* Mint action */
-    --brand-primary-deep: oklch(70% 0.17 165);
-    --brand-primary-light: oklch(24% 0.04 165);
-    --brand-primary-glow: oklch(78% 0.16 165 / 0.28);
+    --brand-primary: oklch(78% 0.17 162);         /* Signal mint #12E896 */
+    --brand-primary-deep: oklch(70% 0.18 162);
+    --brand-primary-light: oklch(31% 0.07 155);
+    --brand-primary-glow: oklch(78% 0.17 162 / 0.30);
 
-    --coral-approval: oklch(68% 0.18 28);         /* Bright approval coral */
-    --coral-approval-hover: oklch(62% 0.19 28);
-    --coral-approval-bg: oklch(24% 0.04 28);
+    --coral-approval: oklch(68% 0.15 42);         /* Terracotta copper */
+    --coral-approval-hover: oklch(62% 0.16 42);
+    --coral-approval-bg: oklch(31% 0.07 42);
 
-    --approval-amber: oklch(76% 0.12 95);
-    --approval-amber-bg: oklch(22% 0.03 95);
-    --success: oklch(78% 0.16 165);
-    --success-bg: oklch(22% 0.04 165);
-    --danger: oklch(68% 0.18 28);
-    --danger-bg: oklch(24% 0.04 28);
+    --approval-amber: oklch(68% 0.15 42);
+    --approval-amber-bg: oklch(31% 0.07 42);
+    --success: oklch(78% 0.17 162);
+    --success-bg: oklch(31% 0.07 155);
+    --danger: oklch(68% 0.15 42);
+    --danger-bg: oklch(31% 0.07 42);
 
-    --brand-hover: oklch(84% 0.15 165);
-    --brand-active: oklch(72% 0.17 165);
-    --brand-soft: oklch(22% 0.04 165);
-    --brand-border: oklch(38% 0.08 165);
+    --brand-hover: oklch(84% 0.16 162);
+    --brand-active: oklch(72% 0.18 162);
+    --brand-soft: oklch(31% 0.07 155);
+    --brand-border: oklch(44% 0.09 162);
 
-    --shadow-clay-card: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.07);
-    --shadow-clay-card-hover: 0 24px 48px -6px rgba(0, 0, 0, 0.80), 0 0 0 1px oklch(78% 0.16 165 / 0.35);
-    --shadow-clay-button-subtle: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.10);
-    --shadow-clay-inset: inset 0 2px 6px rgba(0, 0, 0, 0.70);
+    --shadow-clay-card: 0 16px 36px -6px rgba(10, 28, 19, 0.55), 0 0 0 1px rgba(246, 243, 235, 0.08);
+    --shadow-clay-card-hover: 0 24px 48px -6px rgba(10, 28, 19, 0.70), 0 0 0 1px oklch(78% 0.17 162 / 0.40);
+    --shadow-clay-button-subtle: 0 4px 14px rgba(10, 28, 19, 0.40), inset 0 1px 0 rgba(246, 243, 235, 0.15);
+    --shadow-clay-inset: inset 0 2px 6px rgba(10, 28, 19, 0.60);
   }
 
   body {
@@ -155,7 +158,7 @@
     border: 1px solid var(--border-subtle);
   }
 
-  /* Responsive Type Rules from imp.md */
+  /* Responsive Type Rules */
   .font-fluid-hero {
     font-size: clamp(2.8rem, 4.8vw, 4.8rem);
     line-height: 0.98;
@@ -170,7 +173,7 @@
     font-family: var(--font-display), var(--font-sans), sans-serif;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar in pine tones */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

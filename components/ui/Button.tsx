@@ -18,11 +18,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      primary: 'bg-primary text-black font-extrabold shadow-clay-button hover:bg-brand-hover active:bg-brand-active border border-primary/50',
+      primary: 'bg-primary text-pine font-black shadow-clay-button hover:bg-brand-hover active:bg-brand-active border border-primary/50',
       secondary: 'bg-primary/10 text-primary hover:bg-primary/20 shadow-clay-button-subtle border border-primary/25',
       outline: 'bg-surface text-ink border border-border shadow-clay-button-subtle hover:bg-surface-panel hover:border-primary/40',
       danger: 'bg-danger text-white shadow-clay-button hover:bg-danger/90 border border-danger/40',
-      amber: 'bg-amber-approval text-black shadow-clay-button hover:bg-amber-approval/90 border border-amber-approval/40',
+      amber: 'bg-amber-approval text-pine font-black shadow-clay-button hover:bg-amber-approval/90 border border-amber-approval/40',
       ghost: 'bg-transparent text-ink-muted hover:text-ink hover:bg-surface',
     };
 

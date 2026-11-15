@@ -28,7 +28,7 @@ export function TactileSticker({
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scroll = window.scrollY;
-          // Smooth sinusoidal parallax float between -8px and +8px
+          // Smooth sinusoidal parallax float
           const floatOffset = Math.sin(scroll * 0.0035) * 6;
           setScrollYOffset(floatOffset);
           ticking = false;
@@ -59,17 +59,17 @@ export function TactileSticker({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative rounded-2xl p-2.5 bg-surface border border-primary/30 shadow-clay-card flex flex-col items-center gap-1.5 backdrop-blur-md">
+        <div className="relative rounded-2xl p-2.5 bg-surface border border-primary/40 shadow-clay-card flex flex-col items-center gap-1.5 backdrop-blur-md">
           {/* Animated GIF Container */}
-          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-canvas/80 border border-border flex items-center justify-center">
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-surface-inset border border-border flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/stickers/coding-agent.gif"
               alt="Autonomous Coding Agent Working"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Live Status Pulse */}
-            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/70 border border-primary/40 text-[9px] font-mono font-bold text-primary">
+            {/* Live Status Pulse in Pine and Mint (Zero Black) */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-pine text-mint border border-primary/40 text-[9px] font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>ACTIVE</span>
             </div>
@@ -98,17 +98,17 @@ export function TactileSticker({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative rounded-2xl p-2.5 bg-surface border border-primary/30 shadow-clay-card flex flex-col items-center gap-1.5 backdrop-blur-md">
+        <div className="relative rounded-2xl p-2.5 bg-surface border border-primary/40 shadow-clay-card flex flex-col items-center gap-1.5 backdrop-blur-md">
           {/* Animated GIF Container */}
-          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-canvas/80 border border-border flex items-center justify-center">
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-surface-inset border border-border flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/stickers/multitask-agent.gif"
               alt="Autonomous Multitask Coworker"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Live Status Pulse */}
-            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/70 border border-primary/40 text-[9px] font-mono font-bold text-primary">
+            {/* Live Status Pulse in Pine and Mint (Zero Black) */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-pine text-mint border border-primary/40 text-[9px] font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>DISPATCH</span>
             </div>
@@ -136,17 +136,17 @@ export function TactileSticker({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-surface border-2 border-dashed border-primary/50 shadow-clay-card flex items-center justify-center">
+        <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-surface border-2 border-dashed border-primary/60 shadow-clay-card flex items-center justify-center">
           <Image
             src="/stickers/autonomous-seal.svg"
             alt="Qwenton Autonomous Core Spec Sticker"
             width={128}
             height={128}
-            className="w-full h-full drop-shadow-md select-none pointer-events-none"
+            className="w-full h-full drop-shadow-sm select-none pointer-events-none"
             priority
           />
-          {/* Holographic Sheen Pill */}
-          <div className="absolute -bottom-2 px-2 py-0.5 rounded-full bg-primary text-black font-mono text-[9px] font-black uppercase tracking-wider shadow-xs border border-white/20">
+          {/* Holographic Sheen Pill (Zero Black - Pine text on Mint) */}
+          <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-primary text-pine font-mono text-[9px] font-extrabold uppercase tracking-wider shadow-xs border border-primary-deep/20">
             SPEC. 2026
           </div>
         </div>
@@ -162,21 +162,21 @@ export function TactileSticker({
           transform: currentTransform,
           transition: isHovered
             ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-            : 'transform 0.15s ease-out',
+            : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="tactile-sticker rounded-xl px-3.5 py-2.5 font-mono text-xs flex items-center gap-3">
+        <div className="tactile-sticker rounded-xl px-3.5 py-2.5 font-mono text-xs flex items-center gap-3 bg-surface border border-border">
           <div className="w-7 h-7 rounded-lg bg-surface-inset text-primary flex items-center justify-center shrink-0 border border-border">
             <Cpu className="w-4 h-4 text-primary" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-black text-ink tracking-tight uppercase text-[11px]">
+              <span className="font-extrabold text-ink tracking-tight uppercase text-[11px]">
                 FLEET-VERIFIED
               </span>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-primary/10 text-primary font-bold border border-primary/20">
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-primary/15 text-primary font-bold border border-primary/20">
                 100% DISPATCH
               </span>
             </div>
@@ -195,18 +195,18 @@ export function TactileSticker({
         transform: currentTransform,
         transition: isHovered
           ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-          : 'transform 0.15s ease-out',
+          : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="tactile-sticker rounded-2xl p-3 sm:px-4 sm:py-3 flex items-center gap-3 font-mono">
-        <div className="w-8 h-8 rounded-full bg-primary/15 border border-primary/30 text-primary flex items-center justify-center shrink-0">
+      <div className="tactile-sticker rounded-2xl p-3 sm:px-4 sm:py-3 flex items-center gap-3 font-mono bg-surface border border-border">
+        <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 text-primary flex items-center justify-center shrink-0">
           <ShieldCheck className="w-4 h-4" />
         </div>
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase text-primary tracking-wider">
+            <span className="text-[10px] font-extrabold uppercase text-primary tracking-wider">
               FLEET CERTIFIED
             </span>
             <span className="text-[9px] text-ink-muted font-bold">#QW-8821</span>

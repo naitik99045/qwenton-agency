@@ -1,59 +1,53 @@
 # Project State & Context
-**Last Updated:** November 15, 2026, 17:55 IST (v1.0.0 Editorial Product Theatre, 3D Bot Workspace & Interactive 4-Stage Workflow matching imp.md and refrence.png)
+**Last Updated:** November 15, 2026, 18:35 IST (v2.0.0 Black-Free Tri-Color Palette, Editorial Product Cockpit, 3D WebGL Canvas & Tactile Sticker Integration)
 
 ---
 
 ## 1. Project Overview
 
-**Qwenton** (`qwenton-agents`) is an autonomous AI coworker platform, marketing automation engine, and agency operating system. It features real-time **Instagram Reel Comment-to-DM lead generation**, multi-agent swarms, Telegram mobile push approvals, and zero-Docker serverless deployment on Vercel and Firebase.
+**Qwenton** (`qwenton-agents`) is an autonomous AI coworker platform, social lead generation engine, and agency operating system. It features real-time **Instagram Reel Comment-to-DM lead generation**, multi-coworker swarms, Telegram mobile push approvals, and zero-Docker serverless deployment on Vercel and Firebase.
 
 ### Operating Standards & Non-Negotiable Directives:
-- **Editorial Product Theatre & Clean Customer-Facing UI**:
-  - Implements the exact design, positioning, and visual composition from `imp.md` and `refrence.png`.
-  - Zero internal implementation or design methodology jargon displayed to visitors.
-  - Zero third-party AI vendor names ("Groq", "Grok", "Gemini", "OpenAI") across all pages.
-  - Zero emojis in body text and headlines.
-- **Palette & Typography**:
-  - Canvas: Warm paper `oklch(97% 0.012 90)` (`#F8F6F1`).
-  - Ink: Deep graphite `oklch(21% 0.025 255)` (`#16191F`).
-  - Surface: Softened graphite `oklch(27% 0.03 255)` (`#1E2229`) for dark product cards, pure chalk `oklch(100% 0 0)` for light cards.
-  - Action Mint: `oklch(76% 0.16 165)` (`#2BE49C` / `#10E599`).
-  - Human Approval Coral: `oklch(65% 0.17 28)` (`#FF7A66`).
-  - Typography: `Space Grotesk` (Display), `Plus Jakarta Sans` (Body & Controls), `JetBrains Mono` (System Labels).
+- **Black-Free & Primary-Free Tri-Color Contrast System (60-30-10 Solid Planes)**:
+  - **Zero Black / Shades of Black**: Absolute prohibition on `#000`, `text-black`, `bg-black`, and graphite/carbon tones across user pages.
+  - **Zero Primary Colors**: Absolute prohibition on raw red, blue, and yellow or their saturated primaries.
+  - **Solid Planes**: Zero `bg-gradient-*` gradients; all structural cards and buttons use solid matte planes.
+  - **3-Color Token Architecture**:
+    - **60% Dominant Base**: Warm Alabaster Oat / Linen (`oklch(96.5% 0.015 95)` / `#F6F3EB`), pure chalk panels (`#FDFAF6`), and biscuit wells (`#EDE7DC`).
+    - **30% Structure & High-Contrast Typography**: Deep Forest Pine (`oklch(29% 0.075 155)` / `#163A29`), providing deep visual weight and $>9:1$ WCAG AAA contrast against Alabaster without using black, plus balanced sage copy (`#496C5A`).
+    - **10% High-Contrast Focal Accent**: Signal Cyber Mint (`oklch(78% 0.17 162)` / `#12E896`) paired with Deep Pine typography (`text-[#163A29]`), plus warm Terracotta Copper (`oklch(64% 0.14 42)` / `#C86241`) for the human approval checkpoint.
+- **Physical Sticker & Vector Badging**:
+  - Embedded tactile vector seal (`/stickers/autonomous-seal.svg`) in Deep Pine and Signal Mint with micro-tilt interaction.
+  - Interactive coding coworker animation sticker (`/stickers/coding-agent.gif`) anchored in the hero cockpit.
+- **Pure Code & 3D WebGL Product Cockpit**:
+  - Removed all raster reference images (`hero-bot-stage.webp`, `refrence.png`).
+  - Integrated interactive 3D WebGL Three.js canvas in Deep Pine and Signal Mint materials with real-time mouse parallax.
+- **Human-in-the-Loop Approval Firewall**:
+  - Every external action (Instagram direct message, comment response) pauses at the approval checkpoint.
 
 ---
 
-## 2. Brainstormed Ideas & Architecture
+## 2. Architecture & Design Implementation
 
-### Top 3 Brainstormed Upgrades:
-1. **Photorealistic 3D Bot Workspace & Product Theatre (`components/landing/HeroBotTheatre.tsx`)**:
-   - Replaced abstract empty panels with the authentic 3D desktop robot coworker on a natural wooden workspace desk (with laptop, coffee mug "Less tasks. More growth. Q", and books), complete with subtle mouse parallax and 3 floating interactive product cards connected via curved dashed arrows.
-2. **Interactive 4-Stage Stepper & In-Card Coral Approval Gate (`components/landing/HeroWorkflowStepper.tsx`)**:
-   - Built a floating pill bar with 4 stages: `(1) Comment received`, `(2) Understand`, `(3) Human approval`, `(4) DM delivered`.
-   - Clicking `✓ Approve` on the coral pill inside the approval card triggers a live state transition to the delivered direct message card.
-3. **Structured Editorial Landing Page Flow (`app/page.tsx`)**:
-   - Implemented the 7-section flow specified in `imp.md`:
-     1. Hero Product Theatre with 3D Bot & Stepper
-     2. Product Proof: 3-step horizontal simulator (`Comment arrives → Human approves → DM delivered`)
-     3. Why Human Approval Matters: Asymmetric trust layout with coral gate
-     4. Agent Coworker Roster: 4 specialized agents with interactive selector
-     5. Growth Audit Sandbox: 5-second agency intelligence engine
-     6. Transparent 4-Tier Pricing & Clean FAQ Accordion
-     7. Compact Closing CTA & Clean Technical Footer
-
----
-
-## 3. Current Progress Audit
-
-### Completed Milestones:
-- **Design Tokens (`app/globals.css` & `tailwind.config.ts`)**: Warm paper canvas, deep graphite ink, action mint, and approval coral.
-- **Hero Theatre (`components/landing/HeroBotTheatre.tsx`)**: Desktop bot workspace, 3 floating UI cards, mouse parallax, in-card coral approval button.
-- **Workflow Stepper (`components/landing/HeroWorkflowStepper.tsx`)**: Floating 4-stage pill bar with active step synchronization.
-- **Landing Page Rebuild (`app/page.tsx`)**: Complete 7-section rebuild matching `refrence.png` and `imp.md`.
-- **Verification**: `npm run typecheck` passed (exit code `0`), `npm run build` compiled all 57 static/dynamic pages in 33.9s (exit code `0`).
+### Key Components:
+1. **Editorial Product Cockpit (`components/landing/EditorialProductCockpit.tsx`)**:
+   - WebGL 3D geometric coworker node (Pine core + Mint wireframe cage) with ambient and directional key lights.
+   - 3 floating interactive product cards in Deep Pine (`bg-pine text-alabaster`) connected by curved SVG dashed arrows:
+     1. Inbound comment card (`@maya: "Send me the growth guide"`).
+     2. Human approval card with drafted response, Edit button, and active Coral Approve button.
+     3. Delivered DM card with *Human approved* verification badge.
+   - Anchored physical animated sticker (`/stickers/coding-agent.gif`) and tactile autonomous seal.
+2. **Interactive 4-Stage Stepper (`components/landing/HeroWorkflowStepper.tsx`)**:
+   - Floating pill bar with 4 stages (`Comment received`, `Understand`, `Human approval`, `DM delivered`) in Alabaster and Deep Pine with Signal Mint active indicators.
+3. **Instant Audit Sandbox (`components/landing/InstantAuditSandbox.tsx`)**:
+   - Fast agency competitor audit engine fully styled in Deep Pine and Signal Mint with zero black text.
+4. **Structured Landing Page Flow (`app/page.tsx`)**:
+   - Complete 7-section user landing page adhering to the black-free tri-color contract, high-contrast typography, and accessible interactive controls.
 
 ---
 
-## 4. Pending Work & Next Steps
+## 3. Verification & Quality Assurance
 
-All phases in `.plan/roadmap.md` are actively tracked. Ready for next automated execution task.
+- **Typecheck**: `npm run typecheck` passes with zero errors (exit code `0`).
+- **Build**: `npm run build` compiles all 57 static and dynamic routes cleanly.
+- **Color Audit**: 0 occurrences of `text-black`, `bg-black`, `#000000`, or graphite tones across landing page and landing components.

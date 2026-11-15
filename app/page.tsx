@@ -26,7 +26,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { HeroBotTheatre } from '@/components/landing/HeroBotTheatre';
+import { EditorialProductCockpit } from '@/components/landing/EditorialProductCockpit';
 import { HeroWorkflowStepper } from '@/components/landing/HeroWorkflowStepper';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
 import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
@@ -173,10 +173,10 @@ export default function LandingPage() {
             <Link href="/signup">
               <Button
                 size="sm"
-                className="rounded-full font-extrabold px-5 py-2.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
+                className="rounded-full font-extrabold px-5 py-2.5 text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
               >
                 <span>Deploy Free Agents</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1 text-black" />
+                <ArrowRight className="w-3.5 h-3.5 ml-1 text-pine" />
               </Button>
             </Link>
           </div>
@@ -213,10 +213,10 @@ export default function LandingPage() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="rounded-full font-extrabold px-8 py-3.5 text-sm bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
+                  className="rounded-full font-extrabold px-8 py-3.5 text-sm bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
                 >
                   <span>Deploy free agents</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5 text-black" />
+                  <ArrowRight className="w-4 h-4 ml-1.5 text-pine" />
                 </Button>
               </Link>
               <a href="#how-it-works">
@@ -267,7 +267,7 @@ export default function LandingPage() {
 
           {/* Right Column (7 cols): The 3D Bot Theatre & Floating Product Cards */}
           <div className="lg:col-span-7">
-            <HeroBotTheatre activeStage={heroStage} setActiveStage={setHeroStage} />
+            <EditorialProductCockpit activeStage={heroStage} setActiveStage={setHeroStage} />
           </div>
         </div>
 
@@ -331,7 +331,7 @@ export default function LandingPage() {
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
-                      isActive ? 'bg-primary text-black' : 'bg-surface-inset text-ink-muted'
+                      isActive ? 'bg-primary text-pine' : 'bg-surface-inset text-ink-muted'
                     }`}
                   >
                     {tab.num}
@@ -380,17 +380,17 @@ export default function LandingPage() {
                   setProofApproved(true);
                   setProofStep('delivered');
                 }}
-                className="w-full py-3 rounded-full bg-primary hover:bg-brand-hover text-black font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2 border-0"
+                className="w-full py-3 rounded-full bg-primary hover:bg-brand-hover text-pine font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2 border-0"
               >
-                <Zap className="w-3.5 h-3.5 text-black" />
+                <Zap className="w-3.5 h-3.5 text-pine" />
                 <span>Simulate Complete Flow</span>
               </Button>
             </div>
           </div>
 
           {/* Live Deliverable Display Column */}
-          <div className="lg:col-span-7 bg-[#1C2027] text-white p-6 rounded-2xl border border-white/10 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs">
+          <div className="lg:col-span-7 bg-pine text-alabaster p-6 rounded-2xl border border-pine-surface/40 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-pine-surface/40 pb-3 text-xs">
               <span className="font-bold flex items-center gap-1.5">
                 <Instagram className="w-4 h-4 text-primary" /> Live Deliverable Preview
               </span>
@@ -401,8 +401,8 @@ export default function LandingPage() {
 
             {proofStep === 'comment' && (
               <div className="space-y-3 py-2">
-                <div className="text-xs text-white/60 font-mono">INBOUND REEL COMMENT:</div>
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-sm">
+                <div className="text-xs text-alabaster/60 font-mono">INBOUND REEL COMMENT:</div>
+                <div className="p-3 rounded-xl bg-pine-surface/40 border border-pine-surface/60 text-sm">
                   <strong className="text-primary font-mono">@follower:</strong> &quot;{proofComment}&quot;
                 </div>
                 <div className="text-xs text-primary font-mono flex items-center gap-1 pt-1">
@@ -416,7 +416,7 @@ export default function LandingPage() {
                 <div className="text-xs text-coral font-bold font-mono uppercase">
                   APPROVAL FIREWALL CHECKPOINT:
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/5 border border-coral/40 text-xs text-white/90 leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-pine-surface/40 border border-coral/40 text-xs text-alabaster/90 leading-relaxed">
                   <div>Hey there! 👋 Thanks for commenting on our Reel.</div>
                   <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
                 </div>
@@ -427,12 +427,12 @@ export default function LandingPage() {
                       setProofApproved(true);
                       setProofStep('delivered');
                     }}
-                    className="py-2 px-5 rounded-full bg-coral hover:bg-coral-hover text-black font-extrabold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-transform"
+                    className="py-2 px-5 rounded-full bg-coral hover:bg-coral-hover text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-transform"
                   >
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                     <span>Approve & Send</span>
                   </button>
-                  <span className="text-xs text-white/60">Paused for human operator sign-off</span>
+                  <span className="text-xs text-alabaster/60">Paused for human operator sign-off</span>
                 </div>
               </div>
             )}
@@ -442,11 +442,11 @@ export default function LandingPage() {
                 <div className="text-xs text-success font-bold font-mono uppercase flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-primary" /> DELIVERED DIRECTLY TO INBOX:
                 </div>
-                <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/30 text-xs text-white/95 leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/30 text-xs text-alabaster/95 leading-relaxed">
                   <div>Hey there! 👋 Thanks for commenting on our Reel.</div>
                   <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-white/60 pt-1 font-mono">
+                <div className="flex items-center justify-between text-xs text-alabaster/60 pt-1 font-mono">
                   <span>Latency: 320ms</span>
                   <span className="text-primary font-bold">✓ Human Approved & Verified</span>
                 </div>
@@ -462,8 +462,8 @@ export default function LandingPage() {
       <section className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Approval Panel (5 cols) */}
-          <div className="lg:col-span-5 bg-[#1C2027] text-white p-7 rounded-2xl border border-coral/50 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="lg:col-span-5 bg-pine text-alabaster p-7 rounded-2xl border border-coral/50 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-pine-surface/40 pb-3">
               <div className="flex items-center gap-2 text-coral font-bold text-xs uppercase tracking-wider font-mono">
                 <ShieldAlert className="w-4 h-4" />
                 <span>Approval Firewall</span>
@@ -473,8 +473,8 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <div className="space-y-2 text-xs text-white/80 leading-relaxed font-sans">
-              <div className="font-bold text-white text-sm">
+            <div className="space-y-2 text-xs text-alabaster/80 leading-relaxed font-sans">
+              <div className="font-bold text-alabaster text-sm">
                 No unsupervised external actions. Ever.
               </div>
               <p>
@@ -610,7 +610,7 @@ export default function LandingPage() {
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                         isSelected
-                          ? 'bg-primary text-black'
+                          ? 'bg-primary text-pine'
                           : 'bg-surface-inset text-ink-muted'
                       }`}
                     >
@@ -674,7 +674,7 @@ export default function LandingPage() {
 
             <div className="pt-2 flex items-center justify-between">
               <Link href="/agents/new">
-                <Button size="sm" className="rounded-full font-extrabold px-6 py-2.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0">
+                <Button size="sm" className="rounded-full font-extrabold px-6 py-2.5 text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0">
                   Deploy this Coworker →
                 </Button>
               </Link>
@@ -818,7 +818,7 @@ export default function LandingPage() {
 
           {/* Tier 3: Pro Coworker (Recommended) */}
           <div className="clay-surface p-6 bg-surface border-2 border-primary flex flex-col justify-between hover:shadow-clay-card-hover transition-all relative">
-            <div className="absolute -top-3 right-4 bg-primary text-black font-mono text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
+            <div className="absolute -top-3 right-4 bg-primary text-pine font-mono text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
               RECOMMENDED
             </div>
             <div className="space-y-4">
@@ -860,7 +860,7 @@ export default function LandingPage() {
             </div>
             <div className="pt-6">
               <Link href="/billing">
-                <Button size="sm" className="w-full rounded-full font-extrabold text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button border-0">
+                <Button size="sm" className="w-full rounded-full font-extrabold text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0">
                   Upgrade to Pro
                 </Button>
               </Link>
@@ -962,15 +962,15 @@ export default function LandingPage() {
           9. CLOSING CONVERSION BANNER (Compact & Focused)
           ---------------------------------------------------- */}
       <section className="max-w-6xl mx-auto px-6 py-12 w-full">
-        <div className="p-8 sm:p-12 rounded-hero bg-[#1C2027] text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl border border-white/10">
+        <div className="p-8 sm:p-12 rounded-hero bg-pine text-alabaster flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl border border-pine-surface/40">
           <div className="space-y-3 max-w-xl">
             <span className="text-[11px] font-mono uppercase tracking-wider text-primary font-bold">
               GET STARTED IN 60 SECONDS
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-display">
+            <h2 className="text-2xl sm:text-3xl font-black text-alabaster tracking-tight font-display">
               Put your first AI coworker to work.
             </h2>
-            <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-alabaster/80 leading-relaxed font-normal">
               Activate your free Normal plan. Automate 2 Instagram Reels, connect a private Telegram bot, and run 50 autonomous workflows per month with full human-in-the-loop protection.
             </p>
           </div>
@@ -979,17 +979,17 @@ export default function LandingPage() {
             <Link href="/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto rounded-full font-extrabold px-8 py-3.5 text-xs bg-primary text-black hover:bg-brand-hover shadow-clay-button uppercase tracking-wider border-0"
+                className="w-full sm:w-auto rounded-full font-extrabold px-8 py-3.5 text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button uppercase tracking-wider border-0"
               >
                 <span>Deploy free agents</span>
-                <ArrowRight className="w-4 h-4 ml-1 text-black" />
+                <ArrowRight className="w-4 h-4 ml-1 text-pine" />
               </Button>
             </Link>
             <a href="#how-it-works" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto rounded-full font-bold px-6 py-3.5 text-xs border-white/20 text-white hover:bg-white/10"
+                className="w-full sm:w-auto rounded-full font-bold px-6 py-3.5 text-xs border-alabaster/30 text-alabaster hover:bg-alabaster/10"
               >
                 See how approval works
               </Button>
