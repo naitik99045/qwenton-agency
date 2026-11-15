@@ -22,7 +22,7 @@ export function HeroWorkflowStepper({
 
   return (
     <div
-      className={`w-full max-w-6xl mx-auto px-4 sm:px-6 py-3 rounded-full bg-white/90 dark:bg-pine/90 backdrop-blur-md border border-border shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 select-none ${className}`}
+      className={`w-full max-w-6xl mx-auto px-4 sm:px-6 py-3 rounded-full bg-white/90 dark:bg-[#111C35]/90 backdrop-blur-md border border-border shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 select-none ${className}`}
     >
       <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 lg:gap-8 w-full md:w-auto">
         {steps.map((step, idx) => {
@@ -38,7 +38,7 @@ export function HeroWorkflowStepper({
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
                   isActive
-                    ? 'bg-primary text-pine shadow-md scale-105'
+                    ? 'bg-primary text-white shadow-md scale-105 ring-2 ring-orchid/40'
                     : 'bg-surface-inset text-ink-muted group-hover:bg-border/60'
                 }`}
               >

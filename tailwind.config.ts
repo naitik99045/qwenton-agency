@@ -32,20 +32,28 @@ const config: Config = {
           deep: 'var(--brand-primary-deep)',
           light: 'var(--brand-primary-light)',
         },
-        pine: {
-          DEFAULT: '#163A29',
-          deep: '#0E261B',
-          light: '#1F523A',
+        navy: {
+          DEFAULT: '#0B1120',
+          deep: '#070C16',
+          surface: '#111C35',
+          elevated: '#172342',
+          border: '#1E2E54',
+          light: '#F8FAFC',
         },
-        alabaster: {
-          DEFAULT: '#F6F3EB',
-          light: '#FDFAF6',
-          dark: '#EDE7DC',
+        ice: {
+          DEFAULT: '#38BDF8',
+          frost: '#7DD3FC',
+          light: '#F1F5F9',
+          card: '#E0F2FE',
+          border: 'rgba(56, 189, 248, 0.25)',
         },
-        mint: {
-          DEFAULT: '#12E896',
-          hover: '#0FD287',
-          soft: '#E2FAF0',
+        orchid: {
+          DEFAULT: '#D946EF',
+          hover: '#E879F9',
+          deep: '#A855F7',
+          vibrant: '#C084FC',
+          soft: 'rgba(217, 70, 239, 0.12)',
+          glow: '0 8px 24px -4px rgba(217, 70, 239, 0.4)',
         },
         coral: {
           DEFAULT: 'var(--coral-approval)',

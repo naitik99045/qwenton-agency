@@ -26,7 +26,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { EditorialProductCockpit } from '@/components/landing/EditorialProductCockpit';
+import { ProductCommandCockpit } from '@/components/landing/ProductCommandCockpit';
 import { HeroWorkflowStepper } from '@/components/landing/HeroWorkflowStepper';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
 import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
@@ -173,10 +173,10 @@ export default function LandingPage() {
             <Link href="/signup">
               <Button
                 size="sm"
-                className="rounded-full font-extrabold px-5 py-2.5 text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
+                className="rounded-full font-extrabold px-5 py-2.5 text-xs bg-primary text-white hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
               >
                 <span>Deploy Free Agents</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1 text-pine" />
+                <ArrowRight className="w-3.5 h-3.5 ml-1 text-white" />
               </Button>
             </Link>
           </div>
@@ -184,28 +184,28 @@ export default function LandingPage() {
       </header>
 
       {/* ----------------------------------------------------
-          2. HERO SECTION: 12-COL PRODUCT THEATRE (refrence.png)
+          2. HERO SECTION: 12-COL PRODUCT THEATRE (Midnight Navy + Ice + Orchid)
           ---------------------------------------------------- */}
       <section className="max-w-7xl mx-auto px-6 pt-12 pb-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-10">
           {/* Left Column (5 cols): Positioning, Headlines, Actions & Trust Row */}
           <div className="lg:col-span-5 space-y-6">
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-[11px] font-semibold border border-border">
-              <span className="w-2 h-2 rounded-full bg-primary" />
-              <span className="tracking-wider uppercase">
-                AUTONOMOUS WORKFORCE • SOCIAL • LEADS • GROWTH • ON AUTOPILOT
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-[11px] font-semibold border border-border shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-orchid animate-pulse" />
+              <span className="tracking-wider uppercase text-ice-frost font-bold">
+                AUTONOMOUS WORKFORCE • SOCIAL • LEADS • ZERO BUSYWORK
               </span>
             </div>
 
-            {/* Master Headline from imp.md and refrence.png */}
+            {/* Master Headline */}
             <h1 className="font-fluid-hero font-black text-ink tracking-tight font-display">
               AI coworkers that turn attention into approved action.
             </h1>
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-ink-muted leading-relaxed max-w-xl font-normal">
-              Capture Instagram leads, understand intent, draft the right reply, and get human approval — so you can grow without the busywork.
+              Capture Instagram leads, understand intent, draft the right reply, and get human approval — so you can grow without handing control to a black box.
             </p>
 
             {/* CTAs */}
@@ -213,10 +213,10 @@ export default function LandingPage() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="rounded-full font-extrabold px-8 py-3.5 text-sm bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
+                  className="rounded-full font-extrabold px-8 py-3.5 text-sm bg-primary text-white hover:bg-brand-hover shadow-clay-button border-0 transition-transform active:scale-95"
                 >
                   <span>Deploy free agents</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5 text-pine" />
+                  <ArrowRight className="w-4 h-4 ml-1.5 text-white" />
                 </Button>
               </Link>
               <a href="#how-it-works">
@@ -234,7 +234,7 @@ export default function LandingPage() {
             {/* Trust Micro-Row */}
             <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/80">
               <div className="flex items-start gap-2.5">
-                <Users className="w-4 h-4 text-ink-muted mt-0.5 shrink-0" />
+                <Users className="w-4 h-4 text-ice-frost mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-black text-ink font-mono">10,000+</div>
                   <div className="text-[11px] text-ink-muted leading-tight">
@@ -244,7 +244,7 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <Zap className="w-4 h-4 text-ink-muted mt-0.5 shrink-0" />
+                <Zap className="w-4 h-4 text-orchid mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-black text-ink font-mono">24/7</div>
                   <div className="text-[11px] text-ink-muted leading-tight">
@@ -254,7 +254,7 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-ink-muted mt-0.5 shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-black text-ink font-mono">You&apos;re in control</div>
                   <div className="text-[11px] text-ink-muted leading-tight">
@@ -265,9 +265,9 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Right Column (7 cols): The 3D Bot Theatre & Floating Product Cards */}
+          {/* Right Column (7 cols): The Product Command Cockpit (No Spinning Black Holes) */}
           <div className="lg:col-span-7">
-            <EditorialProductCockpit activeStage={heroStage} setActiveStage={setHeroStage} />
+            <ProductCommandCockpit activeStage={heroStage} setActiveStage={setHeroStage} />
           </div>
         </div>
 
@@ -331,12 +331,12 @@ export default function LandingPage() {
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
-                      isActive ? 'bg-primary text-pine' : 'bg-surface-inset text-ink-muted'
+                      isActive ? 'bg-primary text-white' : 'bg-surface-inset text-ink-muted'
                     }`}
                   >
                     {tab.num}
                   </span>
-                  {isActive && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+                  {isActive && <span className="w-2 h-2 rounded-full bg-orchid animate-pulse" />}
                 </div>
                 <div className="text-sm font-bold text-ink font-display">{tab.title}</div>
                 <div className="text-xs text-ink-muted mt-0.5">{tab.desc}</div>
@@ -357,7 +357,7 @@ export default function LandingPage() {
                 type="text"
                 value={proofKeyword}
                 onChange={(e) => setProofKeyword(e.target.value.toUpperCase())}
-                className="w-full text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-orchid focus:outline-none focus:ring-1 focus:ring-orchid"
               />
             </div>
 
@@ -369,7 +369,7 @@ export default function LandingPage() {
                 type="text"
                 value={proofComment}
                 onChange={(e) => setProofComment(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-ink focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-ink focus:outline-none focus:ring-1 focus:ring-orchid"
               />
             </div>
 
@@ -380,32 +380,32 @@ export default function LandingPage() {
                   setProofApproved(true);
                   setProofStep('delivered');
                 }}
-                className="w-full py-3 rounded-full bg-primary hover:bg-brand-hover text-pine font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2 border-0"
+                className="w-full py-3 rounded-full bg-primary hover:bg-brand-hover text-white font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2 border-0"
               >
-                <Zap className="w-3.5 h-3.5 text-pine" />
+                <Zap className="w-3.5 h-3.5 text-white" />
                 <span>Simulate Complete Flow</span>
               </Button>
             </div>
           </div>
 
-          {/* Live Deliverable Display Column */}
-          <div className="lg:col-span-7 bg-pine text-alabaster p-6 rounded-2xl border border-pine-surface/40 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-pine-surface/40 pb-3 text-xs">
+          {/* Live Deliverable Display Column (Midnight Navy + Ice + Orchid) */}
+          <div className="lg:col-span-7 bg-[#111C35] text-ice p-6 rounded-2xl border border-white/10 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs">
               <span className="font-bold flex items-center gap-1.5">
-                <Instagram className="w-4 h-4 text-primary" /> Live Deliverable Preview
+                <Instagram className="w-4 h-4 text-pink-400" /> Live Deliverable Preview
               </span>
-              <span className="font-mono text-primary text-[11px] font-bold">
+              <span className="font-mono text-orchid text-[11px] font-bold">
                 ● STATUS: {proofStep.toUpperCase()}
               </span>
             </div>
 
             {proofStep === 'comment' && (
               <div className="space-y-3 py-2">
-                <div className="text-xs text-alabaster/60 font-mono">INBOUND REEL COMMENT:</div>
-                <div className="p-3 rounded-xl bg-pine-surface/40 border border-pine-surface/60 text-sm">
-                  <strong className="text-primary font-mono">@follower:</strong> &quot;{proofComment}&quot;
+                <div className="text-xs text-ink-muted font-mono">INBOUND REEL COMMENT:</div>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-sm">
+                  <strong className="text-orchid font-mono">@follower:</strong> &quot;{proofComment}&quot;
                 </div>
-                <div className="text-xs text-primary font-mono flex items-center gap-1 pt-1">
+                <div className="text-xs text-emerald-400 font-mono flex items-center gap-1 pt-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Trigger keyword &quot;{proofKeyword}&quot; identified
                 </div>
               </div>
@@ -413,11 +413,11 @@ export default function LandingPage() {
 
             {proofStep === 'approval' && (
               <div className="space-y-3 py-2">
-                <div className="text-xs text-coral font-bold font-mono uppercase">
+                <div className="text-xs text-amber-400 font-bold font-mono uppercase">
                   APPROVAL FIREWALL CHECKPOINT:
                 </div>
-                <div className="p-3.5 rounded-xl bg-pine-surface/40 border border-coral/40 text-xs text-alabaster/90 leading-relaxed">
-                  <div>Hey there! 👋 Thanks for commenting on our Reel.</div>
+                <div className="p-3.5 rounded-xl bg-white/5 border border-amber-500/40 text-xs text-ice leading-relaxed">
+                  <div>Hey there! Thanks for commenting on our Reel.</div>
                   <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
                 </div>
                 <div className="flex items-center gap-2 pt-1">
@@ -427,28 +427,28 @@ export default function LandingPage() {
                       setProofApproved(true);
                       setProofStep('delivered');
                     }}
-                    className="py-2 px-5 rounded-full bg-coral hover:bg-coral-hover text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-transform"
+                    className="py-2 px-5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-transform"
                   >
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                     <span>Approve & Send</span>
                   </button>
-                  <span className="text-xs text-alabaster/60">Paused for human operator sign-off</span>
+                  <span className="text-xs text-ink-muted">Paused for human operator sign-off</span>
                 </div>
               </div>
             )}
 
             {proofStep === 'delivered' && (
               <div className="space-y-3 py-2">
-                <div className="text-xs text-success font-bold font-mono uppercase flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-primary" /> DELIVERED DIRECTLY TO INBOX:
+                <div className="text-xs text-emerald-400 font-bold font-mono uppercase flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" /> DELIVERED DIRECTLY TO INBOX:
                 </div>
-                <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/30 text-xs text-alabaster/95 leading-relaxed">
-                  <div>Hey there! 👋 Thanks for commenting on our Reel.</div>
+                <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-xs text-ice leading-relaxed">
+                  <div>Hey there! Thanks for commenting on our Reel.</div>
                   <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-alabaster/60 pt-1 font-mono">
-                  <span>Latency: 320ms</span>
-                  <span className="text-primary font-bold">✓ Human Approved & Verified</span>
+                <div className="flex items-center justify-between text-xs text-ink-muted pt-1 font-mono">
+                  <span>Latency: 280ms</span>
+                  <span className="text-emerald-400 font-bold">✓ Human Approved & Verified</span>
                 </div>
               </div>
             )}
@@ -462,19 +462,19 @@ export default function LandingPage() {
       <section className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Approval Panel (5 cols) */}
-          <div className="lg:col-span-5 bg-pine text-alabaster p-7 rounded-2xl border border-coral/50 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-pine-surface/40 pb-3">
-              <div className="flex items-center gap-2 text-coral font-bold text-xs uppercase tracking-wider font-mono">
+          <div className="lg:col-span-5 bg-[#111C35] text-ice p-7 rounded-2xl border border-amber-500/40 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider font-mono">
                 <ShieldAlert className="w-4 h-4" />
                 <span>Approval Firewall</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-coral/20 text-coral font-mono text-[10px] font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold">
                 GATE: ENFORCED
               </span>
             </div>
 
-            <div className="space-y-2 text-xs text-alabaster/80 leading-relaxed font-sans">
-              <div className="font-bold text-alabaster text-sm">
+            <div className="space-y-2 text-xs text-ink-muted leading-relaxed font-sans">
+              <div className="font-bold text-ice text-sm">
                 No unsupervised external actions. Ever.
               </div>
               <p>
@@ -610,7 +610,7 @@ export default function LandingPage() {
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                         isSelected
-                          ? 'bg-primary text-pine'
+                          ? 'bg-primary text-white'
                           : 'bg-surface-inset text-ink-muted'
                       }`}
                     >
@@ -674,7 +674,7 @@ export default function LandingPage() {
 
             <div className="pt-2 flex items-center justify-between">
               <Link href="/agents/new">
-                <Button size="sm" className="rounded-full font-extrabold px-6 py-2.5 text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0">
+                <Button size="sm" className="rounded-full font-extrabold px-6 py-2.5 text-xs bg-primary text-white hover:bg-brand-hover shadow-clay-button border-0">
                   Deploy this Coworker →
                 </Button>
               </Link>
@@ -818,7 +818,7 @@ export default function LandingPage() {
 
           {/* Tier 3: Pro Coworker (Recommended) */}
           <div className="clay-surface p-6 bg-surface border-2 border-primary flex flex-col justify-between hover:shadow-clay-card-hover transition-all relative">
-            <div className="absolute -top-3 right-4 bg-primary text-pine font-mono text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
+            <div className="absolute -top-3 right-4 bg-primary text-white font-mono text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
               RECOMMENDED
             </div>
             <div className="space-y-4">
@@ -860,7 +860,7 @@ export default function LandingPage() {
             </div>
             <div className="pt-6">
               <Link href="/billing">
-                <Button size="sm" className="w-full rounded-full font-extrabold text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button border-0">
+                <Button size="sm" className="w-full rounded-full font-extrabold text-xs bg-primary text-white hover:bg-brand-hover shadow-clay-button border-0">
                   Upgrade to Pro
                 </Button>
               </Link>
@@ -959,18 +959,18 @@ export default function LandingPage() {
       </section>
 
       {/* ----------------------------------------------------
-          9. CLOSING CONVERSION BANNER (Compact & Focused)
+          9. CLOSING CONVERSION BANNER (Midnight Navy + Ice + Orchid)
           ---------------------------------------------------- */}
       <section className="max-w-6xl mx-auto px-6 py-12 w-full">
-        <div className="p-8 sm:p-12 rounded-hero bg-pine text-alabaster flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl border border-pine-surface/40">
+        <div className="p-8 sm:p-12 rounded-hero bg-[#111C35] text-ice flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl border border-white/10">
           <div className="space-y-3 max-w-xl">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-primary font-bold">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-orchid font-bold">
               GET STARTED IN 60 SECONDS
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-alabaster tracking-tight font-display">
+            <h2 className="text-2xl sm:text-3xl font-black text-ice tracking-tight font-display">
               Put your first AI coworker to work.
             </h2>
-            <p className="text-xs sm:text-sm text-alabaster/80 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-ink-muted leading-relaxed font-normal">
               Activate your free Normal plan. Automate 2 Instagram Reels, connect a private Telegram bot, and run 50 autonomous workflows per month with full human-in-the-loop protection.
             </p>
           </div>
@@ -979,17 +979,17 @@ export default function LandingPage() {
             <Link href="/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto rounded-full font-extrabold px-8 py-3.5 text-xs bg-primary text-pine hover:bg-brand-hover shadow-clay-button uppercase tracking-wider border-0"
+                className="w-full sm:w-auto rounded-full font-extrabold px-8 py-3.5 text-xs bg-primary text-white hover:bg-brand-hover shadow-clay-button uppercase tracking-wider border-0"
               >
                 <span>Deploy free agents</span>
-                <ArrowRight className="w-4 h-4 ml-1 text-pine" />
+                <ArrowRight className="w-4 h-4 ml-1 text-white" />
               </Button>
             </Link>
             <a href="#how-it-works" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto rounded-full font-bold px-6 py-3.5 text-xs border-alabaster/30 text-alabaster hover:bg-alabaster/10"
+                className="w-full sm:w-auto rounded-full font-bold px-6 py-3.5 text-xs border-white/20 text-ice hover:bg-white/10"
               >
                 See how approval works
               </Button>

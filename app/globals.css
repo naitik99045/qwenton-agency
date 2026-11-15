@@ -4,103 +4,97 @@
 
 @layer base {
   /* ----------------------------------------------------
-     QWENTON-UI TRI-COLOR SYSTEM (60-30-10 Solid Contract)
-     Strictly Zero Black • Zero Black Shades • Zero Primary Colors
-     1. Base (60%): Warm Alabaster Oat / Linen (#F6F3EB)
-     2. Structure & Ink (30%): Deep Forest Pine (#163A29)
-     3. Focal Accent (10%): Signal Cyber Mint (#12E896)
-     Strictly Zero Gradients • Zero Pure Red/Blue/Yellow
+     UI UX PRO MAX: MIDNIGHT NAVY + ICE + ORCHID PALETTE
+     Midnight Navy: #0B1120 / #111C35
+     Glacial Ice: #F1F5F9 / #38BDF8 / #F8FAFC
+     Electric Orchid: #D946EF / #C084FC / #9333EA
      ---------------------------------------------------- */
   :root {
-    /* 60% Dominant Base Canvas & Panels */
-    --canvas-cream: oklch(96.5% 0.015 95);        /* Warm alabaster oat #F6F3EB */
-    --surface-white: oklch(99.5% 0.005 95);       /* Pure cream chalk #FDFAF6 */
-    --surface-inset: oklch(94% 0.02 95);          /* Muted biscuit well #EDE7DC */
-    --surface-panel: oklch(97.5% 0.012 95);       /* Sub-panel surface #F4EFE6 */
-    --surface-dark: oklch(29% 0.075 155);         /* Deep forest pine card #163A29 (NOT black) */
-    --border-subtle: oklch(88% 0.025 100);        /* Hairline oat border #DCD6C8 */
-    --border-strong: oklch(76% 0.035 110);        /* Defined boundary #C4BAA7 */
+    /* Light Mode: Glacial Frost & Midnight Slate */
+    --canvas-cream: #F8FAFC;                      /* Luminous Glacial Ice Canvas */
+    --surface-white: #FFFFFF;                     /* Pure Ice Surface Card */
+    --surface-inset: #F1F5F9;                     /* Ice Inset Well */
+    --surface-panel: #FFFFFF;                     /* Sub-panel surface */
+    --surface-dark: #0B1120;                      /* Midnight Navy Card */
+    --border-subtle: #E2E8F0;                     /* Crisp border */
+    --border-strong: #CBD5E1;                     /* Defined boundary */
 
-    /* 30% Structure & High-Contrast Typography (Deep Forest Pine - NOT black) */
-    --ink: oklch(29% 0.075 155);                  /* Deep forest pine #163A29 (>9:1 contrast) */
-    --ink-muted: oklch(48% 0.05 150);             /* Balanced sage moss #496C5A (>5.5:1 contrast) */
-    --ink-light: oklch(62% 0.04 150);             /* Sage metadata #6F907E */
+    /* Typography */
+    --ink: #0F172A;                               /* Deep Midnight Navy Text */
+    --ink-muted: #64748B;                         /* Slate Muted Copy */
+    --ink-light: #94A3B8;                         /* Metadata */
 
-    /* 10% High-Contrast Focal Accent: Signal Cyber Mint */
-    --brand-primary: oklch(78% 0.17 162);         /* Signal mint #12E896 */
-    --brand-primary-deep: oklch(36% 0.10 155);    /* Pine emerald deep tone #1F543B */
-    --brand-primary-light: oklch(94% 0.04 162);   /* Mint surface tint #E2FAF0 */
-    --brand-primary-glow: oklch(78% 0.17 162 / 0.28);
+    /* Primary Accent: Orchid */
+    --brand-primary: #9333EA;                     /* Vibrant Orchid */
+    --brand-primary-deep: #7E22CE;                /* Deep Orchid */
+    --brand-primary-light: #FAF5FF;               /* Soft Orchid Tint */
+    --brand-primary-glow: rgba(147, 51, 234, 0.25);
 
-    /* Terracotta Copper Approval Gate (Non-Primary) */
-    --coral-approval: oklch(64% 0.14 42);         /* Warm terracotta copper #C86241 */
-    --coral-approval-hover: oklch(58% 0.15 42);   /* Deep copper hover */
-    --coral-approval-bg: oklch(94% 0.04 42);      /* Copper tint */
+    /* Human Approval Gate (Amber Checkpoint) */
+    --coral-approval: #F59E0B;                    /* Amber Approval Gate */
+    --coral-approval-hover: #D97706;              /* Amber Hover */
+    --coral-approval-bg: #FEF3C7;                 /* Amber Tint */
 
-    /* Semantic Accents (Subtle & Non-Primary) */
-    --approval-amber: oklch(64% 0.14 42);
-    --approval-amber-bg: oklch(94% 0.04 42);
-    --success: oklch(78% 0.17 162);               /* Mint */
-    --success-bg: oklch(94% 0.04 162);
-    --danger: oklch(64% 0.14 42);                 /* Copper */
-    --danger-bg: oklch(94% 0.04 42);
+    --approval-amber: #F59E0B;
+    --approval-amber-bg: #FEF3C7;
+    --success: #10B981;
+    --success-bg: #ECFDF5;
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
 
-    /* Relative Programmatic Tokens */
-    --brand-hover: oklch(72% 0.18 162);
-    --brand-active: oklch(66% 0.18 162);
-    --brand-soft: oklch(94% 0.04 162);
-    --brand-border: oklch(84% 0.07 162);
+    --brand-hover: #A855F7;
+    --brand-active: #7E22CE;
+    --brand-soft: #FAF5FF;
+    --brand-border: #E9D5FF;
 
-    /* Restrained Architectural Shadows (Zero Black) */
-    --shadow-clay-card: 0 10px 28px -6px rgba(22, 58, 41, 0.09), 0 0 0 1px rgba(22, 58, 41, 0.07);
-    --shadow-clay-card-hover: 0 18px 40px -6px rgba(22, 58, 41, 0.15), 0 0 0 1px oklch(78% 0.17 162 / 0.40);
-    --shadow-clay-button-subtle: 0 2px 6px rgba(22, 58, 41, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.90);
-    --shadow-clay-inset: inset 0 2px 4px rgba(22, 58, 41, 0.06);
+    --shadow-clay-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.05);
+    --shadow-clay-card-hover: 0 12px 30px -4px rgba(147, 51, 234, 0.15), 0 0 0 1px rgba(147, 51, 234, 0.35);
+    --shadow-clay-button-subtle: 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    --shadow-clay-inset: inset 0 2px 4px rgba(15, 23, 42, 0.04);
   }
 
   /* ----------------------------------------------------
-     Dark Theme Mode (.dark)
-     Deep Forest Spruce • Alabaster Chalk Text • Mint Focal Accent
-     Strictly Zero Black • Zero Black Shades • Zero Primary Colors
+     Dark Mode (.dark): Cinematic Midnight Navy + Ice + Electric Orchid
      ---------------------------------------------------- */
   .dark {
-    --canvas-cream: oklch(23% 0.06 155);          /* Deep forest spruce #132B20 (NOT black) */
-    --surface-white: oklch(27% 0.065 155);        /* Elevated pine panel #173829 */
-    --surface-inset: oklch(20% 0.05 155);         /* Recessed spruce well #0E2218 */
-    --surface-panel: oklch(31% 0.07 155);         /* Sub-panel surface #1D4432 */
-    --surface-dark: oklch(19% 0.045 155);
-    --border-subtle: oklch(34% 0.05 155);         /* Sage hairline border #25543F */
-    --border-strong: oklch(42% 0.06 155);
+    --canvas-cream: #0B1120;                      /* Deep Midnight Navy Canvas */
+    --surface-white: #111C35;                     /* Elevated Midnight Panel */
+    --surface-inset: #172342;                     /* Recessed Midnight Well */
+    --surface-panel: #1A2748;                     /* Sub-panel Surface */
+    --surface-dark: #070C16;                      /* Deepest Navy */
+    --border-subtle: rgba(226, 232, 240, 0.12);   /* Luminous hairline border */
+    --border-strong: rgba(226, 232, 240, 0.22);
 
-    --ink: oklch(96% 0.015 95);                   /* Warm alabaster chalk text #F6F3EB */
-    --ink-muted: oklch(78% 0.03 150);             /* Soft sage copy #A8C6B6 */
-    --ink-light: oklch(64% 0.04 150);             /* Pine metadata #7FA490 */
+    --ink: #F1F5F9;                               /* Luminous Ice White Text */
+    --ink-muted: #94A3B8;                         /* Glacial Slate Muted */
+    --ink-light: #64748B;                         /* Metadata */
 
-    --brand-primary: oklch(78% 0.17 162);         /* Signal mint #12E896 */
-    --brand-primary-deep: oklch(70% 0.18 162);
-    --brand-primary-light: oklch(31% 0.07 155);
-    --brand-primary-glow: oklch(78% 0.17 162 / 0.30);
+    /* Electric Orchid Action */
+    --brand-primary: #D946EF;                     /* Electric Orchid */
+    --brand-primary-deep: #C084FC;
+    --brand-primary-light: rgba(217, 70, 239, 0.15);
+    --brand-primary-glow: rgba(217, 70, 239, 0.35);
 
-    --coral-approval: oklch(68% 0.15 42);         /* Terracotta copper */
-    --coral-approval-hover: oklch(62% 0.16 42);
-    --coral-approval-bg: oklch(31% 0.07 42);
+    --coral-approval: #F59E0B;                    /* Amber Approval Gate */
+    --coral-approval-hover: #D97706;
+    --coral-approval-bg: rgba(245, 158, 11, 0.15);
 
-    --approval-amber: oklch(68% 0.15 42);
-    --approval-amber-bg: oklch(31% 0.07 42);
-    --success: oklch(78% 0.17 162);
-    --success-bg: oklch(31% 0.07 155);
-    --danger: oklch(68% 0.15 42);
-    --danger-bg: oklch(31% 0.07 42);
+    --approval-amber: #F59E0B;
+    --approval-amber-bg: rgba(245, 158, 11, 0.15);
+    --success: #34D399;
+    --success-bg: rgba(52, 211, 153, 0.15);
+    --danger: #F87171;
+    --danger-bg: rgba(248, 113, 113, 0.15);
 
-    --brand-hover: oklch(84% 0.16 162);
-    --brand-active: oklch(72% 0.18 162);
-    --brand-soft: oklch(31% 0.07 155);
-    --brand-border: oklch(44% 0.09 162);
+    --brand-hover: #E879F9;
+    --brand-active: #C084FC;
+    --brand-soft: rgba(217, 70, 239, 0.15);
+    --brand-border: rgba(217, 70, 239, 0.35);
 
-    --shadow-clay-card: 0 16px 36px -6px rgba(10, 28, 19, 0.55), 0 0 0 1px rgba(246, 243, 235, 0.08);
-    --shadow-clay-card-hover: 0 24px 48px -6px rgba(10, 28, 19, 0.70), 0 0 0 1px oklch(78% 0.17 162 / 0.40);
-    --shadow-clay-button-subtle: 0 4px 14px rgba(10, 28, 19, 0.40), inset 0 1px 0 rgba(246, 243, 235, 0.15);
-    --shadow-clay-inset: inset 0 2px 6px rgba(10, 28, 19, 0.60);
+    --shadow-clay-card: 0 16px 36px -6px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(226, 232, 240, 0.10);
+    --shadow-clay-card-hover: 0 24px 48px -6px rgba(217, 70, 239, 0.25), 0 0 0 1px rgba(217, 70, 239, 0.45);
+    --shadow-clay-button-subtle: 0 4px 14px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --shadow-clay-inset: inset 0 2px 6px rgba(0, 0, 0, 0.40);
   }
 
   body {

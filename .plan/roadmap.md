@@ -2,34 +2,42 @@
 **Status:** Active
 **Instruction for Execution Agent:** Pick the first unchecked `[ ]` task in the current active phase, implement it completely without placeholders, verify it, and mark it `[x]`.
 
-## Phase 1: Black-Free Tri-Color Architecture & Token Inversion
-- [x] **Task 1.1: Tri-Color Palette Formulation (`app/globals.css`, `tailwind.config.ts`)**
-  - *Action:* Replaced carbon/black shades with 60% Alabaster Oat (`#F6F3EB`), 30% Deep Forest Pine (`#163A29`), and 10% Signal Cyber Mint (`#12E896`) + Terracotta Copper (`#C86241`). Solid planes only, zero gradients.
+## Phase 1: UI UX Pro Max System & Palette Inversion
+- [x] **Task 1.1: Design System Persist with ui-ux-pro-max**
+  - *Action:* Execute `python search.py --design-system --persist` from `ui-ux-pro-max` plugin and establish `MASTER.md`.
+  - *Target Files:* `design-system/qwenton-agents/MASTER.md`
+  - *Done When:* Master rules define Midnight Navy (`#0B1120`), Ice (`#F1F5F9`, `#38BDF8`), and Electric Orchid (`#D946EF`).
+- [x] **Task 1.2: Design Tokens & CSS Variable Realignment**
+  - *Action:* Realign `app/globals.css` and `tailwind.config.ts` with Midnight Navy, Ice, and Orchid tokens for both light and dark modes.
   - *Target Files:* `app/globals.css`, `tailwind.config.ts`
-  - *Done When:* Design tokens are updated without black or primary colors and contrast $>7:1$.
-- [x] **Task 1.2: Purge Black Classes Across Components**
-  - *Action:* Replaced all instances of `text-black` on buttons and chips with `text-pine font-black` (`#163A29`) or `text-alabaster`.
-  - *Target Files:* `components/ui/Button.tsx`, `components/landing/InstantAuditSandbox.tsx`, `components/landing/HeroWorkflowStepper.tsx`
-  - *Done When:* Zero instances of `text-black` or `bg-black` in landing components.
+  - *Done When:* Design tokens compile with zero black hole/pine remnants and full contrast compliance.
 
-## Phase 2: Vector & Physical Sticker Assets
-- [x] **Task 2.1: Tactile Vector Seal & GIF Sticker**
-  - *Action:* Updated `public/stickers/autonomous-seal.svg` with Pine and Mint fills. Embedded `/stickers/coding-agent.gif` and micro-tilt sticker component.
-  - *Target Files:* `public/stickers/autonomous-seal.svg`, `components/landing/TactileSticker.tsx`
-  - *Done When:* Physical sticker elements render crisply on the landing page.
+## Phase 2: Purge 3D Spinning Black Hole Wireframe & Build Command Cockpit
+- [x] **Task 2.1: Purge Rotating 3D Wireframe Scene**
+  - *Action:* Remove `components/landing/EditorialProductCockpit.tsx` with the 3D rotating wireframe icosahedron.
+  - *Target Files:* `components/landing/EditorialProductCockpit.tsx`
+  - *Done When:* File removed and zero rotating wireframe scenes remain.
+- [x] **Task 2.2: Authentic Product Command Cockpit (`components/landing/ProductCommandCockpit.tsx`)**
+  - *Action:* Implement authentic 4-stage interactive product desk with live channel status, telemetry inspector, editable response, and inline approval controls.
+  - *Target Files:* `components/landing/ProductCommandCockpit.tsx`, `app/page.tsx`
+  - *Done When:* Cockpit displays live interactive stages with zero spinning decorative 3D objects.
 
-## Phase 3: Pure Code 3D WebGL Cockpit
-- [x] **Task 3.1: 3D Three.js Geometric Coworker & Product Stage (`components/landing/EditorialProductCockpit.tsx`)**
-  - *Action:* Removed raster reference images (`hero-bot-stage.webp`, `refrence.png`). Built interactive 3D WebGL Three.js geometric node in Deep Pine and Signal Mint with mouse parallax, connected to 3 floating interactive product cards.
-  - *Target Files:* `components/landing/EditorialProductCockpit.tsx`, `app/page.tsx`
-  - *Done When:* Cockpit renders with full interactivity and zero raster asset bloat.
+## Phase 3: Landing Page & Component Styling
+- [x] **Task 3.1: Landing Page Master Integration (`app/page.tsx`)**
+  - *Action:* Update navigation, hero section, 3-step proof simulator, approval firewall, agent roster, audit sandbox, and closing banner with Midnight Navy, Ice, and Orchid.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* Landing page renders cleanly with responsive layout and zero build errors.
+- [x] **Task 3.2: Button & Interactive Controls Update (`components/ui/Button.tsx`)**
+  - *Action:* Re-style button variants with Electric Orchid primary, Glacial Ice secondary, and Amber approval.
+  - *Target Files:* `components/ui/Button.tsx`
+  - *Done When:* Buttons render with high contrast and smooth micro-interactions.
 
 ## Phase 4: Production Verification & Git Sync
-- [x] **Task 4.1: Typecheck & Production Build Verification**
-  - *Action:* Run `npm run typecheck` and `npm run build` to confirm clean compilation across all 57 routes.
+- [x] **Task 4.1: Production Build Verification & Typecheck**
+  - *Action:* Run `npm run typecheck` and `npm run build` across all 57 routes.
   - *Target Files:* Workspace
   - *Done When:* Exit code 0 on both typecheck and build.
 - [x] **Task 4.2: Git Commit & Remote Synchronization**
-  - *Action:* Stage and commit all redesigned UI assets, components, and documentation, and push to `origin/main` on GitHub.
-  - *Target Files:* Git workspace
+  - *Action:* Commit all changes with descriptive commit message and push to `origin/main` on GitHub.
+  - *Target Files:* Git repository
   - *Done When:* All changes are committed and pushed cleanly to `origin/main`.

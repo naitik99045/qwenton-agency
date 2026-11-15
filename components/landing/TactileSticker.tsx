@@ -68,8 +68,8 @@ export function TactileSticker({
               alt="Autonomous Coding Agent Working"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Live Status Pulse in Pine and Mint (Zero Black) */}
-            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-pine text-mint border border-primary/40 text-[9px] font-mono font-bold">
+            {/* Live Status Pulse in Midnight Navy and Ice */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#0B1120] text-ice border border-primary/40 text-[9px] font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>ACTIVE</span>
             </div>
@@ -107,8 +107,8 @@ export function TactileSticker({
               alt="Autonomous Multitask Coworker"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Live Status Pulse in Pine and Mint (Zero Black) */}
-            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-pine text-mint border border-primary/40 text-[9px] font-mono font-bold">
+            {/* Live Status Pulse in Midnight Navy and Ice */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#0B1120] text-ice border border-primary/40 text-[9px] font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>DISPATCH</span>
             </div>
@@ -145,8 +145,8 @@ export function TactileSticker({
             className="w-full h-full drop-shadow-sm select-none pointer-events-none"
             priority
           />
-          {/* Holographic Sheen Pill (Zero Black - Pine text on Mint) */}
-          <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-primary text-pine font-mono text-[9px] font-extrabold uppercase tracking-wider shadow-xs border border-primary-deep/20">
+          {/* Holographic Sheen Pill (White text on Orchid) */}
+          <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-primary text-white font-mono text-[9px] font-extrabold uppercase tracking-wider shadow-xs border border-primary-deep/20">
             SPEC. 2026
           </div>
         </div>
