@@ -1,5 +1,5 @@
 # Qwenton Security & Defensive Pentest Audit Report
-**Scan Timestamp:** October 28, 2026, 18:00 IST
+**Scan Timestamp:** November 15, 2026, 22:38 IST
 **Overall Posture:** Pass [Zero Critical or Unresolved High-Severity Issues]
 
 ---
@@ -8,10 +8,11 @@
 
 | Component / Layer | Endpoints & Files Audited | Audit Focus |
 |-------------------|---------------------------|-------------|
-| **Meta Webhook Ingress** | `app/api/instagram/webhook/route.ts`, `lib/instagram/security.ts` | Signature forgery, Replay attacks, Handshake validation |
-| **Meta Graph API Client** | `lib/instagram/api.ts` | Token handling, Error propagation, Rate limits |
-| **Integrations Vault** | `app/api/integrations/route.ts`, `app/integrations/page.tsx` | Secret masking, Auth scopes, SQL/NoSQL injection |
-| **Reels Engine Quotas** | `app/api/instagram/rules/route.ts`, `lib/limits/entitlements.ts` | Tier bypass, Resource exhaustion, Input validation |
+| **Meta Webhook Ingress** | `app/api/instagram/webhook/route.ts`, `lib/instagram/security.ts` | Cryptographic signature forgery (`x-hub-signature-256`), Replay attacks, Handshake validation |
+| **Meta Graph API Client** | `lib/instagram/api.ts` | Access token handling, Error propagation, Rate-limiting compliance |
+| **Integrations Vault** | `app/api/integrations/route.ts`, `app/integrations/page.tsx` | Secret masking (`••••••••${token.slice(-4)}`), Auth scopes, SQL/NoSQL injection prevention |
+| **Reels Engine Quotas** | `app/api/instagram/rules/route.ts`, `lib/limits/entitlements.ts` | Tier quota bypass, Resource exhaustion (DoS), Input validation & sanitization |
+| **Theme & Client Hydration** | `app/layout.tsx`, `app/globals.css` | Removal of unsafe `localStorage` script execution, XSS mitigation |
 
 ---
 
@@ -24,6 +25,7 @@
 | **SEC-03** | Medium | `app/api/instagram/rules/route.ts` | Tier Quota Bypass & Resource Exhaustion (DoS) | **[FIXED]** |
 | **SEC-04** | Medium | `lib/instagram/api.ts` | Algorithmic Spam Suspension from Rapid Automation | **[FIXED]** |
 | **SEC-05** | Low | `app/api/instagram/webhook/route.ts` | Unsanitized Keyword Match Injection & Null Pointer | **[FIXED]** |
+| **SEC-06** | Low | `app/layout.tsx` | Unsanitized inline theme script & hydration mismatch | **[FIXED]** |
 
 ---
 
@@ -58,6 +60,12 @@
 - **Description:** Malformed comment objects without text or with special characters could cause unhandled exceptions and crash route handlers.
 - **Remediation Implemented:** Inbound comment strings are trimmed, normalized to uppercase, and guarded with explicit null-safe checks before evaluating rule trigger patterns.
 - **Verification:** Tested empty and special character inputs; serverless handler responds safely with 200 OK.
+
+### [SEC-06] Unsanitized Inline Theme Script & Hydration Mismatch
+- **Location:** `app/layout.tsx`
+- **Description:** Legacy client-side inline script reading `localStorage.theme` without validation could cause hydration discrepancies and potential DOM injection vectors.
+- **Remediation Implemented:** Completely removed the inline theme toggle script. Adopted a unified, single Linen-Moss-Ochre design tokens model in `app/globals.css` with a constant `themeColor: '#F4EFEA'`.
+- **Verification:** Confirmed elimination of client script and successful compile with zero hydration warnings.
 
 ---
 

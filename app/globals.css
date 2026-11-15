@@ -4,97 +4,55 @@
 
 @layer base {
   /* ----------------------------------------------------
-     UI UX PRO MAX: MIDNIGHT NAVY + ICE + ORCHID PALETTE
-     Midnight Navy: #0B1120 / #111C35
-     Glacial Ice: #F1F5F9 / #38BDF8 / #F8FAFC
-     Electric Orchid: #D946EF / #C084FC / #9333EA
+     UNIFIED 60-30-10 PALETTE: LINEN (60%) + MOSS (30%) + OCHRE (10%)
+     Universally Harmonic • Single Harmonious Theme (No Jarring Mode Shifts)
+     1. Base Canvas (60%): Warm Organic Linen (#F4EFEA / #FFFFFF)
+     2. Structure & Typography (30%): Deep Botanical Moss (#202D1E / #4A5E44)
+     3. Focal Accent (10%): Radiant Harvest Ochre (#C88018)
      ---------------------------------------------------- */
-  :root {
-    /* Light Mode: Glacial Frost & Midnight Slate */
-    --canvas-cream: #F8FAFC;                      /* Luminous Glacial Ice Canvas */
-    --surface-white: #FFFFFF;                     /* Pure Ice Surface Card */
-    --surface-inset: #F1F5F9;                     /* Ice Inset Well */
-    --surface-panel: #FFFFFF;                     /* Sub-panel surface */
-    --surface-dark: #0B1120;                      /* Midnight Navy Card */
-    --border-subtle: #E2E8F0;                     /* Crisp border */
-    --border-strong: #CBD5E1;                     /* Defined boundary */
-
-    /* Typography */
-    --ink: #0F172A;                               /* Deep Midnight Navy Text */
-    --ink-muted: #64748B;                         /* Slate Muted Copy */
-    --ink-light: #94A3B8;                         /* Metadata */
-
-    /* Primary Accent: Orchid */
-    --brand-primary: #9333EA;                     /* Vibrant Orchid */
-    --brand-primary-deep: #7E22CE;                /* Deep Orchid */
-    --brand-primary-light: #FAF5FF;               /* Soft Orchid Tint */
-    --brand-primary-glow: rgba(147, 51, 234, 0.25);
-
-    /* Human Approval Gate (Amber Checkpoint) */
-    --coral-approval: #F59E0B;                    /* Amber Approval Gate */
-    --coral-approval-hover: #D97706;              /* Amber Hover */
-    --coral-approval-bg: #FEF3C7;                 /* Amber Tint */
-
-    --approval-amber: #F59E0B;
-    --approval-amber-bg: #FEF3C7;
-    --success: #10B981;
-    --success-bg: #ECFDF5;
-    --danger: #EF4444;
-    --danger-bg: #FEF2F2;
-
-    --brand-hover: #A855F7;
-    --brand-active: #7E22CE;
-    --brand-soft: #FAF5FF;
-    --brand-border: #E9D5FF;
-
-    --shadow-clay-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.05);
-    --shadow-clay-card-hover: 0 12px 30px -4px rgba(147, 51, 234, 0.15), 0 0 0 1px rgba(147, 51, 234, 0.35);
-    --shadow-clay-button-subtle: 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.90);
-    --shadow-clay-inset: inset 0 2px 4px rgba(15, 23, 42, 0.04);
-  }
-
-  /* ----------------------------------------------------
-     Dark Mode (.dark): Cinematic Midnight Navy + Ice + Electric Orchid
-     ---------------------------------------------------- */
+  :root,
   .dark {
-    --canvas-cream: #0B1120;                      /* Deep Midnight Navy Canvas */
-    --surface-white: #111C35;                     /* Elevated Midnight Panel */
-    --surface-inset: #172342;                     /* Recessed Midnight Well */
-    --surface-panel: #1A2748;                     /* Sub-panel Surface */
-    --surface-dark: #070C16;                      /* Deepest Navy */
-    --border-subtle: rgba(226, 232, 240, 0.12);   /* Luminous hairline border */
-    --border-strong: rgba(226, 232, 240, 0.22);
+    /* 60% Linen Base & Surfaces */
+    --canvas-cream: #F4EFEA;                      /* Warm Organic Linen Canvas */
+    --surface-white: #FFFFFF;                     /* Pure Linen Surface Card */
+    --surface-inset: #EBE3D7;                     /* Recessed Linen Well */
+    --surface-panel: #FAF7F2;                     /* Soft Linen Sub-panel */
+    --surface-dark: #202D1E;                      /* Deep Botanical Moss Dark Surface */
+    --border-subtle: #DCD3C5;                     /* Quiet Linen Hairline Border */
+    --border-strong: #C5B9A5;                     /* Defined Moss-Linen Boundary */
 
-    --ink: #F1F5F9;                               /* Luminous Ice White Text */
-    --ink-muted: #94A3B8;                         /* Glacial Slate Muted */
-    --ink-light: #64748B;                         /* Metadata */
+    /* 30% Deep Botanical Moss Typography & Structure */
+    --ink: #202D1E;                               /* Deep Moss Primary Ink (>12:1 contrast) */
+    --ink-muted: #4A5E44;                         /* Balanced Sage Moss Copy (>5.4:1 contrast) */
+    --ink-light: #6E8566;                         /* Subtle Moss Metadata */
 
-    /* Electric Orchid Action */
-    --brand-primary: #D946EF;                     /* Electric Orchid */
-    --brand-primary-deep: #C084FC;
-    --brand-primary-light: rgba(217, 70, 239, 0.15);
-    --brand-primary-glow: rgba(217, 70, 239, 0.35);
+    /* 10% Radiant Harvest Ochre Accent */
+    --brand-primary: #C88018;                     /* Radiant Harvest Ochre */
+    --brand-primary-deep: #9E620D;                /* Deep Amber Ochre */
+    --brand-primary-light: #FDF4E7;               /* Soft Ochre Tint */
+    --brand-primary-glow: rgba(200, 128, 24, 0.25);
 
-    --coral-approval: #F59E0B;                    /* Amber Approval Gate */
-    --coral-approval-hover: #D97706;
-    --coral-approval-bg: rgba(245, 158, 11, 0.15);
+    /* Human Approval Gate (Burnt Ochre Checkpoint) */
+    --coral-approval: #D96B27;                    /* Burnt Ochre Gate */
+    --coral-approval-hover: #BF5616;              /* Burnt Ochre Hover */
+    --coral-approval-bg: #FDF0E7;                 /* Tint */
 
-    --approval-amber: #F59E0B;
-    --approval-amber-bg: rgba(245, 158, 11, 0.15);
-    --success: #34D399;
-    --success-bg: rgba(52, 211, 153, 0.15);
-    --danger: #F87171;
-    --danger-bg: rgba(248, 113, 113, 0.15);
+    --approval-amber: #C88018;
+    --approval-amber-bg: #FDF4E7;
+    --success: #3E7B45;
+    --success-bg: #EFF7F0;
+    --danger: #C53B27;
+    --danger-bg: #FDF2F0;
 
-    --brand-hover: #E879F9;
-    --brand-active: #C084FC;
-    --brand-soft: rgba(217, 70, 239, 0.15);
-    --brand-border: rgba(217, 70, 239, 0.35);
+    --brand-hover: #DB9326;
+    --brand-active: #A8680E;
+    --brand-soft: #FDF4E7;
+    --brand-border: #E8C88A;
 
-    --shadow-clay-card: 0 16px 36px -6px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(226, 232, 240, 0.10);
-    --shadow-clay-card-hover: 0 24px 48px -6px rgba(217, 70, 239, 0.25), 0 0 0 1px rgba(217, 70, 239, 0.45);
-    --shadow-clay-button-subtle: 0 4px 14px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    --shadow-clay-inset: inset 0 2px 6px rgba(0, 0, 0, 0.40);
+    --shadow-clay-card: 0 4px 20px -2px rgba(32, 45, 30, 0.07), 0 0 0 1px rgba(32, 45, 30, 0.06);
+    --shadow-clay-card-hover: 0 14px 32px -4px rgba(200, 128, 24, 0.20), 0 0 0 1px rgba(200, 128, 24, 0.40);
+    --shadow-clay-button-subtle: 0 2px 6px rgba(32, 45, 30, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    --shadow-clay-inset: inset 0 2px 4px rgba(32, 45, 30, 0.05);
   }
 
   body {

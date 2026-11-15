@@ -24,10 +24,7 @@ const mono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F6F8FA' },
-    { media: '(prefers-color-scheme: dark)', color: '#131418' },
-  ],
+  themeColor: '#F4EFEA',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -39,6 +36,14 @@ export const metadata: Metadata = {
   title: 'QWENTON — Autonomous Coworker Platform & Social Lead Engine',
   description: 'Deploy, operate, and control specialized AI coworkers with built-in human approval firewalls and Instagram Reel Comment-to-DM virality.',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/favicon.png',
+    shortcut: '/favicon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -63,23 +68,8 @@ export default function RootLayout({
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var saved = localStorage.getItem('theme');
-                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (saved === 'dark' || (!saved && prefersDark)) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
       </head>
       <body className="h-full font-sans bg-canvas text-ink antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden">
         {children}

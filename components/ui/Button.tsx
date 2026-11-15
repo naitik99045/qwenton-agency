@@ -19,10 +19,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary: 'bg-primary text-white font-bold shadow-clay-button hover:bg-brand-hover active:bg-brand-active border border-primary/40',
-      secondary: 'bg-ice/10 text-ice hover:bg-ice/20 border border-ice/30 font-semibold shadow-clay-button-subtle',
+      secondary: 'bg-moss/10 text-moss hover:bg-moss/20 border border-moss/25 font-bold shadow-clay-button-subtle',
       outline: 'bg-surface text-ink border border-border shadow-clay-button-subtle hover:bg-surface-panel hover:border-primary/40',
       danger: 'bg-danger text-white shadow-clay-button hover:bg-danger/90 border border-danger/40',
-      amber: 'bg-amber-approval text-[#0B1120] font-black shadow-clay-button hover:bg-amber-approval/90 border border-amber-approval/40',
+      amber: 'bg-coral text-white font-black shadow-clay-button hover:bg-coral-hover border border-coral/40',
       ghost: 'bg-transparent text-ink-muted hover:text-ink hover:bg-surface',
     };
 
