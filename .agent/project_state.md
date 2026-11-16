@@ -1,5 +1,5 @@
 # Project State & Context
-**Last Updated:** November 15, 2026, 22:38 IST (v3.1.0 Universal Linen 60% + Moss 30% + Ochre 10% Palette • Pricing Table Purged • Favicon Deployed • Security & Review Audit Passed)
+**Last Updated:** November 16, 2026, 12:32 IST (v3.2.0 Hero Table Purged • Interactive Hero Sticker & GIF Stage Deployed • Linen 60% + Moss 30% + Ochre 10%)
 
 ---
 
@@ -10,50 +10,43 @@
 ### Operating Standards & Non-Negotiable Directives:
 - **Palette: Linen (60%) + Moss (30%) + Ochre (10%)**:
   - **Linen (60%)**: Natural warm canvas `--canvas-cream` (`#F4EFEA`), elevated panels `#FAF7F2`, pristine card surfaces `#FFFFFF`, and structural borders `#DCD3C5`.
-  - **Moss (30%)**: Deep botanical text & structural headers `--ink` (`#202D1E`, >12:1 WCAG AAA contrast against linen), sage body prose `--ink-muted` (`#4A5E44`, >5.4:1 contrast), and dark command desk surface `#182416`.
+  - **Moss (30%)**: Deep botanical text & structural headers `--ink` (`#202D1E`, >12:1 WCAG AAA contrast against linen), sage body prose `--ink-muted` (`#4A5E44`, >5.4:1 contrast).
   - **Ochre (10%)**: Radiant golden ochre `--brand-primary` (`#C88018`), hover state `#DB9326`, and coral approval trigger `#D96B27`.
 - **Universal Palette (No Mode Discrepancy)**:
   - Eliminated dark/light mode switches, theme toggles, and localStorage theme sync scripts.
-  - A single harmonious palette provides consistent visual warmth and optimal typography readability across every device without system-preference flash.
-- **Zero AI Slop & Purged Pricing Table**:
-  - Completely purged the pricing comparison table / tier grid from `app/page.tsx`, eliminating layout clutter and complying with Trope #5.
-  - Removed decorative 3D spinning black hole wireframe scenes.
-  - Real, interactive [ProductCommandCockpit.tsx](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/ProductCommandCockpit.tsx) showing real pipeline telemetry, keyword matching, interactive Telegram approval gate, and verified DM delivery receipt.
+- **Zero AI Slop, Zero Neon, Zero 3D Rotating Objects**:
+  - Purged the table-like control cockpit from the hero section.
+  - No 3D rotating spheres, cubes, or neon wireframes.
+  - Deployed [HeroStickerStage.tsx](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/HeroStickerStage.tsx) featuring a tactile animated AI coworker GIF mascot, interactive physical sticker notes (Reel Inbound Comment, Human Approval Stamp Seal, AI Triage Engine, DM Direct Delivery Receipt), and persona switcher (Multitask Lead Agent vs. Deep Focus Agent).
 - **Favicon Integration**:
   - Deployed `favicon.png` across `public/favicon.png`, `public/favicon.ico`, `app/icon.png`, and `app/favicon.ico`.
-  - Metadata configured in `app/layout.tsx` for cross-platform tab and bookmark rendering.
 
 ---
 
 ## 2. Brainstormed Ideas & Architecture
 
 ### Top 3 Brainstormed Upgrades:
-1. **Linen (60%) + Moss (30%) + Ochre (10%) Universal Harmony**:
-   - Engineered an earthy, editorial color system replacing cold synthetic neons with organic elegance.
-   - Text contrast exceeds WCAG AAA (12.8:1 for `#202D1E` on `#F4EFEA`), offering fatigue-free readability.
-2. **Product Command Cockpit (`components/landing/ProductCommandCockpit.tsx`)**:
-   - Replaced decorative wireframes with an authentic 4-step interactive pipeline cockpit (`01 Inbound Comment`, `02 AI Semantic Triage`, `03 Approval Gate`, `04 Direct Delivery`).
-   - Integrated live pipeline telemetry, confidence ratings, inline reply editor, and one-tap approval dispatch in deep moss styling.
-3. **Streamlined Conversion Architecture**:
-   - Eliminated the intimidating 4-column pricing table in favor of immediate workflow engagement and free trial conversion.
-   - Preserved interactive coworker fleet selector and live 5-second competitor growth audit sandbox.
+1. **Interactive Hero Sticker Stage ([HeroStickerStage.tsx](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/HeroStickerStage.tsx))**:
+   - Replaced the bulky dark control table with a tactile, delightful 2D sticker stage.
+   - Features animated AI coworker GIF mascot (`/stickers/multitask-agent.gif` and `/stickers/coding-agent.gif`) with dual persona switching.
+   - 4 interactive tactile stickers with hover tilt physics, click reactions, and real-time step highlighting synchronized with the workflow stepper.
+2. **Organic Editorial Color Harmony (Linen 60% + Moss 30% + Ochre 10%)**:
+   - Retained strict zero-neon and zero-black constraints. High-contrast typography (>12.8:1 WCAG AAA).
+3. **Frictionless Conversion Architecture**:
+   - Purged all intimidating tables and dense configuration grids from the top of the funnel.
+   - Highlights the core value proposition: Instagram Reel lead capture with 1-tap human approval.
 
 ---
 
 ## 3. Current Progress
 
-- **Design Tokens (`app/globals.css`, `tailwind.config.ts`)**: Implemented `linen`, `moss`, and `ochre` tokens with unified root variables.
-- **Favicon (`public/favicon.png`, `app/icon.png`, `app/layout.tsx`)**: Deployed across public and app roots; linked in metadata.
-- **Pricing Table Removal (`app/page.tsx`)**: Completely excised Section 5 (pricing tiers) and `#pricing` nav anchor.
-- **Theme Toggle Elimination (`app/layout.tsx`, `app/page.tsx`)**: Dark/light switcher script and UI toggle removed.
-- **Cockpit & Components (`components/landing/ProductCommandCockpit.tsx`, `components/landing/HeroWorkflowStepper.tsx`, `components/ui/Button.tsx`)**: Restyled with Linen, Moss, and Ochre tokens.
-- **Design Review (`qwenton-review`)**: 28/28 negative tropes avoided; skeleton loaders and legal footer links confirmed.
-- **Security Audit (`qwenton-pentest`)**: Verified HMAC-SHA256 signature verification, encrypted token storage, tier quotas, and spintax delivery.
+- **Hero Sticker Stage (`components/landing/HeroStickerStage.tsx`)**: Created and integrated into `app/page.tsx`.
+- **Table Purge (`app/page.tsx`)**: Removed `ProductCommandCockpit` from the hero right column; replaced with `HeroStickerStage`.
+- **Sticker Token Unification (`components/landing/TactileSticker.tsx`)**: Updated status badges to Linen, Moss, and Ochre tokens.
+- **Production Verification**: Zero TypeScript errors (`tsc --noEmit`), Next.js 59 routes production compilation verified.
 
 ---
 
 ## 4. Pending Work & Next Steps
 
-- **GitHub Deployment Status:** **DEPLOYED & PUSHED** to `origin/main` (commit `b2f3008`).
-- **Hardened .gitignore Status:** Active and enforced across all commits (zero credentials, `.env*`, `.next/`, or `node_modules` leakage).
-- **Production Verification:** Zero TypeScript compilation errors (`tsc --noEmit`), Next.js 59 routes static optimization verified with exit code 0.
+- **GitHub Deployment:** Ready to stage, commit, and push `HeroStickerStage.tsx` and updated landing page to `origin/main`.

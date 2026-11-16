@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { ProductCommandCockpit } from '@/components/landing/ProductCommandCockpit';
+import { HeroStickerStage } from '@/components/landing/HeroStickerStage';
 import { HeroWorkflowStepper } from '@/components/landing/HeroWorkflowStepper';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
 import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
@@ -259,9 +259,9 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Right Column (7 cols): The Product Command Cockpit (No Spinning Black Holes) */}
+          {/* Right Column (7 cols): The Hero Sticker & GIF Stage (Zero Tables, Zero Neon, Zero 3D) */}
           <div className="lg:col-span-7">
-            <ProductCommandCockpit activeStage={heroStage} setActiveStage={setHeroStage} />
+            <HeroStickerStage activeStage={heroStage} setActiveStage={setHeroStage} />
           </div>
         </div>
 

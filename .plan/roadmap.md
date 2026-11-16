@@ -21,10 +21,6 @@
   - *Action:* Deploy `favicon.png` to `public/favicon.png`, `public/favicon.ico`, `app/icon.png`, and `app/favicon.ico`. Configure in `app/layout.tsx` metadata.
   - *Target Files:* `app/layout.tsx`, `public/favicon.png`, `app/icon.png`
   - *Done When:* Favicon appears across all browser tabs and mobile bookmark manifests.
-- [x] **Task 2.3: Realign Cockpit & Interactive Stepper**
-  - *Action:* Style [ProductCommandCockpit.tsx](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/ProductCommandCockpit.tsx), [HeroWorkflowStepper.tsx](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/landing/HeroWorkflowStepper.tsx), and [Button.tsx](file:///C:/Users/hp/Desktop/QWENTON-AGENTS/components/ui/Button.tsx) with Linen, Moss, and Ochre.
-  - *Target Files:* `components/landing/ProductCommandCockpit.tsx`, `components/landing/HeroWorkflowStepper.tsx`, `components/ui/Button.tsx`
-  - *Done When:* Cockpit displays live 4-step pipeline telemetry with radiant Ochre action controls.
 
 ## Phase 3: Defensive Auditing & Compliance Verification
 - [x] **Task 3.1: Anti-Trope Design Review (`qwenton-review`)**
@@ -36,10 +32,16 @@
   - *Target Files:* `.agent/security_report.md`, `app/api/*`
   - *Done When:* Security report generated with zero high/critical unpatched vulnerabilities.
 
-## Phase 4: Production Build Verification & Delivery
-- [x] **Task 4.1: Production Build Verification & Typecheck**
-  - *Action:* Run `npm run typecheck` and `npm run build` across all 57 routes.
-  - *Target Files:* Workspace
-  - *Done When:* Exit code 0 on both typecheck and build.
-- [x] **Task 4.2: Terminal Executive Summary**
-  - *Action:* Deliver final report with Top 3 Brainstormed Upgrades, Palette Architecture, `qwenton-review` Table, `qwenton-pentest` Matrix, and Synced Files.
+## Phase 4: Hero Table Purge & Tactile Sticker Stage Deployment
+- [x] **Task 4.1: Purge Cockpit Table & Wireframes**
+  - *Action:* Remove `ProductCommandCockpit` table structure from hero right column in `app/page.tsx`.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* No table-like cockpit containers in hero; zero 3D rotating spheres/cubes or neon wireframes.
+- [x] **Task 4.2: Build & Integrate Hero Sticker & GIF Stage**
+  - *Action:* Create `components/landing/HeroStickerStage.tsx` with animated AI coworker GIF mascot, dual persona switcher (Multitask vs. Focus), 4 tactile interactive sticker notes (Reel Inbound Comment, Human Approval Stamp Seal, AI Triage Engine, DM Direct Delivery Receipt), and stepper sync.
+  - *Target Files:* `components/landing/HeroStickerStage.tsx`, `app/page.tsx`
+  - *Done When:* Stage renders cleanly with responsive tactile stickers, persona switching, and zero neon/3D slop.
+- [x] **Task 4.3: Production Verification & GitHub Sync**
+  - *Action:* Run `npm run typecheck` and `npm run build`, commit changes, and push to `origin/main`.
+  - *Target Files:* Workspace, Git remote
+  - *Done When:* Build passes with code 0 and GitHub commit pushed cleanly.

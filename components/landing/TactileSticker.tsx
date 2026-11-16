@@ -68,8 +68,8 @@ export function TactileSticker({
               alt="Autonomous Coding Agent Working"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Live Status Pulse in Midnight Navy and Ice */}
-            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#0B1120] text-ice border border-primary/40 text-[9px] font-mono font-bold">
+            {/* Live Status Pulse in Linen, Moss, and Ochre */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#202D1E] text-[#F4EFEA] border border-[#C88018]/40 text-[9px] font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>ACTIVE</span>
             </div>
@@ -107,8 +107,8 @@ export function TactileSticker({
               alt="Autonomous Multitask Coworker"
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-            {/* Live Status Pulse in Midnight Navy and Ice */}
-            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#0B1120] text-ice border border-primary/40 text-[9px] font-mono font-bold">
+            {/* Live Status Pulse in Linen, Moss, and Ochre */}
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#202D1E] text-[#F4EFEA] border border-[#C88018]/40 text-[9px] font-mono font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               <span>DISPATCH</span>
             </div>
