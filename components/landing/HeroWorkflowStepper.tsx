@@ -32,7 +32,8 @@ export function HeroWorkflowStepper({
               key={step.id}
               type="button"
               onClick={() => setActiveStage(step.id)}
-              className="flex items-center gap-2.5 text-left group transition-all"
+              className="flex items-center gap-2.5 text-left group transition-all min-h-[44px] py-1 px-1 touch-action-manipulation"
+              aria-label={`Select workflow step ${step.num}: ${step.title}`}
             >
               {/* Step Number Circle */}
               <div

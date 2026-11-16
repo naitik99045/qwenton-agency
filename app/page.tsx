@@ -33,6 +33,7 @@ import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
 export default function LandingPage() {
   // Hero Stepper & Workflow State
   const [heroStage, setHeroStage] = useState<number>(0);
+  const [heroKeyword, setHeroKeyword] = useState<string>('PLAYBOOK');
 
   // Section 1: Product Proof Interactive Simulator State
   const [proofStep, setProofStep] = useState<'comment' | 'approval' | 'delivered'>('approval');
@@ -225,6 +226,58 @@ export default function LandingPage() {
               </a>
             </div>
 
+            {/* Live Interactive Keyword Tester Box */}
+            <div className="p-4 rounded-2xl bg-surface border border-border shadow-xs space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-mono font-bold text-ink uppercase flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" />
+                  Try Live Trigger Simulator
+                </span>
+                <span className="text-[10px] font-mono text-ink-muted">Reacts live on right stage</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={heroKeyword}
+                  onChange={(e) => setHeroKeyword(e.target.value.toUpperCase())}
+                  placeholder="E.G. PLAYBOOK"
+                  className="flex-1 text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-xl text-primary focus:outline-none focus:ring-1 focus:ring-primary min-h-[44px]"
+                  aria-label="Enter simulated Instagram Reel trigger keyword"
+                />
+                <button
+                  type="button"
+                  onClick={() => setHeroStage(0)}
+                  className="px-4 py-2.5 rounded-xl bg-ink text-canvas font-bold text-xs hover:bg-ink/90 transition-all min-h-[44px] flex items-center gap-1.5 shrink-0 active:scale-95"
+                >
+                  <Zap className="w-3 h-3 text-primary" />
+                  <span>Simulate</span>
+                </button>
+              </div>
+
+              {/* Quick-tap keyword chips (Touch-safe for Android) */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <span className="text-[10px] font-mono text-ink-muted">Quick chips:</span>
+                {['PLAYBOOK', 'VIP', 'GROWTH', 'AUDIT'].map((kw) => (
+                  <button
+                    key={kw}
+                    type="button"
+                    onClick={() => {
+                      setHeroKeyword(kw);
+                      setHeroStage(0);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all min-h-[32px] flex items-center ${
+                      heroKeyword === kw
+                        ? 'bg-primary text-white shadow-xs'
+                        : 'bg-surface-inset text-ink hover:bg-border'
+                    }`}
+                  >
+                    #{kw}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Trust Micro-Row */}
             <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/80">
               <div className="flex items-start gap-2.5">
@@ -248,7 +301,7 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-black text-ink font-mono">You&apos;re in control</div>
                   <div className="text-[11px] text-ink-muted leading-tight">
@@ -261,7 +314,11 @@ export default function LandingPage() {
 
           {/* Right Column (7 cols): The Hero Sticker & GIF Stage (Zero Tables, Zero Neon, Zero 3D) */}
           <div className="lg:col-span-7">
-            <HeroStickerStage activeStage={heroStage} setActiveStage={setHeroStage} />
+            <HeroStickerStage
+              activeStage={heroStage}
+              setActiveStage={setHeroStage}
+              simulatedKeyword={heroKeyword}
+            />
           </div>
         </div>
 

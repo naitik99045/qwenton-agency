@@ -14,7 +14,7 @@
 
 ## Phase 2: Landing Page Cleansing & Favicon Deployment
 - [x] **Task 2.1: Purge Pricing Comparison Table**
-  - *Action:* Completely delete Section 5 (4-tier pricing grid table, lines 708–918) and `#pricing` nav anchor from `app/page.tsx`.
+  - *Action:* Completely delete Section 5 (4-tier pricing grid table) and `#pricing` nav anchor from `app/page.tsx`.
   - *Target Files:* `app/page.tsx`
   - *Done When:* Pricing table is removed, eliminating visual clutter and satisfying anti-trope design constraints.
 - [x] **Task 2.2: Favicon Deployment**
@@ -38,10 +38,24 @@
   - *Target Files:* `app/page.tsx`
   - *Done When:* No table-like cockpit containers in hero; zero 3D rotating spheres/cubes or neon wireframes.
 - [x] **Task 4.2: Build & Integrate Hero Sticker & GIF Stage**
-  - *Action:* Create `components/landing/HeroStickerStage.tsx` with animated AI coworker GIF mascot, dual persona switcher (Multitask vs. Focus), 4 tactile interactive sticker notes (Reel Inbound Comment, Human Approval Stamp Seal, AI Triage Engine, DM Direct Delivery Receipt), and stepper sync.
+  - *Action:* Create `components/landing/HeroStickerStage.tsx` with animated AI coworker GIF mascot, dual persona switcher (Multitask vs. Focus), 4 tactile interactive sticker notes, and stepper sync.
   - *Target Files:* `components/landing/HeroStickerStage.tsx`, `app/page.tsx`
   - *Done When:* Stage renders cleanly with responsive tactile stickers, persona switching, and zero neon/3D slop.
-- [x] **Task 4.3: Production Verification & GitHub Sync**
-  - *Action:* Run `npm run typecheck` and `npm run build`, commit changes, and push to `origin/main`.
+
+## Phase 5: Velvet Matte Shades, Android-First Safety & Interactive Keyword Sandbox
+- [x] **Task 5.1: Velvet Matte Design Tokens (`app/globals.css`, `app/layout.tsx`)**
+  - *Action:* Invert tokens into anti-glare Velvet Matte Chalk Linen (`#F4F0E8`), Matte Charcoal Moss (`#1C241B`), and Velvet Matte Ochre (`#C27329`). Set mobile viewport themeColor and accessibility scaling.
+  - *Target Files:* `app/globals.css`, `app/layout.tsx`
+  - *Done When:* Matte tokens compile with zero glare, and Android Chrome status bar matches canvas seamlessly.
+- [x] **Task 5.2: Android Mobile Safety Hardening (`components/landing/HeroStickerStage.tsx`)**
+  - *Action:* Build dedicated mobile touch sequencer with 48px touch targets, zero card collision, and 1-tap interactive approval gate. Prevent mobile input auto-zoom (`16px font-size`).
+  - *Target Files:* `components/landing/HeroStickerStage.tsx`, `components/ui/Button.tsx`, `components/landing/HeroWorkflowStepper.tsx`
+  - *Done When:* 100% Android-safe layout with comfortable touch ergonomics on small screens.
+- [x] **Task 5.3: Live Keyword Simulator in Hero (`app/page.tsx`)**
+  - *Action:* Implement live interactive trigger sandbox in hero with custom input and quick chips (`#PLAYBOOK`, `#VIP`, `#GROWTH`, `#AUDIT`) connected live to the mascot stage.
+  - *Target Files:* `app/page.tsx`
+  - *Done When:* Typing or clicking chips immediately animates the follower comment and DM response.
+- [x] **Task 5.4: Production Build Verification & GitHub Sync**
+  - *Action:* Verify build with exit code 0 and push commit to `origin/main`.
   - *Target Files:* Workspace, Git remote
-  - *Done When:* Build passes with code 0 and GitHub commit pushed cleanly.
+  - *Done When:* Build passes and changes are live on GitHub.
