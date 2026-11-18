@@ -28,6 +28,20 @@ import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 import { logoutUser, subscribeToAuthState, syncSessionToken, getAuthToken } from '@/lib/auth/firebase-client-auth';
 
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badgeCount?: number;
+  badgeText?: string;
+  count?: string;
+}
+
+interface NavGroup {
+  group: string;
+  items: NavItem[];
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -132,133 +146,165 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
 
-  const navItems = [
-    { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-    { label: 'Agency Swarm', href: '/swarm', icon: Sparkles, badgeText: 'Mission' },
-    { label: 'My Agents', href: '/agents', icon: Bot, count: entitlements ? `${entitlements.activeAgents}/${entitlements.maxAgents}` : undefined },
-    { label: 'Conversations', href: '/conversations', icon: MessageSquare },
-    { label: 'Approvals', href: '/approvals', icon: ShieldAlert, badgeCount: pendingApprovalsCount },
-    { label: 'Knowledge Base', href: '/files', icon: FolderLock },
-    { label: 'Routines', href: '/routines', icon: CalendarClock },
-    { label: 'Instagram Auto DM', href: '/instagram', icon: Instagram, badgeText: 'Reels' },
-    { label: 'Integrations', href: '/integrations', icon: Radio },
-    { label: 'Billing & Plans', href: '/billing', icon: CreditCard },
-    { label: 'AI Settings', href: '/settings', icon: Settings },
+  // Blueprint Section 03 Information Architecture: 6 Organized Functional Groups
+  const navigationGroups: NavGroup[] = [
+    {
+      group: 'Workspace',
+      items: [
+        { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+      ],
+    },
+    {
+      group: 'Build',
+      items: [
+        {
+          label: 'Agent Studio',
+          href: '/agents',
+          icon: Bot,
+          count: entitlements ? `${entitlements.activeAgents}/${entitlements.maxAgents}` : undefined,
+        },
+        { label: 'Workflow Studio', href: '/swarm', icon: Sparkles, badgeText: 'Mission' },
+        { label: 'Conversations', href: '/conversations', icon: MessageSquare },
+        { label: 'Instagram Auto DM', href: '/instagram', icon: Instagram, badgeText: 'Reels' },
+      ],
+    },
+    {
+      group: 'Connect',
+      items: [
+        { label: 'Integrations', href: '/integrations', icon: Radio },
+      ],
+    },
+    {
+      group: 'Knowledge',
+      items: [
+        { label: 'Knowledge Hub', href: '/files', icon: FolderLock },
+      ],
+    },
+    {
+      group: 'Operate',
+      items: [
+        { label: 'Approvals', href: '/approvals', icon: ShieldAlert, badgeCount: pendingApprovalsCount },
+        { label: 'Runs & Routines', href: '/routines', icon: CalendarClock },
+      ],
+    },
+    {
+      group: 'Admin',
+      items: [
+        ...(user?.role === 'admin'
+          ? [{ label: 'Admin Command', href: '/admin', icon: ShieldCheck }]
+          : []),
+        { label: 'Billing & Usage', href: '/billing', icon: CreditCard },
+        { label: 'Settings', href: '/settings', icon: Settings },
+      ],
+    },
   ];
 
   return (
-    <div className="flex min-h-screen bg-canvas text-ink selection:bg-cloud-blue selection:text-primary-deep">
-      {/* Mobile Drawer Overlay */}
+    <div className="flex min-h-screen bg-canvas text-ink selection:bg-primary/20 selection:text-plum-dark">
+      {/* Mobile Drawer Overlay: Soft plum tint, zero dark shades */}
       {mobileMenuOpen && (
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-plum-dark/40 backdrop-blur-xs lg:hidden transition-opacity"
         />
       )}
 
       {/* Tactile Sidebar (Persistent on Desktop, Slide-out Drawer on Mobile/Android) */}
       <aside
         className={cn(
-          'w-64 border-r border-border/70 bg-white/95 backdrop-blur-md flex flex-col justify-between p-4 shrink-0 shadow-xs z-50 transition-transform duration-300 ease-in-out',
-          'fixed inset-y-0 left-0 lg:static lg:translate-x-0',
-          mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
+          'w-64 border-r border-border/70 bg-surface/95 backdrop-blur-md flex flex-col justify-between p-4 shrink-0 shadow-xs z-50 transition-transform duration-clay ease-in-out',
+          'fixed inset-y-0 left-0 lg:static lg:translate-x-0 overflow-y-auto',
+          mobileMenuOpen ? 'translate-x-0 shadow-clay-card' : '-translate-x-full lg:translate-x-0'
         )}
       >
         <div>
           {/* Brand Logo & Tactile Mark */}
-          <div className="flex items-center justify-between mb-6 px-2 py-2">
+          <div className="flex items-center justify-between mb-4 px-2 py-2">
             <Link href="/dashboard" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-[12px] bg-primary text-white flex items-center justify-center shadow-clay-button border border-primary-deep/30">
+              <div className="w-9 h-9 rounded-control bg-primary text-white flex items-center justify-center shadow-clay-button border border-plum-deep/30">
                 <Sparkles className="w-5 h-5 animate-pulse" />
               </div>
               <div>
-                <div className="font-bold text-base text-ink tracking-tight flex items-center gap-1.5">
+                <div className="font-bold text-base text-ink tracking-tight flex items-center gap-1.5 font-display">
                   qwenton<span className="text-primary font-extrabold">agents</span>
                 </div>
-                <div className="text-[10px] text-ink-muted uppercase tracking-wider font-semibold">AI Coworker Space</div>
+                <div className="text-[10px] text-ink-muted uppercase tracking-wider font-semibold font-mono">
+                  Autonomous Workforce
+                </div>
               </div>
             </Link>
 
-            {/* Mobile Drawer Close Button */}
+            {/* Mobile Drawer Close Button: 48px touch target */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="p-1.5 rounded-control text-ink-muted hover:text-ink lg:hidden hover:bg-black/5"
+              className="p-2.5 rounded-control text-ink-muted hover:text-ink lg:hidden hover:bg-sage-light/60 min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors"
+              aria-label="Close Navigation Drawer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center justify-between px-3.5 py-2.5 rounded-control text-sm font-medium transition-all select-none',
-                    isActive
-                      ? 'bg-cloud-blue text-primary-deep shadow-clay-button-subtle font-semibold border border-[#D0DFEF]'
-                      : 'text-ink-muted hover:text-ink hover:bg-black/5'
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className={cn('w-4 h-4', isActive ? 'text-primary' : 'text-ink-muted')} />
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badgeCount && item.badgeCount > 0 ? (
-                    <Badge variant="amber" className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center font-bold">
-                      {item.badgeCount}
-                    </Badge>
-                  ) : item.badgeText ? (
-                    <Badge variant="info" className="text-[10px] px-1.5 py-0 h-4 flex items-center justify-center font-bold">
-                      {item.badgeText}
-                    </Badge>
-                  ) : item.count ? (
-                    <span className="text-[11px] text-ink-light font-semibold">{item.count}</span>
-                  ) : null}
-                </Link>
-              );
-            })}
-
-            {/* Admin navigation if admin */}
-            {user?.role === 'admin' ? (
-              <div className="pt-4 mt-4 border-t border-border/50">
-                <div className="px-3 text-[10px] font-bold text-ink-light uppercase tracking-wider mb-2">Administrator</div>
-                <Link
-                  href="/admin"
-                  className={cn(
-                    'flex items-center gap-3 px-3.5 py-2.5 rounded-control text-sm font-medium transition-all select-none',
-                    pathname.startsWith('/admin')
-                      ? 'bg-[#EAE7F5] text-[#523E8C] shadow-clay-button-subtle font-semibold border border-[#CEC5EB]'
-                      : 'text-ink-muted hover:text-ink hover:bg-black/5'
-                  )}
-                >
-                  <ShieldCheck className="w-4 h-4 text-[#523E8C]" />
-                  <span>Admin Command Panel</span>
-                </Link>
+          {/* Navigation Links: 6 Organized Groups per Blueprint Section 03 */}
+          <nav className="space-y-4">
+            {navigationGroups.map((group) => (
+              <div key={group.group} className="space-y-1">
+                <div className="px-3 text-[10px] font-mono font-bold uppercase tracking-wider text-ink-muted/80">
+                  {group.group}
+                </div>
+                {group.items.map((item) => {
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        'flex items-center justify-between px-3.5 py-2.5 rounded-control text-sm font-medium transition-all select-none min-h-[48px]',
+                        isActive
+                          ? 'bg-sage-light text-sage-dark shadow-clay-button-subtle font-bold border border-sage-border'
+                          : 'text-ink-muted hover:text-ink hover:bg-sage-light/50'
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className={cn('w-4 h-4 shrink-0', isActive ? 'text-sage-dark' : 'text-ink-muted')} />
+                        <span>{item.label}</span>
+                      </div>
+                      {item.badgeCount && item.badgeCount > 0 ? (
+                        <Badge variant="amber" className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center font-bold">
+                          {item.badgeCount}
+                        </Badge>
+                      ) : item.badgeText ? (
+                        <Badge variant="info" className="text-[10px] px-1.5 py-0 h-4 flex items-center justify-center font-bold">
+                          {item.badgeText}
+                        </Badge>
+                      ) : item.count ? (
+                        <span className="text-[11px] text-ink-light font-semibold font-mono">{item.count}</span>
+                      ) : null}
+                    </Link>
+                  );
+                })}
               </div>
-            ) : null}
+            ))}
           </nav>
         </div>
 
         {/* Bottom Entitlement Meter & User Info */}
-        <div className="space-y-3 pt-4 border-t border-border/50">
+        <div className="space-y-3 pt-4 border-t border-border/70 mt-6">
           {entitlements ? (
-            <div className="bg-[#F8F6F1] p-3 rounded-control border border-border shadow-xs">
+            <div className="bg-surface-inset p-3 rounded-control border border-border shadow-xs">
               <div className="flex items-center justify-between text-xs font-medium text-ink mb-1.5">
-                <span className="capitalize">{entitlements.planName}</span>
-                <span className="font-bold text-primary-deep">
+                <span className="capitalize font-semibold">{entitlements.planName} Plan</span>
+                <span className="font-bold text-plum-dark font-mono">
                   {entitlements.activeAgents} / {entitlements.maxAgents}
                 </span>
               </div>
               <div className="w-full bg-border/60 h-2 rounded-full overflow-hidden">
                 <div
                   className={cn(
-                    'h-full transition-all duration-300 rounded-full',
-                    entitlements.isAtLimit ? 'bg-amber-approval' : 'bg-primary'
+                    'h-full transition-all duration-clay rounded-full',
+                    entitlements.isAtLimit ? 'bg-sage-deep' : 'bg-primary'
                   )}
                   style={{ width: `${Math.min(100, (entitlements.activeAgents / entitlements.maxAgents) * 100)}%` }}
                 />
@@ -272,14 +318,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Avatar name={user?.displayName || 'User'} size="md" variant="user" />
               <div className="min-w-0">
                 <div className="text-xs font-bold text-ink truncate">{user?.displayName || user?.email?.split('@')[0] || 'User'}</div>
-                <div className="text-[11px] text-ink-muted truncate">{user?.email || ''}</div>
+                <div className="text-[11px] text-ink-muted truncate font-mono">{user?.email || ''}</div>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="p-1.5 text-ink-muted hover:text-danger rounded-control hover:bg-black/5 transition-colors"
+              className="p-2 text-ink-muted hover:text-danger rounded-control hover:bg-plum-light transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center"
+              aria-label="Sign Out"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -290,12 +337,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
         {/* Top Header */}
-        <header className="h-16 border-b border-border/70 bg-white/70 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between shrink-0 sticky top-0 z-30">
+        <header className="h-16 border-b border-border/70 bg-surface/80 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between shrink-0 sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            {/* Mobile Drawer Trigger (Android/iOS) */}
+            {/* Mobile Drawer Trigger (Android/iOS 48px touch target) */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-2 rounded-control text-ink-muted hover:text-ink hover:bg-black/5 lg:hidden"
+              className="p-2.5 rounded-control text-ink-muted hover:text-ink hover:bg-sage-light/60 lg:hidden min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors"
               aria-label="Open Navigation Menu"
             >
               <Menu className="w-5 h-5" />
@@ -304,7 +351,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-2 text-sm text-ink-muted">
               <span className="font-medium text-ink hidden sm:inline">Workspace</span>
               <span className="hidden sm:inline">/</span>
-              <span className="capitalize font-bold text-ink sm:text-ink-muted">
+              <span className="capitalize font-bold text-ink sm:text-ink-muted font-display">
                 {pathname.split('/')[1] || 'Dashboard'}
               </span>
             </div>
@@ -313,18 +360,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2.5 sm:gap-4">
             {/* LLM Status Pill */}
             {llmStatus ? (
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-white border border-border shadow-clay-button-subtle">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-surface border border-border shadow-clay-button-subtle">
                 {llmStatus.ok ? (
                   <>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-success" />
-                    <span className="text-ink-muted font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-sage-dark" />
+                    <span className="text-ink-muted font-medium font-mono">
                       AI Active ({llmStatus.provider || 'Multi-model'})
                     </span>
                   </>
                 ) : (
                   <>
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-approval" />
-                    <span className="text-ink-muted font-medium">Local Model</span>
+                    <AlertTriangle className="w-3.5 h-3.5 text-sage-deep" />
+                    <span className="text-ink-muted font-medium font-mono">Local Model</span>
                   </>
                 )}
               </div>
@@ -333,10 +380,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link href="/agents/new">
               <button
                 disabled={entitlements?.isAtLimit}
-                className="px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-primary hover:bg-primary-deep text-white text-xs font-semibold rounded-[12px] shadow-clay-button active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1"
+                className="px-3.5 py-2 bg-primary hover:bg-plum-hover text-white text-xs font-bold rounded-control shadow-clay-button active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1.5 min-h-[40px] sm:min-h-[38px]"
               >
-                <Plus className="w-3.5 h-3.5 sm:hidden" />
-                <span className="hidden sm:inline">+ New Agent</span>
+                <Plus className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">New Agent</span>
                 <span className="sm:hidden">New</span>
               </button>
             </Link>
@@ -359,19 +406,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 Privacy Policy
               </Link>
               <span>•</span>
-              <span className="font-mono text-[10px] text-ink-light">Tri-Color 60-30-10 OKLCH</span>
+              <span className="font-mono text-[10px] text-ink-light">Warm Ivory • Muted Sage • Dusty Plum</span>
             </div>
           </footer>
         </main>
 
-        {/* Android / Mobile Bottom Tab Bar */}
-        <div className="fixed bottom-0 inset-x-0 h-14 bg-white/95 backdrop-blur-md border-t border-border/80 flex items-center justify-around px-2 z-30 lg:hidden shadow-lg">
+        {/* Android / Mobile Bottom Tab Bar (48px Touch Targets) */}
+        <div className="fixed bottom-0 inset-x-0 h-16 bg-surface/95 backdrop-blur-md border-t border-border flex items-center justify-around px-2 z-30 lg:hidden shadow-clay-card">
           <Link
             href="/dashboard"
             className={cn(
-              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors',
+              'flex flex-col items-center justify-center w-16 h-full min-h-[48px] text-[10px] font-medium transition-colors',
               pathname === '/dashboard' ? 'text-primary font-bold' : 'text-ink-muted'
             )}
+            aria-label="Overview Home"
           >
             <LayoutDashboard className="w-4 h-4 mb-0.5" />
             <span>Home</span>
@@ -380,9 +428,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/agents"
             className={cn(
-              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors',
+              'flex flex-col items-center justify-center w-16 h-full min-h-[48px] text-[10px] font-medium transition-colors',
               pathname.startsWith('/agents') ? 'text-primary font-bold' : 'text-ink-muted'
             )}
+            aria-label="Agents Studio"
           >
             <Bot className="w-4 h-4 mb-0.5" />
             <span>Agents</span>
@@ -391,9 +440,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/conversations"
             className={cn(
-              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors',
+              'flex flex-col items-center justify-center w-16 h-full min-h-[48px] text-[10px] font-medium transition-colors',
               pathname.startsWith('/conversations') ? 'text-primary font-bold' : 'text-ink-muted'
             )}
+            aria-label="Conversations"
           >
             <MessageSquare className="w-4 h-4 mb-0.5" />
             <span>Chat</span>
@@ -402,20 +452,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             href="/approvals"
             className={cn(
-              'flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium transition-colors relative',
+              'flex flex-col items-center justify-center w-16 h-full min-h-[48px] text-[10px] font-medium transition-colors relative',
               pathname.startsWith('/approvals') ? 'text-primary font-bold' : 'text-ink-muted'
             )}
+            aria-label="Approvals Firewall"
           >
             <ShieldAlert className="w-4 h-4 mb-0.5" />
             <span>Approvals</span>
             {pendingApprovalsCount > 0 && (
-              <span className="absolute top-1.5 right-2.5 w-2 h-2 rounded-full bg-amber-approval animate-pulse" />
+              <span className="absolute top-2 right-4 w-2 h-2 rounded-full bg-sage-deep animate-pulse" />
             )}
           </Link>
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="flex flex-col items-center justify-center w-14 h-full text-[10px] font-medium text-ink-muted hover:text-ink transition-colors"
+            className="flex flex-col items-center justify-center w-16 h-full min-h-[48px] text-[10px] font-medium text-ink-muted hover:text-ink transition-colors"
+            aria-label="Open Navigation Menu"
           >
             <Menu className="w-4 h-4 mb-0.5" />
             <span>Menu</span>

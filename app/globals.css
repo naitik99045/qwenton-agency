@@ -3,56 +3,70 @@
 @tailwind utilities;
 
 @layer base {
-  /* ----------------------------------------------------
-     UNIFIED VELVET MATTE PALETTE: MATTE LINEN (60%) + MATTE CHARCOAL MOSS (30%) + VELVET MATTE OCHRE (10%)
-     Tactile Editorial Finish • Anti-Glare Matte Sheen • Zero Glossy Plastic Reflectivity
-     1. Base Canvas (60%): Velvet Matte Chalk Linen (#F4F0E8 / #FAF7F0)
-     2. Structure & Typography (30%): Deep Matte Botanical Charcoal (#1C241B / #4D5E4A)
-     3. Focal Accent (10%): Warm Velvet Matte Ochre (#C27329 / #D4832E)
-     ---------------------------------------------------- */
+  /* -------------------------------------------------------------------------
+     QWENTON ALL-ROUNDER 3-COLOUR DESIGN SYSTEM & SOFT CLAYMORPHISM
+     Reference: Blueprint Section 02 (18 November 2026)
+     Strict Palette: Warm Ivory (#F4F0E8), Muted Sage (#8FA99A), Dusty Plum (#80627D)
+     - Typography uses Darkest Plum (#3C2A3A) exceeding WCAG AAA (11.66:1 on Ivory)
+     - Shallow claymorphic dual shadows using plum/sage undertones
+     - Soft ivory borders (#DED8CD) and 12-18px radii
+     ------------------------------------------------------------------------- */
   :root,
   .dark {
-    /* 60% Matte Linen Base & Surfaces */
-    --canvas-cream: #F4F0E8;                      /* Velvet Matte Chalk Linen Canvas */
-    --surface-white: #FFFFFF;                     /* Pristine Matte Card Surface */
-    --surface-inset: #EBE5DA;                     /* Recessed Matte Well */
-    --surface-panel: #FAF7F0;                     /* Soft Matte Sub-panel */
-    --surface-dark: #1C241B;                      /* Deep Matte Charcoal Moss Surface */
-    --border-subtle: #DDD6C8;                     /* Quiet Matte Hairline Border */
-    --border-strong: #C8BEAC;                     /* Defined Matte Boundary */
+    /* 1. Base Canvas & Surfaces: Warm Ivory Family */
+    --canvas-cream: #F4F0E8;                      /* Warm Ivory Main Canvas */
+    --surface-white: #FCFAF6;                     /* Raised Warm Ivory Card Surface */
+    --surface-pure: #FFFFFF;                      /* Pristine Pure Light Surface */
+    --surface-inset: #EDE8DE;                     /* Recessed Warm Ivory Well */
+    --surface-panel: #FAF7F2;                     /* Soft Warm Ivory Sub-panel */
+    --surface-dark: #3C2A3A;                      /* Darkest Plum Contrast Surface */
+    --border-subtle: #DED8CD;                     /* Soft Warm Ivory Hairline Border */
+    --border-strong: #C8BEAC;                     /* Defined Warm Ivory Boundary */
 
-    /* 30% Deep Matte Botanical Charcoal Typography & Structure */
-    --ink: #1C241B;                               /* Deep Matte Botanical Charcoal (>13:1 contrast) */
-    --ink-muted: #4D5E4A;                         /* Velvet Sage Prose (>5.5:1 contrast) */
-    --ink-light: #70846C;                         /* Subtle Matte Metadata */
+    /* 2. Typography: Darkest Plum & Muted Plum */
+    --ink: #3C2A3A;                               /* Darkest Plum (11.66:1 contrast on #F4F0E8, WCAG AAA) */
+    --ink-muted: #644C61;                         /* Muted Plum Body/Subtext (6.72:1 contrast, WCAG AA/AAA) */
+    --ink-light: #8C7789;                         /* Subtle Plum Metadata (>4.0:1 contrast) */
 
-    /* 10% Warm Velvet Matte Ochre Accent */
-    --brand-primary: #C27329;                     /* Warm Velvet Matte Ochre */
-    --brand-primary-deep: #9B5518;                /* Deep Matte Terracotta */
-    --brand-primary-light: #FBF2E8;               /* Soft Matte Ochre Tint */
-    --brand-primary-glow: rgba(194, 115, 41, 0.18);
+    /* 3. Primary Actions: Dusty Plum Family */
+    --brand-primary: #80627D;                     /* Dusty Plum Brand Primary (4.66:1 contrast) */
+    --brand-primary-deep: #5E445B;                /* Deep Plum High-Contrast Emphasis (7.53:1, WCAG AAA) */
+    --brand-primary-light: #F5EFF4;               /* Light Plum Tint */
+    --brand-primary-glow: rgba(94, 68, 91, 0.16); /* Plum Ambient Glow */
+    --brand-hover: #6E526B;                       /* Dusty Plum Hover */
+    --brand-active: #5E445B;                      /* Dusty Plum Active */
+    --brand-soft: #F5EFF4;                        /* Plum Soft Background */
+    --brand-border: #C4B5C1;                      /* Plum Subtle Border */
 
-    /* Human Approval Gate (Burnt Ochre Checkpoint) */
-    --coral-approval: #D66A2C;                    /* Burnt Matte Ochre Gate */
-    --coral-approval-hover: #B8531A;              /* Burnt Matte Ochre Hover */
-    --coral-approval-bg: #FDF0E7;                 /* Tint */
+    /* 4. Secondary Surfaces & Active States: Muted Sage Family */
+    --sage-base: #8FA99A;                         /* Muted Sage Base Accent */
+    --sage-deep: #587363;                         /* Deep Sage (4.56:1 contrast, WCAG AA) */
+    --sage-dark: #3A5245;                         /* Dark Sage Text/Icon (7.47:1 contrast, WCAG AAA) */
+    --sage-light: #EAF0EC;                        /* Soft Sage Tint / Active State Background */
+    --sage-border: #B9C9C0;                       /* Subtle Sage Hairline Border */
+    --sage-hover: #7E9A8B;                        /* Sage Hover Accent */
+    --sage-active: #6A8777;                       /* Sage Active Accent */
 
-    --approval-amber: #C27329;
-    --approval-amber-bg: #FBF2E8;
-    --success: #3A7340;
-    --success-bg: #EEF6F0;
-    --danger: #BD3724;
-    --danger-bg: #FDF1EF;
+    /* 5. Functional Component Mappings (Derived from 3 Brand Colours Only) */
+    --coral-approval: #80627D;                    /* Approval Gate: Dusty Plum Action */
+    --coral-approval-hover: #5E445B;              /* Approval Gate Hover */
+    --coral-approval-bg: #F5EFF4;                 /* Approval Gate Tint */
 
-    --brand-hover: #D4832E;
-    --brand-active: #9B5518;
-    --brand-soft: #FBF2E8;
-    --brand-border: #E5C387;
+    --approval-amber: #587363;                    /* Approval Checkpoint: Deep Sage */
+    --approval-amber-bg: #EAF0EC;                 /* Approval Checkpoint Tint */
 
-    --shadow-clay-card: 0 4px 18px -2px rgba(28, 36, 27, 0.06), 0 0 0 1px rgba(28, 36, 27, 0.05);
-    --shadow-clay-card-hover: 0 12px 28px -4px rgba(194, 115, 41, 0.16), 0 0 0 1px rgba(194, 115, 41, 0.35);
-    --shadow-clay-button-subtle: 0 2px 5px rgba(28, 36, 27, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.85);
-    --shadow-clay-inset: inset 0 2px 4px rgba(28, 36, 27, 0.04);
+    --success: #3A5245;                           /* Success: Dark Sage (7.47:1 WCAG AAA) */
+    --success-bg: #EAF0EC;                        /* Success Tint: Soft Sage */
+
+    --danger: #5E445B;                            /* Danger/Alert: Deep Plum (7.53:1 WCAG AAA) */
+    --danger-bg: #F5EFF4;                         /* Danger Tint: Soft Plum */
+
+    /* 6. Soft Claymorphic Dual Shadows (Tinted with Plum/Sage undertones) */
+    --shadow-clay-card: 0 4px 18px -2px rgba(60, 42, 58, 0.07), 0 0 0 1px rgba(60, 42, 58, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    --shadow-clay-card-hover: 0 12px 28px -4px rgba(94, 68, 91, 0.14), 0 0 0 1px rgba(128, 98, 125, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+    --shadow-clay-button: 0 4px 14px -1px rgba(94, 68, 91, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    --shadow-clay-button-subtle: 0 2px 6px -1px rgba(60, 42, 58, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    --shadow-clay-inset: inset 0 2px 5px rgba(60, 42, 58, 0.06), inset 0 0 0 1px rgba(60, 42, 58, 0.04);
   }
 
   /* Android & Mobile Native Hardening */
@@ -74,7 +88,7 @@
     letter-spacing: -0.015em;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: background-color 0.18s ease-in-out, color 0.18s ease-in-out;
   }
 
   /* Mobile-first touch & input optimizations for Android Chrome */
@@ -99,29 +113,48 @@
       font-size: 0.875rem; /* 14px on desktop */
     }
   }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
-  /* Tactile Matte Surfaces */
+  /* Soft Claymorphic Surfaces */
   .clay-surface {
     background-color: var(--surface-white);
-    border-radius: 20px;
+    border-radius: 16px;
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-clay-card);
-    transition: all 0.2s ease-in-out;
+    transition: box-shadow 0.18s ease-in-out, transform 0.18s ease-in-out;
   }
 
   .clay-surface-interactive {
     background-color: var(--surface-white);
-    border-radius: 20px;
+    border-radius: 16px;
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-clay-card);
-    transition: all 0.2s ease-in-out;
+    transition: box-shadow 0.18s ease-in-out, transform 0.18s ease-in-out;
   }
 
   .clay-surface-interactive:hover {
     box-shadow: var(--shadow-clay-card-hover);
     transform: translateY(-2px);
+  }
+
+  .clay-inset-panel {
+    background-color: var(--surface-inset);
+    border-radius: 12px;
+    box-shadow: var(--shadow-clay-inset);
+    border: 1px solid var(--border-subtle);
   }
 
   /* Android-safe touch target utility */

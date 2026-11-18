@@ -6,12 +6,13 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Badge({ className, variant = 'default', children, ...props }: BadgeProps) {
+  // Blueprint Section 02 3-Colour Palette
   const variantStyles = {
     default: 'bg-primary/10 text-primary border-primary/25',
-    success: 'bg-success/15 text-success border-success/30',
-    amber: 'bg-amber-approval/15 text-amber-approval border-amber-approval/30',
-    danger: 'bg-danger/15 text-danger border-danger/30',
-    info: 'bg-surface text-ink-muted border-border',
+    success: 'bg-sage-light text-sage-dark border-sage-border',
+    amber: 'bg-sage-light text-sage-deep border-sage-border',
+    danger: 'bg-plum-light text-plum-deep border-plum-border',
+    info: 'bg-surface-panel text-ink-muted border-border',
     outline: 'bg-surface text-ink border-border',
   };
 

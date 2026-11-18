@@ -15,9 +15,11 @@ const config: Config = {
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
+        // Blueprint 3-Colour Design Tokens: Warm Ivory, Muted Sage, Dusty Plum (Section 02)
         canvas: 'var(--canvas-cream)',
         surface: {
           DEFAULT: 'var(--surface-white)',
+          pure: 'var(--surface-pure)',
           inset: 'var(--surface-inset)',
           panel: 'var(--surface-panel)',
           dark: 'var(--surface-dark)',
@@ -32,26 +34,56 @@ const config: Config = {
           deep: 'var(--brand-primary-deep)',
           light: 'var(--brand-primary-light)',
         },
+        // 1. Warm Ivory Family (#F4F0E8)
+        ivory: {
+          DEFAULT: '#F4F0E8',
+          canvas: '#F4F0E8',
+          card: '#FCFAF6',
+          panel: '#FAF7F2',
+          well: '#EDE8DE',
+          border: '#DED8CD',
+        },
+        // 2. Muted Sage Family (#8FA99A)
+        sage: {
+          DEFAULT: '#8FA99A',
+          deep: '#587363',
+          dark: '#3A5245',
+          light: '#EAF0EC',
+          border: '#B9C9C0',
+          hover: '#7E9A8B',
+          active: '#6A8777',
+        },
+        // 3. Dusty Plum Family (#80627D)
+        plum: {
+          DEFAULT: '#80627D',
+          deep: '#5E445B',
+          dark: '#3C2A3A',
+          light: '#F5EFF4',
+          border: '#C4B5C1',
+          hover: '#6E526B',
+          active: '#5E445B',
+        },
+        // Mapped tokens strictly adhering to 3-colour palette
         linen: {
-          DEFAULT: '#F4EFEA',
+          DEFAULT: '#F4F0E8',
           light: '#FAF7F2',
-          dark: '#EBE3D7',
-          border: '#DCD3C5',
+          dark: '#EDE8DE',
+          border: '#DED8CD',
         },
         moss: {
-          DEFAULT: '#202D1E',
-          deep: '#172215',
-          surface: '#2B3D28',
-          muted: '#4A5E44',
-          light: '#6E8566',
-          border: '#354932',
+          DEFAULT: '#587363',
+          deep: '#3A5245',
+          surface: '#EAF0EC',
+          muted: '#8FA99A',
+          light: '#8FA99A',
+          border: '#B9C9C0',
         },
         ochre: {
-          DEFAULT: '#C88018',
-          hover: '#DB9326',
-          deep: '#9E620D',
-          light: '#FDF4E7',
-          border: '#E8C88A',
+          DEFAULT: '#80627D',
+          hover: '#6E526B',
+          deep: '#5E445B',
+          light: '#F5EFF4',
+          border: '#C4B5C1',
         },
         coral: {
           DEFAULT: 'var(--coral-approval)',
@@ -77,16 +109,22 @@ const config: Config = {
         },
       },
       borderRadius: {
-        control: '14px',
-        card: '20px',
-        hero: '28px',
+        control: '8px',     // Blueprint Section 02: 8px controls
+        panel: '12px',      // Blueprint Section 02: 12px panels
+        card: '16px',       // Blueprint Section 02: 16–18px cards
+        'card-lg': '18px',  // Blueprint Section 02: 16–18px cards
+        modal: '20px',      // Blueprint Section 02: 20px modal shells
+        hero: '24px',
       },
       boxShadow: {
         'clay-card': 'var(--shadow-clay-card)',
         'clay-card-hover': 'var(--shadow-clay-card-hover)',
-        'clay-button': '0 4px 14px rgba(18, 232, 150, 0.35)',
+        'clay-button': 'var(--shadow-clay-button)',
         'clay-button-subtle': 'var(--shadow-clay-button-subtle)',
         'clay-inset': 'var(--shadow-clay-inset)',
+      },
+      transitionDuration: {
+        clay: '180ms', // Blueprint Section 02: 120–200ms restrained motion
       },
     },
   },

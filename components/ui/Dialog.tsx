@@ -46,29 +46,30 @@ export function Dialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/* Backdrop: Plum-tinted soft overlay */}
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-xs transition-opacity animate-in fade-in"
+        className="fixed inset-0 bg-plum-dark/40 backdrop-blur-xs transition-opacity animate-in fade-in"
         onClick={onClose}
       />
 
-      {/* Modal Dialog Body */}
+      {/* Modal Dialog Body: Blueprint Section 02 rounded-modal (20px) */}
       <div
         className={cn(
-          'relative w-full bg-white rounded-card shadow-clay-card border border-border p-6 z-10 animate-in zoom-in-95 duration-150',
+          'relative w-full bg-surface-white rounded-modal shadow-clay-card border border-border p-6 z-10 animate-in zoom-in-95 duration-clay',
           maxWidthStyles[maxWidth]
         )}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-ink-muted hover:text-ink rounded-full hover:bg-black/5 transition-colors"
+          className="absolute top-4 right-4 p-1.5 text-ink-muted hover:text-ink rounded-control hover:bg-sage-light/60 transition-colors"
+          aria-label="Close dialog"
         >
           <X className="w-5 h-5" />
         </button>
 
         {title ? (
           <div className="mb-4 pr-6">
-            <h2 className="text-xl font-bold text-ink">{title}</h2>
+            <h2 className="text-xl font-bold text-ink font-display">{title}</h2>
             {description ? <p className="text-sm text-ink-muted mt-1">{description}</p> : null}
           </div>
         ) : null}

@@ -26,9 +26,12 @@ export function FormattedMessage({ content, className = '' }: FormattedMessagePr
           const codeBody = isLanguage ? lines.slice(1).join('\n') : lines.join('\n');
 
           return (
-            <div key={pIdx} className="my-2 rounded-control bg-[#1E1E24] text-[#E6EEF8] p-3 text-xs font-mono overflow-x-auto shadow-inner border border-black/20">
+            <div
+              key={pIdx}
+              className="my-2 rounded-control bg-surface-dark text-ivory-card p-3 text-xs font-mono overflow-x-auto shadow-inner border border-plum-deep/30"
+            >
               {isLanguage && (
-                <div className="text-[10px] uppercase font-bold text-ink-muted/80 pb-1 mb-1 border-b border-white/10">
+                <div className="text-[10px] uppercase font-bold text-plum-border pb-1 mb-1 border-b border-plum-deep/40">
                   {firstLine}
                 </div>
               )}
@@ -82,7 +85,7 @@ function renderInlineMarkdown(text: string): React.ReactNode[] {
           <Link
             key={matchIndex}
             href={linkUrl}
-            className="font-bold text-primary underline underline-offset-2 hover:text-primary-deep inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-primary/10 transition-colors"
+            className="font-bold text-primary underline underline-offset-2 hover:text-primary-deep inline-flex items-center gap-0.5 px-1 py-0.5 rounded-control bg-primary/10 transition-colors"
           >
             <span>{linkText}</span>
           </Link>
@@ -94,7 +97,7 @@ function renderInlineMarkdown(text: string): React.ReactNode[] {
             href={linkUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold text-[#2B6CB0] underline underline-offset-2 hover:text-[#1A4971] inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-[#EBF8FF] transition-colors"
+            className="font-bold text-sage-dark underline underline-offset-2 hover:text-sage-deep inline-flex items-center gap-0.5 px-1 py-0.5 rounded-control bg-sage-light transition-colors"
           >
             <span>{linkText}</span>
             <ExternalLink className="w-3 h-3 inline shrink-0" />
@@ -105,7 +108,10 @@ function renderInlineMarkdown(text: string): React.ReactNode[] {
       nodes.push(<strong key={matchIndex} className="font-bold text-ink">{boldText}</strong>);
     } else if (inlineCode) {
       nodes.push(
-        <code key={matchIndex} className="px-1.5 py-0.5 rounded bg-black/5 text-[#9C4221] font-mono text-[11px] border border-border/50">
+        <code
+          key={matchIndex}
+          className="px-1.5 py-0.5 rounded-control bg-sage-light text-sage-dark font-mono text-[11px] border border-sage-border"
+        >
           {inlineCode}
         </code>
       );

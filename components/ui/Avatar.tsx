@@ -11,16 +11,17 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Avatar({ name = '', role, variant = 'agent', size = 'md', className, ...props }: AvatarProps) {
   const sizeStyles = {
-    sm: 'w-7 h-7 text-xs rounded-[10px]',
-    md: 'w-10 h-10 text-sm rounded-[14px]',
-    lg: 'w-14 h-14 text-base rounded-[18px]',
-    xl: 'w-20 h-20 text-xl rounded-[24px]',
+    sm: 'w-7 h-7 text-xs rounded-control',
+    md: 'w-10 h-10 text-sm rounded-panel',
+    lg: 'w-14 h-14 text-base rounded-card',
+    xl: 'w-20 h-20 text-xl rounded-modal',
   };
 
+  // Blueprint Section 02 3-Colour Palette: Warm Ivory, Muted Sage, Dusty Plum
   const variantStyles = {
-    agent: 'bg-[#E6EEF8] text-primary-deep border border-[#C5D7EF] shadow-clay-button-subtle',
-    user: 'bg-[#F5DED1] text-[#7A3F22] border border-[#DFC3B2] shadow-clay-button-subtle',
-    system: 'bg-[#EAE7F5] text-[#523E8C] border border-[#CEC5EB] shadow-clay-button-subtle',
+    agent: 'bg-sage-light text-sage-dark border border-sage-border shadow-clay-button-subtle',
+    user: 'bg-plum-light text-plum-dark border border-plum-border shadow-clay-button-subtle',
+    system: 'bg-surface-inset text-ink border border-border-subtle shadow-clay-button-subtle',
   };
 
   const getInitials = (str: string) => {
