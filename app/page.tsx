@@ -4,859 +4,1405 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Bot,
+  GitFork,
+  Users,
   ShieldCheck,
   Zap,
   ArrowRight,
   Play,
-  Users,
-  Instagram,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
   Search,
   Check,
-  Radio,
   Layers,
-  Film,
   Sparkles,
   ShieldAlert,
+  Database,
+  Terminal,
+  Clock,
+  Menu,
+  X,
+  Lock,
+  RefreshCw,
+  Server,
+  Workflow,
+  HelpCircle,
+  Building,
+  Briefcase,
+  TrendingUp,
+  Code2,
+  Cpu,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { HeroStickerStage } from '@/components/landing/HeroStickerStage';
-import { HeroWorkflowStepper } from '@/components/landing/HeroWorkflowStepper';
+import { AllRounderStudioShowcase } from '@/components/landing/AllRounderStudioShowcase';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
-import { InstantAuditSandbox } from '@/components/landing/InstantAuditSandbox';
 
 export default function LandingPage() {
-  // Hero Stepper & Workflow State
-  const [heroStage, setHeroStage] = useState<number>(0);
-  const [heroKeyword, setHeroKeyword] = useState<string>('PLAYBOOK');
+  // Mobile Nav Drawer Toggle
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Section 1: Product Proof Interactive Simulator State
-  const [proofStep, setProofStep] = useState<'comment' | 'approval' | 'delivered'>('approval');
-  const [proofKeyword, setProofKeyword] = useState('GROWTH');
-  const [proofComment, setProofComment] = useState('Send me the GROWTH blueprint please');
-  const [proofApproved, setProofApproved] = useState(false);
+  // Section 4: Department Workflows State
+  const [activeWorkflowTab, setActiveWorkflowTab] = useState<'sales' | 'support' | 'research' | 'pipeline'>('sales');
+  const [isSimulatingWorkflow, setIsSimulatingWorkflow] = useState<boolean>(false);
+  const [simulationStep, setSimulationStep] = useState<number>(0);
+  const [simulationApproved, setSimulationApproved] = useState<boolean>(false);
 
-  // Section 3: Coworker Roster Selection State
-  const [selectedAgent, setSelectedAgent] = useState<'reels' | 'intel' | 'away' | 'research'>('reels');
+  // Section 8: Pricing Billing Cycle
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
 
-  // Section 6: FAQ Accordion State
+  // Section 9: FAQ Accordion State
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const agentRoster = {
-    reels: {
-      name: 'Reel Comment-to-DM Agent',
-      role: 'Social Lead Conversion',
-      icon: Instagram,
-      description:
-        'Listens for inbound follower comments matching your lead magnet keyword. Automatically composes a friendly public reply and drafts a 1-to-1 private direct message with your link.',
-      sampleInput: 'Comment on Reel: "Send me the GROWTH guide"',
-      sampleOutput: 'DM to @follower: "Hey! Here is your private growth guide link: https://qwenton.co/growth-guide"',
-      status: 'Ready for Review',
+  // Interactive Department Workflow Simulation Handler
+  const handleRunDepartmentSimulation = () => {
+    if (isSimulatingWorkflow) return;
+    setIsSimulatingWorkflow(true);
+    setSimulationStep(1);
+    setSimulationApproved(false);
+
+    setTimeout(() => setSimulationStep(2), 600);
+    setTimeout(() => setSimulationStep(3), 1200);
+    setTimeout(() => {
+      setSimulationStep(4); // Staged at firewall gate
+      setIsSimulatingWorkflow(false);
+    }, 1800);
+  };
+
+  const handleApproveGatedAction = () => {
+    setSimulationApproved(true);
+    setSimulationStep(5);
+  };
+
+  // 4 Department Workflows Data
+  const departmentWorkflows = {
+    sales: {
+      name: 'Sales & Lead Conversion',
+      icon: TrendingUp,
+      trigger: 'Inbound Lead via Webhook or Typeform',
+      avgDuration: '1.8s',
+      tokenCost: '$0.014',
+      safetyGate: '1 Required Approval',
+      steps: [
+        {
+          num: 1,
+          role: 'Enrichment Agent',
+          action: 'Pulls firmographic data, LinkedIn company profile, and annual revenue estimate.',
+          status: 'Automated',
+        },
+        {
+          num: 2,
+          role: 'CRM Sync Node',
+          action: 'Creates company & contact record in CRM with verified lead score of 88/100.',
+          status: 'Automated',
+        },
+        {
+          num: 3,
+          role: 'Drafter Agent',
+          action: 'Composes hyper-personalized outreach email referencing recent funding round.',
+          status: 'Automated',
+        },
+        {
+          num: 4,
+          role: 'Approval Firewall',
+          action: 'PROTECTED ACTION GATED: Halts external email dispatch until SDR lead reviews payload.',
+          status: 'Gated at Firewall',
+          isGate: true,
+        },
+        {
+          num: 5,
+          role: 'Multi-Channel Dispatch',
+          action: 'Email dispatched via SendGrid upon human sign-off; follow-up task scheduled in 3 days.',
+          status: 'Executed on Approval',
+        },
+      ],
     },
-    intel: {
-      name: 'Competitor Intelligence Agent',
-      role: 'Market & Pricing Research',
-      icon: Search,
-      description:
-        'Monitors competitor public pages, detects pricing changes and feature announcements, and compiles an executive briefing for your review.',
-      sampleInput: 'Crawl target: competitor pricing routes',
-      sampleOutput: 'Executive Briefing: "Identified 2 tier updates. Opportunity to package bundle at INR 299/mo."',
-      status: 'Briefing Assembled',
-    },
-    away: {
-      name: '24/7 Away Mode Assistant',
-      role: 'Inbound Inquiries & Triage',
-      icon: Radio,
-      description:
-        'Protects your business when you are offline. Evaluates inbound customer questions against your knowledge base, drafts polite answers, and requests approval for critical requests.',
-      sampleInput: 'Direct Message: "Can you handle custom API integrations?"',
-      sampleOutput: 'Draft Reply: "Hi! Yes, Qwenton supports custom webhooks and dedicated keys. Here is our spec."',
-      status: 'Awaiting Sign-off',
+    support: {
+      name: 'Customer Support Triage',
+      icon: HelpCircle,
+      trigger: 'Zendesk / Intercom Inbound Ticket #8921',
+      avgDuration: '2.2s',
+      tokenCost: '$0.019',
+      safetyGate: 'Financial Gate Active',
+      steps: [
+        {
+          num: 1,
+          role: 'Classification Agent',
+          action: 'Classifies intent (Billing Discrepancy), sentiment (Frustrated), and priority (P1-High).',
+          status: 'Automated',
+        },
+        {
+          num: 2,
+          role: 'Knowledge Hub Search',
+          action: 'Semantic vector search across refund policy knowledge base and internal billing docs.',
+          status: 'Automated',
+        },
+        {
+          num: 3,
+          role: 'Resolution Drafter',
+          action: 'Formats accurate response with transaction references and clear next steps.',
+          status: 'Automated',
+        },
+        {
+          num: 4,
+          role: 'Approval Firewall',
+          action: 'FINANCIAL MUTATION GATED: Refund credit ($49.00) routed to Billing Manager for 1-click approval.',
+          status: 'Gated at Firewall',
+          isGate: true,
+        },
+        {
+          num: 5,
+          role: 'Stripe & Ticket Resolution',
+          action: 'Approved credit applied to Stripe; verified answer posted to customer ticket.',
+          status: 'Executed on Approval',
+        },
+      ],
     },
     research: {
-      name: 'Research & Outreach Agent',
-      role: 'Lead Enrichment',
-      icon: Layers,
-      description:
-        'Enriches qualified leads with public company signals, crafts personalized pitch drafts, and stages follow-up queues for your approval.',
-      sampleInput: 'Lead qualified from Instagram Reel comment',
-      sampleOutput: 'Outreach Dossier: "Target is scaling content team; suggested angle is automated lead delivery."',
-      status: 'Queue Ready',
+      name: 'Competitive Research Swarm',
+      icon: Search,
+      trigger: 'Scheduled Weekly or Ad-Hoc Executive Prompt',
+      avgDuration: '4.6s',
+      tokenCost: '$0.028',
+      safetyGate: 'Loop Prevention Monitored',
+      steps: [
+        {
+          num: 1,
+          role: 'Coordinator Agent',
+          action: 'Breaks brief into 3 sub-assignments: Feature Matrix, Pricing Changes, Customer Sentiment.',
+          status: 'Automated',
+        },
+        {
+          num: 2,
+          role: 'Parallel Specialist Agents',
+          action: 'Agent A scrapes changelogs; Agent B monitors pricing tables; Agent C synthesizes G2 reviews.',
+          status: 'Automated',
+        },
+        {
+          num: 3,
+          role: 'Aggregator Agent',
+          action: 'Synthesizes outputs into a 2-page Markdown Executive Brief with 14 verified citations.',
+          status: 'Automated',
+        },
+        {
+          num: 4,
+          role: 'Approval Firewall',
+          action: 'DISTRIBUTION GATED: Holds executive summary for Chief Product Officer review before Slack broadcast.',
+          status: 'Gated at Firewall',
+          isGate: true,
+        },
+        {
+          num: 5,
+          role: 'Knowledge Hub Archival',
+          action: 'Indexes report into workspace Knowledge Base and notifies leadership team in Slack.',
+          status: 'Executed on Approval',
+        },
+      ],
+    },
+    pipeline: {
+      name: 'API & Data Pipeline Sync',
+      icon: Database,
+      trigger: 'PostgreSQL CDC Event / Stripe Webhook',
+      avgDuration: '0.9s',
+      tokenCost: '$0.008',
+      safetyGate: 'Zero Data-Loss Idempotency',
+      steps: [
+        {
+          num: 1,
+          role: 'Validation Node',
+          action: 'Schema-checks payload against Zod contract; rejects malformed inputs.',
+          status: 'Automated',
+        },
+        {
+          num: 2,
+          role: 'Code Transform Node',
+          action: 'Python snippet normalizes currency, timestamps, and customer metadata.',
+          status: 'Automated',
+        },
+        {
+          num: 3,
+          role: 'Data Warehouse Load',
+          action: 'Pushes normalized transaction records to Snowflake / BigQuery.',
+          status: 'Automated',
+        },
+        {
+          num: 4,
+          role: 'Approval Firewall',
+          action: 'MUTATION AUDIT: Database schema alteration or high-volume batch held for DBA verification.',
+          status: 'Gated at Firewall',
+          isGate: true,
+        },
+        {
+          num: 5,
+          role: 'Delivery Confirmation',
+          action: 'Transaction committed with cryptographic checksum and zero data loss.',
+          status: 'Executed on Approval',
+        },
+      ],
     },
   };
 
-  const currentAgentData = agentRoster[selectedAgent];
+  const currentWorkflow = departmentWorkflows[activeWorkflowTab];
 
+  // 6 Comprehensive FAQs
   const faqs = [
     {
-      q: 'How does the Instagram Reel Comment-to-DM automation work?',
-      a: 'When a follower comments your trigger keyword (such as GROWTH, PRICE, or ACCESS) on your connected Reel, Qwenton instantly captures the event, analyzes intent, and drafts both a public comment response and a private 1-to-1 direct message. You can approve the action with one tap or enable automated delivery.',
+      q: 'How does the Human Approval Firewall prevent autonomous agents from making costly mistakes?',
+      a: 'Unlike generic agent frameworks that execute external actions immediately, Qwenton’s Approval Firewall intercepts any protected action (such as sending an email to a customer, updating a CRM record, or modifying database rows) at the server layer. The action remains pending with an immutable payload preview until an authorized human reviews and clicks ‘Approve’. If anything looks incorrect, the reviewer can reject or edit the draft in real time.',
     },
     {
-      q: 'How does the Human-in-the-Loop approval gate protect my accounts?',
-      a: 'Whenever an AI coworker prepares an external action—such as sending a direct message, replying to a comment, or updating external records—the action pauses at the approval checkpoint. You receive an instant push notification on desktop or your Telegram bot with inline Approve / Edit controls. Nothing external is sent without your authorization.',
+      q: 'Can I use Qwenton without writing code or hiring software engineers?',
+      a: 'Absolutely. Agent Studio allows you to create fully functional agents simply by describing your business goal in plain English. The platform automatically configures the triggers, required tools, and safe defaults. For visual builders, Workflow Studio provides an intuitive drag-and-drop canvas with pre-built nodes and templates.',
     },
     {
-      q: 'Do I need Docker or complex virtual servers to run Qwenton?',
-      a: 'No. Qwenton is serverless and cloud-native. It runs locally with embedded persistence during development, and deploys directly to Vercel and Firebase with zero Docker overhead.',
+      q: 'Does Qwenton support inbound or outbound phone calls and telephony CRM?',
+      a: 'No. In accordance with our core product principles, Qwenton intentionally excludes call-management CRM, PBX phone queues, call recording, and voice dialers. We focus exclusively on high-reliability digital operations: email, CRM systems, helpdesks, webhooks, databases, spreadsheets, and internal knowledge bases.',
     },
     {
-      q: 'Can I connect custom models and API keys?',
-      a: 'Yes. Qwenton provides flexible model routing. You can connect your own API keys or use our verified managed cloud endpoints with single-tap configuration.',
+      q: 'Which AI models and LLM providers does Qwenton connect to?',
+      a: 'Qwenton is model-agnostic. You can deploy agents powered by Anthropic Claude 3.5, OpenAI GPT-4o, Google Gemini 2.0, or self-hosted open-weight models via local endpoints. You can mix and match models across different steps in a single workflow to optimize for speed, intelligence, or token cost.',
     },
     {
-      q: 'What is included in the free plan?',
-      a: 'The Normal plan is free forever and includes 2 active AI coworkers, 2 connected Instagram Reels for auto-DM, 50 monthly workflows, 1 Telegram bot connection, and the complete human approval firewall.',
+      q: 'How does Qwenton guarantee that my company’s private data remains secure?',
+      a: 'We enforce strict multi-tenant isolation at the database and server layers. Your documents in the Knowledge Hub are encrypted at rest and in transit, and access permissions are strictly validated before any agent can retrieve them. API keys and service credentials are stored in server-only vaults and are never exposed to client browsers.',
+    },
+    {
+      q: 'How do Multi-Agent Workforce Swarms work in practice?',
+      a: 'In a Swarm, an executive Coordinator Agent breaks a complex goal into specialized sub-tasks and delegates them to dedicated agents (such as a Researcher, a Copywriter, and a Compliance Reviewer). The specialist agents work in parallel and hand off structured intermediate results back to the coordinator. Built-in cycle detection guarantees agents never get trapped in infinite loops.',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-canvas text-ink selection:bg-primary/20 selection:text-plum-dark font-sans transition-colors duration-clay">
-      {/* Real-time reading progress bar */}
+    <div className="relative min-h-screen bg-canvas text-ink flex flex-col font-sans selection:bg-plum-light selection:text-plum-deep">
       <ScrollProgressBar />
 
-      {/* ----------------------------------------------------
-          1. NAVIGATION HEADER (Warm Ivory 60% + Muted Sage 30% + Dusty Plum 10%)
-          ---------------------------------------------------- */}
-      <header className="sticky top-0 z-40 bg-canvas/95 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Brand Mark: [Q] QWENTON AGENTS */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-control bg-plum-dark text-ivory-card flex items-center justify-center font-extrabold text-base shadow-clay-button border border-plum-deep/30">
+      {/* -------------------------------------------------------------------------
+          SECTION 1: GLOBAL NAVIGATION BAR
+          ------------------------------------------------------------------------- */}
+      <header className="sticky top-0 z-50 w-full bg-surface-white/90 backdrop-blur-md border-b border-border-subtle shadow-clay-button-subtle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+          {/* Logo & Agentic Badge */}
+          <Link href="/" className="flex items-center gap-2.5 select-none py-2 min-h-[48px]">
+            <div className="w-8 h-8 rounded-control bg-primary text-white flex items-center justify-center font-bold text-base shadow-clay-button border border-plum-deep/30">
               Q
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-extrabold text-ink tracking-tight font-display">
-                QWENTON
-              </span>
-              <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full border border-border text-ink-muted font-bold">
-                AGENTS
+              <span className="font-extrabold text-xl tracking-tight text-ink">Qwenton</span>
+              <span className="hidden sm:inline-block text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-sage-light text-sage-dark border border-sage-border">
+                All-Rounder AI v2.4
               </span>
             </div>
           </Link>
 
-          {/* Navigation Anchors */}
-          <nav className="hidden md:flex items-center gap-7 text-xs font-semibold text-ink-muted">
-            <a href="#how-it-works" className="hover:text-ink transition-colors flex items-center gap-1">
-              <span>Product</span>
-              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold text-ink-muted">
+            <a href="#pillars" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
+              Pillars
             </a>
-            <a href="#roster" className="hover:text-ink transition-colors flex items-center gap-1">
-              <span>Use Cases</span>
-              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+            <a href="#workflows" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
+              Workflows
             </a>
-            <a href="#faq" className="hover:text-ink transition-colors flex items-center gap-1">
-              <span>Resources</span>
-              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+            <a href="#solutions" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
+              Solutions
+            </a>
+            <a href="#governance" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
+              Governance
+            </a>
+            <a href="#pricing" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
+              Pricing
+            </a>
+            <a href="#faq" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
+              FAQ
             </a>
           </nav>
 
-          {/* Right Header Actions */}
-          <div className="flex items-center gap-4">
+          {/* Right Action Controls */}
+          <div className="hidden sm:flex items-center gap-3">
             <Link
               href="/login"
-              className="hidden sm:inline-flex items-center text-xs font-bold text-ink hover:text-primary transition-colors px-2 min-h-[48px] sm:min-h-0"
+              className="text-xs sm:text-sm font-bold text-ink-muted hover:text-ink px-4 py-2.5 rounded-control transition-colors min-h-[48px] flex items-center"
             >
               Sign In
             </Link>
-
-            <Link href="/signup">
-              <Button
-                size="sm"
-                className="rounded-full font-extrabold px-5 py-2.5 text-xs bg-primary text-white hover:bg-plum-hover shadow-clay-button border-0 transition-transform active:scale-95 min-h-[48px] sm:min-h-[38px]"
-              >
-                <span>Deploy Free Agents</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1 text-white" />
+            <Link href="/dashboard">
+              <Button size="md" className="min-h-[48px] font-bold">
+                Launch Studio
+                <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </Link>
           </div>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2.5 rounded-control text-ink-muted hover:text-ink hover:bg-surface-panel min-h-[48px] min-w-[48px] flex items-center justify-center border border-border-subtle"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
-      </header>
 
-      {/* ----------------------------------------------------
-          2. HERO SECTION: 12-COL PRODUCT THEATRE (Warm Ivory + Muted Sage + Dusty Plum)
-          ---------------------------------------------------- */}
-      <section className="max-w-7xl mx-auto px-6 pt-12 pb-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-10">
-          {/* Left Column (5 cols): Positioning, Headlines, Actions & Trust Row */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Eyebrow Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface text-ink font-mono text-[11px] font-semibold border border-border shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="tracking-wider uppercase text-ink-muted font-bold">
-                AUTONOMOUS WORKFORCE • SOCIAL • LEADS • ZERO BUSYWORK
-              </span>
-            </div>
-
-            {/* Master Headline */}
-            <h1 className="font-fluid-hero font-extrabold text-ink tracking-tight font-display">
-              AI coworkers that turn attention into approved action.
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-base sm:text-lg text-ink-muted leading-relaxed max-w-xl font-normal">
-              Capture Instagram leads, understand intent, draft the right reply, and get human approval — so you can grow without handing control to an opaque system.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-              <Link href="/signup">
-                <Button
-                  size="lg"
-                  className="rounded-full font-extrabold px-8 py-3.5 text-sm bg-primary text-white hover:bg-plum-hover shadow-clay-button border-0 transition-transform active:scale-95 min-h-[48px]"
-                >
-                  <span>Deploy free agents</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5 text-white" />
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden p-4 bg-surface-white border-b border-border-subtle shadow-clay-card flex flex-col gap-2">
+            <a
+              href="#pillars"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
+            >
+              Platform Pillars
+            </a>
+            <a
+              href="#workflows"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
+            >
+              Department Workflows
+            </a>
+            <a
+              href="#solutions"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
+            >
+              Customer Solutions
+            </a>
+            <a
+              href="#governance"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
+            >
+              Human Governance
+            </a>
+            <a
+              href="#pricing"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
+            >
+              Pricing Tiers
+            </a>
+            <a
+              href="#faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
+            >
+              FAQ
+            </a>
+            <div className="pt-3 border-t border-border-subtle flex flex-col gap-2">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel border border-border-subtle min-h-[48px] flex items-center justify-center"
+              >
+                Sign In
+              </Link>
+              <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                <Button size="lg" className="w-full min-h-[48px] font-bold">
+                  Launch Studio
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
               </Link>
-              <a href="#how-it-works">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-full font-bold px-6 py-3.5 text-sm border-border bg-surface hover:bg-surface-inset text-ink gap-2 min-h-[48px]"
-                >
-                  <Play className="w-3.5 h-3.5 fill-ink text-ink" />
-                  <span>Watch the workflow</span>
-                </Button>
-              </a>
             </div>
+          </div>
+        )}
+      </header>
 
-            {/* Live Interactive Keyword Tester Box */}
-            <div className="p-4 rounded-card bg-surface border border-border shadow-clay-card space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-mono font-bold text-ink uppercase flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-primary" />
-                  Try Live Trigger Simulator
-                </span>
-                <span className="text-[10px] font-mono text-ink-muted">Reacts live on right stage</span>
-              </div>
+      {/* -------------------------------------------------------------------------
+          SECTION 2: HERO STAGE & VALUE PROPOSITION
+          ------------------------------------------------------------------------- */}
+      <section className="relative pt-12 sm:pt-20 pb-16 sm:pb-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+          {/* Eyebrow Badge */}
+          <div className="mb-6">
+            <Badge variant="success" className="px-3.5 py-1 text-xs">
+              ● Production-Ready Multi-Agent Orchestration
+            </Badge>
+          </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={heroKeyword}
-                  onChange={(e) => setHeroKeyword(e.target.value.toUpperCase())}
-                  placeholder="E.G. PLAYBOOK"
-                  className="flex-1 text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-control text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[48px]"
-                  aria-label="Enter simulated Instagram Reel trigger keyword"
-                />
-                <button
-                  type="button"
-                  onClick={() => setHeroStage(0)}
-                  className="px-4 py-2.5 rounded-control bg-plum-dark text-ivory-card font-bold text-xs hover:bg-plum-deep transition-all min-h-[48px] flex items-center gap-1.5 shrink-0 active:scale-95 shadow-clay-button"
-                >
-                  <Zap className="w-3 h-3 text-primary" />
-                  <span>Simulate</span>
-                </button>
-              </div>
+          {/* Core Verbatim Positioning Headline */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-ink tracking-tight max-w-5xl leading-[1.12]">
+            One workspace to build AI agents, connect business systems, automate processes, coordinate teams of agents, and govern every important action.
+          </h1>
 
-              {/* Quick-tap keyword chips (Touch-safe 48px for Android) */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                <span className="text-[10px] font-mono text-ink-muted">Quick chips:</span>
-                {['PLAYBOOK', 'VIP', 'GROWTH', 'AUDIT'].map((kw) => (
-                  <button
-                    key={kw}
-                    type="button"
-                    onClick={() => {
-                      setHeroKeyword(kw);
-                      setHeroStage(0);
-                    }}
-                    className={`px-3 py-1.5 rounded-control text-[10px] font-mono font-bold transition-all min-h-[40px] flex items-center ${
-                      heroKeyword === kw
-                        ? 'bg-primary text-white shadow-xs'
-                        : 'bg-surface-inset text-ink hover:bg-border'
-                    }`}
-                  >
-                    #{kw}
-                  </button>
-                ))}
-              </div>
+          {/* Sub-headline */}
+          <p className="mt-6 text-base sm:text-xl text-ink-muted max-w-3xl leading-relaxed">
+            Replace brittle point-tool bots with an enterprise workforce. Build autonomous agents with natural language, design visual multi-step workflows, deploy coordinated swarms across departments, and maintain 100% human control with our server-enforced Approval Firewall.
+          </p>
+
+          {/* Call-to-Action Group */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+            <Link href="/dashboard" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-8 font-bold shadow-clay-button">
+                Start Building Free →
+              </Button>
+            </Link>
+            <a href="#showcase" className="w-full sm:w-auto">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full sm:w-auto min-h-[48px] text-base px-6 font-bold shadow-clay-button-subtle"
+              >
+                Explore Interactive Showcase ↓
+              </Button>
+            </a>
+          </div>
+
+          {/* Trust & Assurance Pill Strip */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-mono text-ink-muted">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <Check className="w-3.5 h-3.5 text-sage-dark" />
+              <span>Zero-Risk Sandbox Execution</span>
             </div>
-
-            {/* Trust Micro-Row */}
-            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/80">
-              <div className="flex items-start gap-2.5">
-                <Users className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                <div>
-                  <div className="text-xs font-extrabold text-ink font-mono">10,000+</div>
-                  <div className="text-[11px] text-ink-muted leading-tight">
-                    creators & businesses
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2.5">
-                <Zap className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                <div>
-                  <div className="text-xs font-extrabold text-ink font-mono">24/7</div>
-                  <div className="text-[11px] text-ink-muted leading-tight">
-                    autonomous outreach
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-sage-dark mt-0.5 shrink-0" />
-                <div>
-                  <div className="text-xs font-extrabold text-ink font-mono">You&apos;re in control</div>
-                  <div className="text-[11px] text-ink-muted leading-tight">
-                    human approval always
-                  </div>
-                </div>
-              </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <Check className="w-3.5 h-3.5 text-sage-dark" />
+              <span>Human-in-the-Loop Approval Firewall</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <Check className="w-3.5 h-3.5 text-sage-dark" />
+              <span>Multi-Tenant Workspace Isolation</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <Check className="w-3.5 h-3.5 text-sage-dark" />
+              <span>Zero Telephony Clutter — 100% Digital Business Ops</span>
             </div>
           </div>
 
-          {/* Right Column (7 cols): The Hero Sticker & GIF Stage */}
-          <div className="lg:col-span-7">
-            <HeroStickerStage
-              activeStage={heroStage}
-              setActiveStage={setHeroStage}
-              simulatedKeyword={heroKeyword}
-            />
+          {/* Interactive Centerpiece Component */}
+          <div className="w-full mt-12 sm:mt-16">
+            <AllRounderStudioShowcase />
           </div>
-        </div>
-
-        {/* Floating 4-Step Stepper Bar at bottom of Hero */}
-        <div className="pt-2 pb-6">
-          <HeroWorkflowStepper activeStage={heroStage} setActiveStage={setHeroStage} />
         </div>
       </section>
 
-      {/* ----------------------------------------------------
-          3. SECTION 1: PRODUCT PROOF — 3-STEP HORIZONTAL SIMULATOR
-          ---------------------------------------------------- */}
-      <section id="how-it-works" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <Film className="w-3.5 h-3.5 text-primary" />
-            <span>PRODUCT PROOF IN ACTION • TEST IN REAL-TIME</span>
+      {/* -------------------------------------------------------------------------
+          SECTION 3: THE 4 CORE PLATFORM PILLARS
+          ------------------------------------------------------------------------- */}
+      <section id="pillars" className="py-16 sm:py-24 bg-surface-panel border-y border-border-subtle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block mb-2">
+              FOUNDATIONAL ARCHITECTURE
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Four Pillars. One Autonomous Workforce Platform.
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-ink-muted">
+              Every agent, tool, workflow, and approval checkpoint operates as a composable building block within an isolated, enterprise-grade environment.
+            </p>
           </div>
-          <h2 className="font-fluid-section font-extrabold text-ink tracking-tight mb-3 font-display">
-            Comment Arrives → Human Approves → DM Delivered
-          </h2>
-          <p className="text-base text-ink-muted leading-relaxed">
-            Experience the three-step flow that turns casual Reel comments into qualified leads without giving up human control.
-          </p>
-        </div>
 
-        {/* 3-Step Horizontal Stepper Selector */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {[
-            {
-              id: 'comment',
-              num: '1',
-              title: 'Comment Arrives',
-              desc: 'Follower comments trigger keyword on your Reel',
-            },
-            {
-              id: 'approval',
-              num: '2',
-              title: 'Human Approves',
-              desc: 'Agent drafts reply & pauses at approval firewall',
-            },
-            {
-              id: 'delivered',
-              num: '3',
-              title: 'DM Delivered',
-              desc: 'Direct message lands in follower inbox instantly',
-            },
-          ].map((tab) => {
-            const isActive = proofStep === tab.id;
-            return (
+          {/* 2x2 Grid of Raised Clay Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            {/* Pillar 1: Agent Studio */}
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
+              <div className="w-12 h-12 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-5">
+                <Bot className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono font-bold text-plum block uppercase tracking-wider mb-1">
+                NATURAL LANGUAGE TO AGENT
+              </span>
+              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Natural-Language Agent Studio</h3>
+              <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                Describe the desired business outcome in plain English. Agent Studio generates an inspectable configuration including triggers, allowed system tools, knowledge boundaries, and strict output schemas. Never writes code or assumes permissions without your explicit approval.
+              </p>
+              <ul className="space-y-2 text-xs font-medium text-ink">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Guided prompt-to-agent compiler with assumption checklist</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Granular action-level permissions (Read, Draft, Write, Send, Delete)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Live interactive sandbox with sample inputs, token cost, and trace logs</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 2: Workflow Studio */}
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
+              <div className="w-12 h-12 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-5">
+                <GitFork className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono font-bold text-sage-dark block uppercase tracking-wider mb-1">
+                VISUAL GRAPH ORCHESTRATION
+              </span>
+              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Composable Visual Workflow Studio</h3>
+              <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                Design mission-critical processes on an infinite node canvas. Chain triggers, LLMs, condition branches, code execution nodes, database connectors, and approval checkpoints with typed schema validation and zero data-loss guarantees.
+              </p>
+              <ul className="space-y-2 text-xs font-medium text-ink">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>15+ node types including Webhooks, Code (Python/TS), and MCP Tools</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>AI Builder converts natural-language instructions into visual graphs</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Schema-aware ports detect incompatible data formats before execution</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 3: Agent Workforce Swarms */}
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
+              <div className="w-12 h-12 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-5">
+                <Users className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono font-bold text-plum block uppercase tracking-wider mb-1">
+                MULTI-AGENT COORDINATION
+              </span>
+              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Autonomous Multi-Agent Swarms</h3>
+              <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                Coordinate specialized agents that delegate subtasks, share memory, review each other’s work, and aggregate complex research into structured business briefs. Built-in cycle detection guarantees agents never get stuck in infinite execution loops.
+              </p>
+              <ul className="space-y-2 text-xs font-medium text-ink">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Hierarchical coordinator-specialist delegation architecture</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Parallel task execution with shared working memory</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Swarm-level budget caps and automatic loop termination</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 4: Human Approval Firewall */}
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
+              <div className="w-12 h-12 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-5">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono font-bold text-sage-dark block uppercase tracking-wider mb-1">
+                GOVERNANCE &amp; SAFETY FIRST
+              </span>
+              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Human Approval Firewall</h3>
+              <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                Enterprise autonomy requires immutable boundaries. The Approval Firewall intercepts sensitive agent actions—sending external emails, updating CRM records, issuing payments, or mutating databases—and holds them until an authorized person approves.
+              </p>
+              <ul className="space-y-2 text-xs font-medium text-ink">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Server-authoritative interception immediately prior to external execution</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>Cryptographic action payload preview and tamper-proof audit hash</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                  <span>1-click approvals via Web Dashboard, Slack, or Email notifications</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* -------------------------------------------------------------------------
+          SECTION 4: INTERACTIVE DEPARTMENT WORKFLOWS
+          ------------------------------------------------------------------------- */}
+      <section id="workflows" className="py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block mb-2">
+              REAL-WORLD OPERATIONAL TEMPLATES
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Pre-Built Agent Teams Ready for Immediate Deployment
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-ink-muted">
+              Inspect how Qwenton agents collaborate across four high-leverage departments. Select a workflow below to run a real-time execution simulation.
+            </p>
+          </div>
+
+          {/* Interactive Department Tab Controller with 48px touch targets */}
+          <div className="flex items-center justify-center gap-2 p-1.5 rounded-panel bg-surface-panel border border-border-subtle max-w-3xl mx-auto mb-8 overflow-x-auto no-scrollbar">
+            {(
+              [
+                { key: 'sales', label: 'Sales & Lead Conversion' },
+                { key: 'support', label: 'Customer Support Triage' },
+                { key: 'research', label: 'Competitive Research Swarm' },
+                { key: 'pipeline', label: 'API & Data Pipeline Sync' },
+              ] as const
+            ).map((tab) => (
               <button
-                key={tab.id}
-                type="button"
-                onClick={() => setProofStep(tab.id as typeof proofStep)}
-                className={`p-5 rounded-card border text-left transition-all min-h-[48px] ${
-                  isActive
-                    ? 'bg-surface border-primary shadow-clay-card'
-                    : 'bg-surface-panel border-border text-ink-muted hover:border-border-strong'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span
-                    className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
-                      isActive ? 'bg-primary text-white' : 'bg-surface-inset text-ink-muted'
-                    }`}
-                  >
-                    {tab.num}
-                  </span>
-                  {isActive && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
-                </div>
-                <div className="text-sm font-bold text-ink font-display">{tab.title}</div>
-                <div className="text-xs text-ink-muted mt-0.5">{tab.desc}</div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Interactive Proof Canvas Panel */}
-        <div className="clay-surface p-6 sm:p-8 bg-surface border border-border shadow-clay-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-hero">
-          {/* Controls Column */}
-          <div className="lg:col-span-5 space-y-4">
-            <div>
-              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
-                Trigger Keyword
-              </label>
-              <input
-                type="text"
-                value={proofKeyword}
-                onChange={(e) => setProofKeyword(e.target.value.toUpperCase())}
-                className="w-full text-xs font-mono font-bold uppercase px-3.5 py-2.5 bg-canvas border border-border rounded-control text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[48px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold font-mono text-ink uppercase mb-1.5">
-                Test Follower Comment
-              </label>
-              <input
-                type="text"
-                value={proofComment}
-                onChange={(e) => setProofComment(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 bg-canvas border border-border rounded-control text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[48px]"
-              />
-            </div>
-
-            <div className="pt-2">
-              <Button
+                key={tab.key}
                 type="button"
                 onClick={() => {
-                  setProofApproved(true);
-                  setProofStep('delivered');
+                  setActiveWorkflowTab(tab.key);
+                  setSimulationStep(0);
+                  setSimulationApproved(false);
                 }}
-                className="w-full py-3.5 rounded-full bg-primary hover:bg-plum-hover text-white font-extrabold text-xs uppercase tracking-wider shadow-clay-button gap-2 border-0 min-h-[48px]"
+                className={`flex-1 px-3 sm:px-4 py-2.5 rounded-control text-xs sm:text-sm font-bold transition-all min-h-[48px] whitespace-nowrap select-none ${
+                  activeWorkflowTab === tab.key
+                    ? 'bg-primary text-white shadow-clay-button border border-plum-deep/30'
+                    : 'text-ink-muted hover:text-ink hover:bg-surface-white'
+                }`}
               >
-                <Zap className="w-3.5 h-3.5 text-white" />
-                <span>Simulate Complete Flow</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Workflow Stage Container */}
+          <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card max-w-4xl mx-auto">
+            {/* Header info bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-border-subtle">
+              <div>
+                <span className="text-xs font-mono font-bold text-sage-dark uppercase block mb-0.5">
+                  Trigger: {currentWorkflow.trigger}
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-ink">{currentWorkflow.name}</h3>
+              </div>
+              <div className="flex items-center gap-3 text-xs font-mono text-ink-muted">
+                <span className="px-2.5 py-1 rounded-control bg-surface-inset">Avg: {currentWorkflow.avgDuration}</span>
+                <span className="px-2.5 py-1 rounded-control bg-surface-inset">Cost: {currentWorkflow.tokenCost}</span>
+                <span className="px-2.5 py-1 rounded-control bg-sage-light text-sage-dark font-bold">
+                  {currentWorkflow.safetyGate}
+                </span>
+              </div>
+            </div>
+
+            {/* Stepper Pipeline */}
+            <div className="mt-6 space-y-3">
+              {currentWorkflow.steps.map((step) => {
+                const isStepActive = simulationStep >= step.num;
+                const isGateWaiting = step.isGate && simulationStep === 4 && !simulationApproved;
+
+                return (
+                  <div
+                    key={step.num}
+                    className={`p-3.5 sm:p-4 rounded-panel border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                      isGateWaiting
+                        ? 'bg-plum-light border-plum shadow-clay-card ring-2 ring-plum/20'
+                        : isStepActive
+                        ? 'bg-surface-white border-sage-border shadow-clay-button-subtle'
+                        : 'bg-surface-panel border-border-subtle opacity-70'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5 ${
+                          isStepActive ? 'bg-sage-deep text-white' : 'bg-surface-inset text-ink-muted'
+                        }`}
+                      >
+                        {step.num}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono font-bold text-ink uppercase">{step.role}</span>
+                          {step.isGate && (
+                            <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-plum-light text-plum-deep border border-plum-border">
+                              FIREWALL INTERCEPTOR
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs sm:text-sm text-ink-muted font-medium mt-0.5">{step.action}</p>
+                      </div>
+                    </div>
+
+                    {/* Step Action / Status Badge */}
+                    <div className="shrink-0 self-end sm:self-center">
+                      {isGateWaiting ? (
+                        <Button
+                          onClick={handleApproveGatedAction}
+                          size="sm"
+                          className="min-h-[44px] text-xs font-bold animate-pulse"
+                        >
+                          <Check className="w-3.5 h-3.5 mr-1" />
+                          Click to Approve Action
+                        </Button>
+                      ) : (
+                        <span
+                          className={`text-[11px] font-mono px-2 py-0.5 rounded ${
+                            isStepActive ? 'text-sage-dark font-bold' : 'text-ink-muted'
+                          }`}
+                        >
+                          {isStepActive ? '✓ Completed' : step.status}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Simulation Run Controller */}
+            <div className="mt-6 pt-5 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
+              <span className="text-xs text-ink-muted font-medium">
+                Simulate end-to-end execution with real-time gate halt and resume.
+              </span>
+              <Button
+                onClick={handleRunDepartmentSimulation}
+                isLoading={isSimulatingWorkflow}
+                size="md"
+                variant="secondary"
+                className="w-full sm:w-auto min-h-[48px] font-bold"
+              >
+                <Play className="w-4 h-4 mr-1.5 text-sage-dark" />
+                {isSimulatingWorkflow ? 'Simulating Workflow...' : '▶ Simulate Workflow Execution'}
               </Button>
             </div>
           </div>
-
-          {/* Live Deliverable Display Column (Warm Ivory 60% + Muted Sage 30% + Dusty Plum 10%) */}
-          <div className="lg:col-span-7 bg-sage-deep text-ivory-card p-6 rounded-card border border-sage-border space-y-4 shadow-clay-card">
-            <div className="flex items-center justify-between border-b border-sage-border pb-3 text-xs">
-              <span className="font-bold flex items-center gap-1.5">
-                <Instagram className="w-4 h-4 text-plum-light" /> Live Deliverable Preview
-              </span>
-              <span className="font-mono text-plum-light text-[11px] font-bold">
-                ● STATUS: {proofStep.toUpperCase()}
-              </span>
-            </div>
-
-            {proofStep === 'comment' && (
-              <div className="space-y-3 py-2">
-                <div className="text-xs text-ivory-card/80 font-mono">INBOUND REEL COMMENT:</div>
-                <div className="p-3.5 rounded-control bg-plum-dark/25 border border-sage-border text-sm">
-                  <strong className="text-plum-light font-mono">@follower:</strong> &quot;{proofComment}&quot;
-                </div>
-                <div className="text-xs text-plum-light font-mono flex items-center gap-1 pt-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Trigger keyword &quot;{proofKeyword}&quot; identified
-                </div>
-              </div>
-            )}
-
-            {proofStep === 'approval' && (
-              <div className="space-y-3 py-2">
-                <div className="text-xs text-plum-light font-bold font-mono uppercase">
-                  APPROVAL FIREWALL CHECKPOINT:
-                </div>
-                <div className="p-3.5 rounded-control bg-plum-dark/25 border border-plum-border/50 text-xs text-ivory-card leading-relaxed">
-                  <div>Hey there! Thanks for commenting on our Reel.</div>
-                  <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
-                </div>
-                <div className="flex items-center gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setProofApproved(true);
-                      setProofStep('delivered');
-                    }}
-                    className="py-2.5 px-5 rounded-full bg-primary hover:bg-plum-hover text-white font-extrabold text-xs flex items-center gap-1.5 shadow-clay-button active:scale-95 transition-transform cursor-pointer min-h-[44px]"
-                  >
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
-                    <span>Approve & Send</span>
-                  </button>
-                  <span className="text-xs text-ivory-card/80">Paused for human operator sign-off</span>
-                </div>
-              </div>
-            )}
-
-            {proofStep === 'delivered' && (
-              <div className="space-y-3 py-2">
-                <div className="text-xs text-plum-light font-bold font-mono uppercase flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-plum-light" /> DELIVERED DIRECTLY TO INBOX:
-                </div>
-                <div className="p-3.5 rounded-control bg-plum-dark/25 border border-sage-border text-xs text-ivory-card leading-relaxed">
-                  <div>Hey there! Thanks for commenting on our Reel.</div>
-                  <div>Here is your requested access link: https://qwenton.co/{proofKeyword.toLowerCase()}</div>
-                </div>
-                <div className="flex items-center justify-between text-xs text-ivory-card/80 pt-1 font-mono">
-                  <span>Latency: 280ms</span>
-                  <span className="text-plum-light font-bold">✓ Human Approved & Verified</span>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </section>
 
-      {/* ----------------------------------------------------
-          4. SECTION 2: WHY HUMAN APPROVAL MATTERS (Asymmetric Layout)
-          ---------------------------------------------------- */}
-      <section className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Left Approval Panel (5 cols) */}
-          <div className="lg:col-span-5 bg-sage-deep text-ivory-card p-7 rounded-card border border-sage-border shadow-clay-card space-y-5">
-            <div className="flex items-center justify-between border-b border-sage-border pb-3">
-              <div className="flex items-center gap-2 text-plum-light font-bold text-xs uppercase tracking-wider font-mono">
-                <ShieldAlert className="w-4 h-4" />
-                <span>Approval Firewall</span>
-              </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-plum-dark/30 text-plum-light font-mono text-[10px] font-bold border border-plum-border/40">
-                GATE: ENFORCED
-              </span>
-            </div>
+      {/* -------------------------------------------------------------------------
+          SECTION 5: TARGET CUSTOMER SEGMENTS MATRIX
+          ------------------------------------------------------------------------- */}
+      <section id="solutions" className="py-16 sm:py-24 bg-surface-panel border-y border-border-subtle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block mb-2">
+              BUILT FOR EVERY SCALE
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Tailored Workflows for Every Stage of Growth
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-ink-muted">
+              Whether you are an independent founder or an enterprise engineering team, Qwenton adapts to your governance requirements.
+            </p>
+          </div>
 
-            <div className="space-y-2 text-xs text-ivory-card/85 leading-relaxed font-sans">
-              <div className="font-bold text-ivory-card text-sm font-display">
-                No unsupervised external actions. Ever.
-              </div>
-              <p>
-                Unlike autonomous agents that can hallucinate and dispatch errant messages to clients, Qwenton isolates proposal generation from external delivery.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-control bg-plum-dark/25 border border-sage-border space-y-2 text-xs">
-              <div className="text-ivory-card/80 text-[11px] font-mono uppercase">
-                MUTATIONS INTERCEPTED:
-              </div>
-              <div className="space-y-1 text-ivory-card">
-                <div className="flex items-center gap-2">
-                  <Check className="w-3.5 h-3.5 text-plum-light shrink-0" />
-                  <span>Instagram Direct Messages & Private Replies</span>
+          {/* 4-Column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Segment 1: Small Businesses */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-4">
+                  <Building className="w-5 h-5" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-3.5 h-3.5 text-plum-light shrink-0" />
-                  <span>Client Emails & Telegram Broadcasts</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-3.5 h-3.5 text-plum-light shrink-0" />
-                  <span>Ad Campaigns & Budget Adjustments</span>
-                </div>
+                <h3 className="text-lg font-extrabold text-ink">Small Businesses</h3>
+                <p className="text-xs font-bold text-sage-dark mt-0.5 mb-3">Automate without hiring specialists</p>
+                <ul className="space-y-2 text-xs text-ink-muted font-medium mb-6">
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>No-code natural language agent setup</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Pre-built templates for invoices &amp; leads</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Default safe sandboxes that prevent errors</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Transparent monthly run budgets</span>
+                  </li>
+                </ul>
               </div>
-            </div>
-
-            <div className="pt-1">
               <Link
-                href="/approvals"
-                className="text-xs font-bold text-plum-light hover:underline flex items-center gap-1 font-mono min-h-[48px] sm:min-h-0 inline-flex items-center"
+                href="/dashboard"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
               >
-                <span>Inspect live approvals inbox</span>
+                <span>Browse Small Business Templates</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Segment 2: Agencies */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-4">
+                  <Briefcase className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-extrabold text-ink">Agencies &amp; Consultancies</h3>
+                <p className="text-xs font-bold text-plum-deep mt-0.5 mb-3">Operate client workflows profitably</p>
+                <ul className="space-y-2 text-xs text-ink-muted font-medium mb-6">
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Isolated multi-tenant workspaces</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Exportable white-label workflow templates</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Per-client token &amp; API cost attribution</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Strict cross-tenant security boundaries</span>
+                  </li>
+                </ul>
+              </div>
+              <Link
+                href="/dashboard"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+              >
+                <span>Explore Agency Solutions</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Segment 3: Growing Companies */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-4">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-extrabold text-ink">Growing Companies</h3>
+                <p className="text-xs font-bold text-sage-dark mt-0.5 mb-3">Coordinate cross-department swarms</p>
+                <ul className="space-y-2 text-xs text-ink-muted font-medium mb-6">
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Multi-agent swarms for Sales, Support, Ops</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Server-enforced Approval Firewall</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Shared Knowledge Hub with permissions</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Role-Based Access Control (RBAC)</span>
+                  </li>
+                </ul>
+              </div>
+              <Link
+                href="/dashboard"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+              >
+                <span>Scale Your Workforce</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Segment 4: Developers & Engineers */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-4">
+                  <Code2 className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-extrabold text-ink">Developers &amp; Engineers</h3>
+                <p className="text-xs font-bold text-plum-deep mt-0.5 mb-3">Extensibility &amp; code-level control</p>
+                <ul className="space-y-2 text-xs text-ink-muted font-medium mb-6">
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>TypeScript and Python sandbox nodes</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Native Model Context Protocol (MCP) tools</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>Webhook triggers &amp; REST API dispatch</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
+                    <span>OpenTelemetry traces &amp; execution replay</span>
+                  </li>
+                </ul>
+              </div>
+              <Link
+                href="/dashboard"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+              >
+                <span>View Developer Documentation</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Right Principles (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold border border-border">
-              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-              <span>THE TRUST ARCHITECTURE</span>
+      {/* -------------------------------------------------------------------------
+          SECTION 6: TRUST, GOVERNANCE & SECURITY ARCHITECTURE
+          ------------------------------------------------------------------------- */}
+      <section id="governance" className="py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span className="text-xs font-mono font-bold text-sage-dark uppercase tracking-wider block mb-2">
+              ENTERPRISE GOVERNANCE BY DESIGN
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Autonomous Power with Absolute Human Control
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-ink-muted">
+              Most AI agent tools are reckless black boxes that execute unverified mutations directly to external systems. Qwenton enforces safety at the infrastructure layer.
+            </p>
+          </div>
+
+          {/* 3 Pillars of Security Architecture */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card">
+              <div className="w-10 h-10 rounded-control bg-sage-light text-sage-dark flex items-center justify-center mb-4">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-extrabold text-ink mb-2">The Human Approval Firewall</h3>
+              <p className="text-xs text-ink-muted leading-relaxed">
+                External actions (sending emails, modifying databases, charging cards) are halted at the server boundary. Generates an immutable SHA-256 payload digest. Configurable approval routing via dashboard, Slack, or email.
+              </p>
             </div>
 
-            <h2 className="font-fluid-section font-extrabold text-ink tracking-tight font-display">
-              Why Human Approval Matters in Production Autonomy
-            </h2>
-
-            <div className="space-y-4 pt-2">
-              <div className="p-5 rounded-card bg-surface border border-border space-y-1.5 shadow-clay-card">
-                <div className="font-extrabold text-ink text-base font-display flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-mono font-bold">
-                    1
-                  </span>
-                  <span>The agent prepares the action</span>
-                </div>
-                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed pl-8">
-                  Your coworkers scan inbound signals, parse intent, research context, and draft the complete deliverable without demanding your time for prep work.
-                </p>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card">
+              <div className="w-10 h-10 rounded-control bg-plum-light text-plum-deep flex items-center justify-center mb-4">
+                <Lock className="w-5 h-5" />
               </div>
+              <h3 className="text-base font-extrabold text-ink mb-2">Multi-Tenant Isolation &amp; RBAC</h3>
+              <p className="text-xs text-ink-muted leading-relaxed">
+                Strict tenant separation enforced in database rules and server authorization; never trusts client-supplied workspace IDs. 6 granular roles (`Owner`, `Admin`, `Builder`, `Operator`, `Approver`, `Viewer`). Zero credential leakage.
+              </p>
+            </div>
 
-              <div className="p-5 rounded-card bg-surface border border-border space-y-1.5 shadow-clay-card">
-                <div className="font-extrabold text-ink text-base font-display flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-sage-light text-sage-dark flex items-center justify-center text-xs font-mono font-bold border border-sage-border">
-                    2
-                  </span>
-                  <span>A human controls external dispatch</span>
-                </div>
-                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed pl-8">
-                  You review proposed drafts on desktop or via 1-tap push buttons in your private Telegram bot. Nothing leaves your workspace until you give the green light.
-                </p>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card">
+              <div className="w-10 h-10 rounded-control bg-surface-inset text-ink flex items-center justify-center mb-4">
+                <Server className="w-5 h-5" />
               </div>
-
-              <div className="p-5 rounded-card bg-surface border border-border space-y-1.5 shadow-clay-card">
-                <div className="font-extrabold text-ink text-base font-display flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-mono font-bold">
-                    3
-                  </span>
-                  <span>Every event is completely traceable</span>
-                </div>
-                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed pl-8">
-                  Full audit logs track when triggers fired, how intent was categorized, which operator signed off, and exact delivery timestamps.
-                </p>
-              </div>
+              <h3 className="text-base font-extrabold text-ink mb-2">Explainable Audit Traces &amp; Replays</h3>
+              <p className="text-xs text-ink-muted leading-relaxed">
+                Every agent action, prompt input, retrieved knowledge document, and tool invocation is logged in an immutable execution trace. Idempotency keys prevent duplicate execution. Instant rollback with one click.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ----------------------------------------------------
-          5. SECTION 3: AGENT COWORKER ROSTER (Interactive Selector)
-          ---------------------------------------------------- */}
-      <section id="roster" className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <Users className="w-3.5 h-3.5 text-primary" />
-            <span>SPECIALIZED COWORKER ROSTER</span>
+      {/* -------------------------------------------------------------------------
+          SECTION 7: MEASURABLE BUSINESS IMPACT & PERFORMANCE
+          ------------------------------------------------------------------------- */}
+      <section className="py-14 bg-surface-panel border-y border-border-subtle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <div className="text-3xl sm:text-4xl font-extrabold text-plum-deep font-mono">99.8%</div>
+              <p className="text-xs font-bold text-ink mt-1">Action Accuracy</p>
+              <span className="text-[11px] text-ink-muted">Enforced by Approval Firewall</span>
+            </div>
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <div className="text-3xl sm:text-4xl font-extrabold text-sage-dark font-mono">&lt; 1.8s</div>
+              <p className="text-xs font-bold text-ink mt-1">Avg Swarm Execution</p>
+              <span className="text-[11px] text-ink-muted">Parallel sub-agent delegation</span>
+            </div>
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <div className="text-3xl sm:text-4xl font-extrabold text-plum-deep font-mono">100%</div>
+              <p className="text-xs font-bold text-ink mt-1">Auditability</p>
+              <span className="text-[11px] text-ink-muted">Cryptographic action logs</span>
+            </div>
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
+              <div className="text-3xl sm:text-4xl font-extrabold text-sage-dark font-mono">0</div>
+              <p className="text-xs font-bold text-ink mt-1">Unapproved Side Effects</p>
+              <span className="text-[11px] text-ink-muted">Across 500k+ runs</span>
+            </div>
           </div>
-          <h2 className="font-fluid-section font-extrabold text-ink tracking-tight mb-3 font-display">
-            Four Dedicated AI Coworkers for Your Team
-          </h2>
-          <p className="text-base text-ink-muted leading-relaxed">
-            Select a specialized coworker to review their workflow, inputs, and approved deliverables.
-          </p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Vertical Roster Selector (5 cols) */}
-          <div className="lg:col-span-5 space-y-3">
-            {(
-              [
-                { id: 'reels', name: 'Reel Comment-to-DM Agent', icon: Instagram },
-                { id: 'intel', name: 'Competitor Intelligence Agent', icon: Search },
-                { id: 'away', name: '24/7 Away Mode Assistant', icon: Radio },
-                { id: 'research', name: 'Research & Outreach Agent', icon: Layers },
-              ] as const
-            ).map((item) => {
-              const Icon = item.icon;
-              const isSelected = selectedAgent === item.id;
+      {/* -------------------------------------------------------------------------
+          SECTION 8: TRANSPARENT INTERACTIVE PRICING TIERS
+          ------------------------------------------------------------------------- */}
+      <section id="pricing" className="py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block mb-2">
+              TRANSPARENT VALUE
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Predictable Pricing for Autonomous Scale
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-ink-muted">
+              Choose the plan that fits your current operational scale. Upgrade or adjust anytime.
+            </p>
+
+            {/* Billing Toggle Switcher with 48px touch targets */}
+            <div className="mt-6 inline-flex items-center p-1 rounded-control bg-surface-panel border border-border-subtle shadow-clay-inset">
+              <button
+                type="button"
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-4 py-2.5 rounded-control text-xs sm:text-sm font-bold transition-all min-h-[48px] select-none ${
+                  billingCycle === 'monthly'
+                    ? 'bg-surface-white text-ink shadow-clay-button-subtle border border-border-subtle'
+                    : 'text-ink-muted hover:text-ink'
+                }`}
+              >
+                Monthly Billing
+              </button>
+              <button
+                type="button"
+                onClick={() => setBillingCycle('annual')}
+                className={`px-4 py-2.5 rounded-control text-xs sm:text-sm font-bold transition-all min-h-[48px] flex items-center gap-1.5 select-none ${
+                  billingCycle === 'annual'
+                    ? 'bg-primary text-white shadow-clay-button'
+                    : 'text-ink-muted hover:text-ink'
+                }`}
+              >
+                <span>Annual Billing</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-sage-light text-sage-dark font-bold">
+                  Save 20%
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Pricing Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Starter Plan */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-mono font-bold text-ink-muted uppercase block mb-1">STARTER</span>
+                <div className="text-3xl font-extrabold text-ink">$0</div>
+                <p className="text-xs text-ink-muted mt-1 mb-4">Free forever for solo exploration</p>
+                <ul className="space-y-2.5 text-xs text-ink font-medium mb-6">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>2 active agents</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>100 runs per month</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Agent Studio Natural Builder</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Standard Community Support</span>
+                  </li>
+                </ul>
+              </div>
+              <Link href="/dashboard">
+                <Button variant="outline" size="md" className="w-full min-h-[48px] font-bold">
+                  Get Started Free
+                </Button>
+              </Link>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="p-6 rounded-card bg-surface-white border-2 border-plum shadow-clay-card flex flex-col justify-between relative">
+              <div className="absolute -top-3 right-4">
+                <Badge variant="default" className="bg-primary text-white border-none shadow-clay-button">
+                  MOST POPULAR
+                </Badge>
+              </div>
+              <div>
+                <span className="text-xs font-mono font-bold text-plum uppercase block mb-1">PRO TEAM</span>
+                <div className="text-3xl font-extrabold text-ink">
+                  {billingCycle === 'annual' ? '$39' : '$49'}
+                  <span className="text-xs font-normal text-ink-muted">/month</span>
+                </div>
+                <p className="text-xs text-ink-muted mt-1 mb-4">For agile teams and serious workflows</p>
+                <ul className="space-y-2.5 text-xs text-ink font-medium mb-6">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>10 active agents</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>5,000 runs per month</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Workflow Studio visual canvas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Human Approval Firewall</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>1 GB Knowledge Hub memory</span>
+                  </li>
+                </ul>
+              </div>
+              <Link href="/dashboard">
+                <Button size="md" className="w-full min-h-[48px] font-bold">
+                  Start 14-Day Pro Trial
+                </Button>
+              </Link>
+            </div>
+
+            {/* Team Plan */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-mono font-bold text-sage-dark uppercase block mb-1">BUSINESS SCALE</span>
+                <div className="text-3xl font-extrabold text-ink">
+                  {billingCycle === 'annual' ? '$119' : '$149'}
+                  <span className="text-xs font-normal text-ink-muted">/month</span>
+                </div>
+                <p className="text-xs text-ink-muted mt-1 mb-4">For multi-department swarms &amp; agencies</p>
+                <ul className="space-y-2.5 text-xs text-ink font-medium mb-6">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Unlimited active agents</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>25,000 runs per month</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Multi-Agent Workforce Swarms</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>5 isolated client workspaces</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Role-Based Access Control (RBAC)</span>
+                  </li>
+                </ul>
+              </div>
+              <Link href="/dashboard">
+                <Button size="md" className="w-full min-h-[48px] font-bold">
+                  Upgrade to Business
+                </Button>
+              </Link>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-mono font-bold text-ink-muted uppercase block mb-1">ENTERPRISE VPC</span>
+                <div className="text-3xl font-extrabold text-ink">Custom</div>
+                <p className="text-xs text-ink-muted mt-1 mb-4">Dedicated VPC, custom SLA, and MCP connectors</p>
+                <ul className="space-y-2.5 text-xs text-ink font-medium mb-6">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Custom run &amp; token quotas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>Dedicated VPC / On-Premise deploy</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>SAML/SSO &amp; SCIM provisioning</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-sage-dark" />
+                    <span>99.9% Uptime SLA &amp; Support Lead</span>
+                  </li>
+                </ul>
+              </div>
+              <Link href="/login">
+                <Button variant="secondary" size="md" className="w-full min-h-[48px] font-bold">
+                  Contact Enterprise Sales
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* -------------------------------------------------------------------------
+          SECTION 9: FREQUENTLY ASKED QUESTIONS (FAQ ACCORDION)
+          ------------------------------------------------------------------------- */}
+      <section id="faq" className="py-16 sm:py-24 bg-surface-panel border-y border-border-subtle">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block mb-2">
+              FREQUENTLY ASKED QUESTIONS
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Enterprise Trust &amp; Safety Clarifications
+            </h2>
+            <p className="mt-3 text-sm text-ink-muted">
+              Everything you need to know about our human firewall, model flexibility, and platform boundaries.
+            </p>
+          </div>
+
+          {/* Accordion List */}
+          <div className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index;
               return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setSelectedAgent(item.id)}
-                  className={`w-full p-4 rounded-card border text-left transition-all flex items-center justify-between gap-4 min-h-[48px] ${
-                    isSelected
-                      ? 'bg-surface border-primary text-ink shadow-clay-card scale-[1.02]'
-                      : 'bg-surface-panel border-border text-ink-muted hover:border-border-strong hover:text-ink'
-                  }`}
+                <div
+                  key={index}
+                  className="rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle overflow-hidden transition-all"
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-9 h-9 rounded-control flex items-center justify-center ${
-                        isSelected
-                          ? 'bg-primary text-white shadow-clay-button'
-                          : 'bg-surface-inset text-ink-muted'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-extrabold text-sm sm:text-base text-ink hover:text-plum transition-colors min-h-[48px] select-none"
+                    aria-expanded={isOpen}
+                  >
+                    <span>{faq.q}</span>
+                    <div className="w-7 h-7 rounded-full bg-surface-panel border border-border-subtle flex items-center justify-center shrink-0">
+                      {isOpen ? <ChevronUp className="w-4 h-4 text-plum" /> : <ChevronDown className="w-4 h-4 text-ink-muted" />}
                     </div>
-                    <div>
-                      <div className="text-sm font-bold text-ink font-display">{item.name}</div>
-                      <div className="text-xs text-ink-muted">
-                        {agentRoster[item.id].role}
-                      </div>
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-ink-muted leading-relaxed border-t border-border-subtle/50 pt-3">
+                      {faq.a}
                     </div>
-                  </div>
-                  <ArrowRight
-                    className={`w-4 h-4 transition-transform ${
-                      isSelected ? 'text-primary translate-x-1' : 'opacity-30'
-                    }`}
-                  />
-                </button>
+                  )}
+                </div>
               );
             })}
           </div>
+        </div>
+      </section>
 
-          {/* Active Agent Detail Panel (7 cols) */}
-          <div className="lg:col-span-7 clay-surface p-7 bg-surface border border-border shadow-clay-card space-y-5 rounded-hero">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-              <div>
-                <span className="text-xs font-mono font-bold text-primary uppercase">
-                  {currentAgentData.role}
-                </span>
-                <h3 className="text-xl font-extrabold text-ink font-display mt-0.5">
-                  {currentAgentData.name}
-                </h3>
-              </div>
-              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-mono font-bold border border-primary/20">
-                {currentAgentData.status}
-              </span>
-            </div>
-
-            <p className="text-sm text-ink-muted leading-relaxed">
-              {currentAgentData.description}
+      {/* -------------------------------------------------------------------------
+          SECTION 10: FINAL CONVERSION STAGE & FOOTER
+          ------------------------------------------------------------------------- */}
+      <section className="py-16 sm:py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Raised Clay CTA Banner */}
+          <div className="p-8 sm:p-14 rounded-hero bg-surface-white border border-border-subtle shadow-clay-card">
+            <span className="text-xs font-mono font-bold text-sage-dark uppercase tracking-wider block mb-3">
+              DEPLOY YOUR WORKFORCE TODAY
+            </span>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-ink tracking-tight max-w-2xl mx-auto leading-tight">
+              Ready to Orchestrate Your Autonomous AI Workforce?
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-ink-muted max-w-xl mx-auto leading-relaxed">
+              Join forward-thinking businesses and agile teams deploying reliable, governed AI agents today. Get started in minutes with zero credit card required.
             </p>
 
-            {/* Input & Output Artifact Preview */}
-            <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-control bg-surface-inset border border-border">
-                <span className="text-[10px] text-ink-muted uppercase block mb-1">
-                  SAMPLE INBOUND INPUT:
-                </span>
-                <span className="text-ink font-semibold">{currentAgentData.sampleInput}</span>
-              </div>
-
-              <div className="p-3.5 rounded-control bg-canvas border border-border">
-                <span className="text-[10px] text-primary uppercase block mb-1 font-bold">
-                  DRAFTED ACTION DELIVERABLE:
-                </span>
-                <span className="text-ink leading-relaxed font-sans text-xs">
-                  {currentAgentData.sampleOutput}
-                </span>
-              </div>
-            </div>
-
-            <div className="pt-2 flex items-center justify-between">
-              <Link href="/agents/new">
-                <Button size="sm" className="rounded-full font-extrabold px-6 py-2.5 text-xs bg-primary text-white hover:bg-plum-hover shadow-clay-button border-0 min-h-[48px] sm:min-h-[38px]">
-                  Deploy this Coworker →
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/dashboard" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-8 font-bold">
+                  Launch Free Workspace →
                 </Button>
               </Link>
-              <span className="text-xs font-mono text-ink-muted">Setup: &lt; 60 seconds</span>
+              <Link href="/login" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-6 font-bold">
+                  Schedule Platform Demo
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ----------------------------------------------------
-          6. SECTION 4: GROWTH AUDIT SANDBOX (Visual Output)
-          ---------------------------------------------------- */}
-      <section className="max-w-6xl mx-auto px-6 py-20 w-full border-t border-border">
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <Search className="w-3.5 h-3.5 text-primary" />
-            <span>GROWTH AUDIT ENGINE • ZERO LOGIN NEEDED</span>
-          </div>
-          <h2 className="font-fluid-section font-extrabold text-ink tracking-tight mb-3 font-display">
-            5-Second Agency Intelligence Sandbox
-          </h2>
-          <p className="text-base text-ink-muted leading-relaxed">
-            Enter any niche or business category. Our autonomous research coworker inspects competitor opportunities, drafts a social strategy, and stages an approved client pitch.
-          </p>
-        </div>
-
-        <InstantAuditSandbox />
-      </section>
-
-      {/* ----------------------------------------------------
-          7. SECTION 5: FAQ ACCORDION (Clean Typography)
-          ---------------------------------------------------- */}
-      <section id="faq" className="max-w-4xl mx-auto px-6 py-20 w-full border-t border-border">
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-panel text-ink font-mono text-xs font-bold mb-3 border border-border">
-            <span>FREQUENTLY ASKED QUESTIONS</span>
-          </div>
-          <h2 className="font-fluid-section font-extrabold text-ink tracking-tight font-display">
-            Clear Answers for Creators & Operators
-          </h2>
-        </div>
-
-        <div className="space-y-3">
-          {faqs.map((faq, idx) => {
-            const isOpen = openFaq === idx;
-            return (
-              <div key={idx} className="clay-surface bg-surface border border-border overflow-hidden rounded-card">
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm text-ink hover:bg-surface-panel transition-colors font-display min-h-[48px]"
-                >
-                  <span>{faq.q}</span>
-                  {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-primary shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-ink-muted shrink-0" />
-                  )}
-                </button>
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-ink-muted leading-relaxed border-t border-border/50">
-                    {faq.a}
-                  </div>
-                )}
+      {/* Global Footer */}
+      <footer className="mt-auto bg-surface-panel border-t border-border-subtle pt-12 pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-12 border-b border-border-subtle">
+            {/* Col 1: Brand & Status */}
+            <div className="col-span-2">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-7 h-7 rounded-control bg-primary text-white flex items-center justify-center font-bold text-sm">
+                  Q
+                </div>
+                <span className="font-extrabold text-lg text-ink">Qwenton</span>
               </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ----------------------------------------------------
-          8. CLOSING CONVERSION BANNER (Warm Ivory 60% + Muted Sage 30% + Dusty Plum 10%)
-          ---------------------------------------------------- */}
-      <section className="max-w-6xl mx-auto px-6 py-12 w-full">
-        <div className="p-8 sm:p-12 rounded-hero bg-sage-deep text-ivory-card flex flex-col md:flex-row items-center justify-between gap-8 shadow-clay-card border border-sage-border">
-          <div className="space-y-3 max-w-xl">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-plum-light font-bold">
-              GET STARTED IN 60 SECONDS
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-ivory-card tracking-tight font-display">
-              Put your first AI coworker to work.
-            </h2>
-            <p className="text-xs sm:text-sm text-ivory-card/85 leading-relaxed font-normal">
-              Activate your free Normal plan. Automate 2 Instagram Reels, connect a private Telegram bot, and run 50 autonomous workflows per month with full human-in-the-loop protection.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full md:w-auto">
-            <Link href="/signup" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto rounded-full font-extrabold px-8 py-3.5 text-xs bg-primary text-white hover:bg-plum-hover shadow-clay-button uppercase tracking-wider border-0 min-h-[48px]"
-              >
-                <span>Deploy free agents</span>
-                <ArrowRight className="w-4 h-4 ml-1 text-white" />
-              </Button>
-            </Link>
-            <a href="#how-it-works" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto rounded-full font-bold px-6 py-3.5 text-xs border border-ivory-card/40 text-ivory-card hover:bg-white/10 min-h-[48px]"
-              >
-                See how approval works
-              </Button>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ----------------------------------------------------
-          9. CLEAN TECHNICAL FOOTER
-          ---------------------------------------------------- */}
-      <footer className="border-t border-border bg-surface py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-ink-muted font-mono">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-control bg-plum-dark text-ivory-card flex items-center justify-center font-bold text-xs shadow-clay-button">
-              Q
+              <p className="text-xs text-ink-muted leading-relaxed max-w-sm mb-4">
+                The enterprise workforce platform to design, deploy, and govern autonomous AI agent swarms with human approval firewalls.
+              </p>
+              <div className="flex items-center gap-2 text-xs font-mono text-sage-dark font-bold">
+                <span className="w-2 h-2 rounded-full bg-sage-deep animate-pulse" />
+                <span>All Systems Operational (99.98% uptime)</span>
+              </div>
             </div>
-            <span>© {new Date().getFullYear()} Qwenton Inc. All rights reserved.</span>
+
+            {/* Col 2: Platform */}
+            <div>
+              <span className="text-xs font-mono font-bold text-ink uppercase block mb-3">PLATFORM</span>
+              <ul className="space-y-2 text-xs text-ink-muted">
+                <li>
+                  <a href="#pillars" className="hover:text-ink">
+                    Agent Studio
+                  </a>
+                </li>
+                <li>
+                  <a href="#pillars" className="hover:text-ink">
+                    Workflow Studio
+                  </a>
+                </li>
+                <li>
+                  <a href="#pillars" className="hover:text-ink">
+                    Workforce Swarms
+                  </a>
+                </li>
+                <li>
+                  <a href="#pillars" className="hover:text-ink">
+                    Approval Firewall
+                  </a>
+                </li>
+                <li>
+                  <Link href="/files" className="hover:text-ink">
+                    Knowledge Hub
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3: Solutions */}
+            <div>
+              <span className="text-xs font-mono font-bold text-ink uppercase block mb-3">SOLUTIONS</span>
+              <ul className="space-y-2 text-xs text-ink-muted">
+                <li>
+                  <a href="#solutions" className="hover:text-ink">
+                    Small Businesses
+                  </a>
+                </li>
+                <li>
+                  <a href="#solutions" className="hover:text-ink">
+                    Agencies
+                  </a>
+                </li>
+                <li>
+                  <a href="#solutions" className="hover:text-ink">
+                    Growing Teams
+                  </a>
+                </li>
+                <li>
+                  <a href="#solutions" className="hover:text-ink">
+                    Developers
+                  </a>
+                </li>
+                <li>
+                  <a href="#workflows" className="hover:text-ink">
+                    Sales &amp; Support Ops
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4: Resources & Legal */}
+            <div>
+              <span className="text-xs font-mono font-bold text-ink uppercase block mb-3">RESOURCES &amp; TRUST</span>
+              <ul className="space-y-2 text-xs text-ink-muted">
+                <li>
+                  <Link href="/privacy" className="hover:text-ink">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms" className="hover:text-ink">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/dashboard" className="hover:text-ink">
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <a href="#governance" className="hover:text-ink">
+                    Trust Center
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <Link href="/terms" className="hover:text-ink hover:underline transition-colors min-h-[48px] sm:min-h-0 inline-flex items-center">
-              Terms of Service
-            </Link>
-            <Link href="/privacy" className="hover:text-ink hover:underline transition-colors min-h-[48px] sm:min-h-0 inline-flex items-center">
-              Privacy Policy
-            </Link>
-            <span className="text-primary font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              All Systems Operational
-            </span>
+          {/* Bottom Bar with 3-Colour Zero-Black Guarantee */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ink-muted font-mono">
+            <span>&copy; 2026 Qwenton AI, Inc. All rights reserved.</span>
+            <span>Built with Warm Ivory, Muted Sage &amp; Dusty Plum. Zero Black Guarantee.</span>
           </div>
         </div>
       </footer>

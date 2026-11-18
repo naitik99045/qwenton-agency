@@ -15,3 +15,8 @@
 ## Wave 4: Verification, Quality Gates & Release
 - [x] **AT-007 (code-reviewer)**: Audit files for adherence to blueprint constraints (zero black, 3-colour rule, accessibility).
 - [x] **AT-008 (qa-test-automation)**: Run TypeScript typecheck, production build across all routes, and produce verification evidence.
+
+## Wave 5: Landing Page Rework & Interactive Hero
+- [x] **AT-009 (product-manager)**: Define product architecture, messaging, interactive states, and component spec for `AllRounderStudioShowcase.tsx` in `docs/agentic-team/brief-landing-rework.md`.
+- [ ] **AT-010 (frontend-developer)**: Implement `components/landing/AllRounderStudioShowcase.tsx` and rework `app/page.tsx` with full 4-pillar showcase and department workflows.
+- [ ] **AT-011 (qa-test-automation)**: Verify zero black, contrast ratios, and clean production build on reworked landing page.
