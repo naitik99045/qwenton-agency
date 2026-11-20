@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Bot,
@@ -11,24 +11,21 @@ import {
   ArrowRight,
   Play,
   CheckCircle2,
-  ChevronRight,
   Check,
   X,
   Sparkles,
   RefreshCw,
-  Layers,
   ShieldAlert,
   FileText,
   Lock,
   Terminal,
   Clock,
-  Send,
   Database,
   Search,
-  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { Workflow3DCanvas } from '@/components/landing/Workflow3DCanvas';
 
 export type ShowcasePillar = 'agent-studio' | 'workflow-studio' | 'workforce-swarm' | 'approval-firewall';
 
@@ -42,7 +39,6 @@ export function AllRounderStudioShowcase() {
     'Monitor Zendesk tickets, search Knowledge Hub for solutions, draft friendly replies, and ask for approval on refund requests.'
   );
   const [isGeneratingAgent, setIsGeneratingAgent] = useState<boolean>(false);
-  const [agentGenerated, setAgentGenerated] = useState<boolean>(true);
   const [permissions, setPermissions] = useState({
     readDocs: true,
     draftZendesk: true,
@@ -51,15 +47,12 @@ export function AllRounderStudioShowcase() {
   });
   const [isSimulatingTicket, setIsSimulatingTicket] = useState<boolean>(false);
   const [ticketTraceStep, setTicketTraceStep] = useState<number>(0);
-  const [ticketApproved, setTicketApproved] = useState<boolean>(false);
 
   const handleGenerateAgent = () => {
     setIsGeneratingAgent(true);
     setTimeout(() => {
       setIsGeneratingAgent(false);
-      setAgentGenerated(true);
       setTicketTraceStep(0);
-      setTicketApproved(false);
     }, 450);
   };
 
@@ -67,7 +60,6 @@ export function AllRounderStudioShowcase() {
     if (isSimulatingTicket) return;
     setIsSimulatingTicket(true);
     setTicketTraceStep(1);
-    setTicketApproved(false);
 
     setTimeout(() => setTicketTraceStep(2), 500);
     setTimeout(() => setTicketTraceStep(3), 1000);
@@ -196,8 +188,8 @@ export function AllRounderStudioShowcase() {
           : 'I turn plain English into verified agents with strict guardrails!';
       case 'workflow-studio':
         return isWorkflowRunning
-          ? `Executing step ${workflowActiveStep} of 4 with zero data loss...`
-          : 'Select any node to inspect schemas and security policies!';
+          ? `Executing step ${workflowActiveStep} of 4 in 3D with zero data loss...`
+          : 'Drag to tilt the 3D scene or click any node to inspect schemas!';
       case 'workforce-swarm':
         return isSwarmRunning
           ? 'Coordinating 3 specialist agents in parallel with cycle detection!'
@@ -244,7 +236,7 @@ export function AllRounderStudioShowcase() {
             aria-label="Switch to Workflow Studio interactive tab"
           >
             <GitFork className="w-4 h-4 shrink-0" />
-            <span className="whitespace-nowrap">Workflow Studio</span>
+            <span className="whitespace-nowrap">Workflow Studio (3D)</span>
           </button>
 
           <button
@@ -304,7 +296,7 @@ export function AllRounderStudioShowcase() {
           TAB 1: NATURAL LANGUAGE AGENT STUDIO
           ---------------------------------------------------- */}
       {activePillar === 'agent-studio' && (
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start perspective-container">
           {/* Left Panel: Configuration & Natural Language Prompt Builder */}
           <div className="lg:col-span-5 flex flex-col gap-4">
             <div className="p-4 sm:p-5 rounded-panel bg-surface-panel border border-border-subtle shadow-clay-inset">
@@ -358,7 +350,7 @@ export function AllRounderStudioShowcase() {
             {/* Granular Permissions Checklist */}
             <div className="p-4 sm:p-5 rounded-panel bg-surface-panel border border-border-subtle">
               <span className="block text-xs font-mono font-bold text-ink uppercase tracking-wider mb-3">
-                Action-Level Permissions & Boundaries
+                Action-Level Permissions &amp; Boundaries
               </span>
               <div className="space-y-2.5">
                 <label className="flex items-start gap-2.5 cursor-pointer">
@@ -369,8 +361,8 @@ export function AllRounderStudioShowcase() {
                     className="mt-0.5 rounded text-plum focus:ring-plum"
                   />
                   <div>
-                    <span className="text-xs font-bold text-ink">Read Tickets & Knowledge Documents</span>
-                    <p className="text-[11px] text-ink-muted">Semantic search across indexed refund policies & FAQs.</p>
+                    <span className="text-xs font-bold text-ink">Read Tickets &amp; Knowledge Documents</span>
+                    <p className="text-[11px] text-ink-muted">Semantic search across indexed refund policies &amp; FAQs.</p>
                   </div>
                 </label>
 
@@ -435,9 +427,9 @@ export function AllRounderStudioShowcase() {
 
           {/* Right Panel: Generated Agent Profile & Live Sandbox Simulation */}
           <div className="lg:col-span-7 flex flex-col gap-4">
-            {/* Generated Profile Summary Card */}
-            <div className="p-4 sm:p-5 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-subtle">
+            {/* Generated Profile Summary Card with 3D Depth */}
+            <div className="p-4 sm:p-5 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-subtle clay-card-3d-content">
                 <div className="flex items-center gap-2.5">
                   <div className="w-9 h-9 rounded-control bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark">
                     <Bot className="w-5 h-5" />
@@ -451,7 +443,7 @@ export function AllRounderStudioShowcase() {
               </div>
 
               {/* Grid of Verified Agent Boundaries */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 text-xs clay-card-3d-content">
                 <div className="p-2.5 rounded-control bg-surface-panel border border-border-subtle">
                   <span className="text-[10px] font-mono text-ink-muted block uppercase">Trigger Event</span>
                   <span className="font-bold text-ink">Zendesk Webhook</span>
@@ -540,7 +532,7 @@ export function AllRounderStudioShowcase() {
       )}
 
       {/* ----------------------------------------------------
-          TAB 2: COMPOSABLE WORKFLOW STUDIO CANVAS
+          TAB 2: COMPOSABLE WORKFLOW STUDIO (WITH 3D CANVAS)
           ---------------------------------------------------- */}
       {activePillar === 'workflow-studio' && (
         <div className="mt-6 flex flex-col gap-6">
@@ -548,10 +540,10 @@ export function AllRounderStudioShowcase() {
           <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-panel bg-surface-panel border border-border-subtle">
             <div>
               <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block">
-                Visual Graph Pipeline
+                Visual Graph Pipeline • Interactive 3D Spatial Canvas
               </span>
               <p className="text-xs text-ink font-semibold">
-                Click any node below to inspect schemas, parameters, and firewall rules.
+                Click any node in the 3D canvas or the cards below to inspect schemas, parameters, and firewall rules.
               </p>
             </div>
             <Button
@@ -565,8 +557,16 @@ export function AllRounderStudioShowcase() {
             </Button>
           </div>
 
-          {/* Interactive Node Canvas: 4 Sequential Nodes */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 relative">
+          {/* Interactive 3D WebGL Canvas Centerpiece */}
+          <Workflow3DCanvas
+            activeNodeId={selectedNodeId}
+            isSimulating={isWorkflowRunning}
+            onNodeSelect={(nodeId) => setSelectedNodeId(nodeId)}
+            className="w-full"
+          />
+
+          {/* Interactive Node Canvas: 4 Sequential Nodes with 3D Depth */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 relative perspective-container">
             {workflowNodes.map((node, index) => {
               const NodeIcon = node.icon;
               const isSelected = selectedNodeId === node.id;
@@ -576,7 +576,7 @@ export function AllRounderStudioShowcase() {
                 <div
                   key={node.id}
                   onClick={() => setSelectedNodeId(node.id)}
-                  className={`cursor-pointer p-4 rounded-panel transition-all min-h-[140px] flex flex-col justify-between border ${
+                  className={`cursor-pointer p-4 rounded-panel transition-all min-h-[140px] flex flex-col justify-between border clay-card-3d ${
                     isSelected
                       ? 'bg-surface-white border-plum shadow-clay-card ring-2 ring-plum/20'
                       : isActiveInSimulation
@@ -584,7 +584,7 @@ export function AllRounderStudioShowcase() {
                       : 'bg-surface-white border-border-subtle hover:border-plum-border hover:bg-surface-panel shadow-clay-button-subtle'
                   }`}
                 >
-                  <div>
+                  <div className="clay-card-3d-content">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-surface-inset text-ink-muted">
                         Node 0{index + 1}
@@ -605,7 +605,7 @@ export function AllRounderStudioShowcase() {
                     <p className="text-[11px] text-ink-muted mt-0.5">{node.subtitle}</p>
                   </div>
 
-                  <div className="mt-3 pt-2 border-t border-border-subtle flex items-center justify-between text-[10px] font-mono">
+                  <div className="mt-3 pt-2 border-t border-border-subtle flex items-center justify-between text-[10px] font-mono clay-card-3d-content">
                     <span className="text-sage-dark font-bold">{node.status}</span>
                     <span className="text-plum hover:underline">Inspect →</span>
                   </div>
@@ -688,18 +688,18 @@ export function AllRounderStudioShowcase() {
             </Button>
           </div>
 
-          {/* 3 Parallel Specialist Agents */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* 3 Parallel Specialist Agents with 3D Depth */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 perspective-container">
             {/* Agent 1 */}
-            <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="flex items-center justify-between mb-2">
+            <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="flex items-center justify-between mb-2 clay-card-3d-content">
                 <div className="w-8 h-8 rounded-control bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark">
                   <Search className="w-4 h-4" />
                 </div>
                 <span className="text-xs font-mono font-bold text-sage-dark">{swarmProgress.researcher}%</span>
               </div>
-              <h5 className="text-xs sm:text-sm font-extrabold text-ink">Intelligence Harvester</h5>
-              <p className="text-[11px] text-ink-muted mt-0.5">Scrapes competitor changelogs and API announcements.</p>
+              <h5 className="text-xs sm:text-sm font-extrabold text-ink clay-card-3d-content">Intelligence Harvester</h5>
+              <p className="text-[11px] text-ink-muted mt-0.5 clay-card-3d-content">Scrapes competitor changelogs and API announcements.</p>
               <div className="w-full bg-surface-inset rounded-full h-2 mt-3 overflow-hidden">
                 <div
                   className="bg-sage h-2 rounded-full transition-all duration-300"
@@ -709,15 +709,15 @@ export function AllRounderStudioShowcase() {
             </div>
 
             {/* Agent 2 */}
-            <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="flex items-center justify-between mb-2">
+            <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="flex items-center justify-between mb-2 clay-card-3d-content">
                 <div className="w-8 h-8 rounded-control bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep">
                   <Database className="w-4 h-4" />
                 </div>
                 <span className="text-xs font-mono font-bold text-plum-deep">{swarmProgress.analyst}%</span>
               </div>
-              <h5 className="text-xs sm:text-sm font-extrabold text-ink">Quantitative Analyst</h5>
-              <p className="text-[11px] text-ink-muted mt-0.5">Normalizes pricing tiers and feature differences.</p>
+              <h5 className="text-xs sm:text-sm font-extrabold text-ink clay-card-3d-content">Quantitative Analyst</h5>
+              <p className="text-[11px] text-ink-muted mt-0.5 clay-card-3d-content">Normalizes pricing tiers and feature differences.</p>
               <div className="w-full bg-surface-inset rounded-full h-2 mt-3 overflow-hidden">
                 <div
                   className="bg-primary h-2 rounded-full transition-all duration-300"
@@ -727,15 +727,15 @@ export function AllRounderStudioShowcase() {
             </div>
 
             {/* Agent 3 */}
-            <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="flex items-center justify-between mb-2">
+            <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="flex items-center justify-between mb-2 clay-card-3d-content">
                 <div className="w-8 h-8 rounded-control bg-surface-inset border border-border-subtle flex items-center justify-center text-ink">
                   <FileText className="w-4 h-4" />
                 </div>
                 <span className="text-xs font-mono font-bold text-ink">{swarmProgress.drafter}%</span>
               </div>
-              <h5 className="text-xs sm:text-sm font-extrabold text-ink">Executive Drafter</h5>
-              <p className="text-[11px] text-ink-muted mt-0.5">Synthesizes findings into Markdown brief with citations.</p>
+              <h5 className="text-xs sm:text-sm font-extrabold text-ink clay-card-3d-content">Executive Drafter</h5>
+              <p className="text-[11px] text-ink-muted mt-0.5 clay-card-3d-content">Synthesizes findings into Markdown brief with citations.</p>
               <div className="w-full bg-surface-inset rounded-full h-2 mt-3 overflow-hidden">
                 <div
                   className="bg-ink-muted h-2 rounded-full transition-all duration-300"
@@ -747,8 +747,8 @@ export function AllRounderStudioShowcase() {
 
           {/* Consolidated Executive Brief Result */}
           {swarmStage === 'completed' && (
-            <div className="p-4 sm:p-5 rounded-panel bg-surface-white border border-border-subtle shadow-clay-card">
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-subtle">
+            <div className="p-4 sm:p-5 rounded-panel bg-surface-white border border-border-subtle shadow-clay-card clay-card-3d">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-subtle clay-card-3d-content">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-sage-dark" />
                   <span className="text-xs font-extrabold text-ink">
@@ -757,7 +757,7 @@ export function AllRounderStudioShowcase() {
                 </div>
                 <span className="text-[11px] font-mono text-ink-muted">14 Verified Citations • Indexed to Knowledge Hub</span>
               </div>
-              <div className="mt-3 p-3 rounded-control bg-surface-inset text-xs text-ink font-mono leading-relaxed shadow-clay-inset">
+              <div className="mt-3 p-3 rounded-control bg-surface-inset text-xs text-ink font-mono leading-relaxed shadow-clay-inset clay-card-3d-content">
                 <p className="font-bold text-plum-deep mb-1">### Executive Finding: 2026 Competitive Landscape</p>
                 <p className="text-ink-muted font-sans text-xs mb-2">
                   Competitors A &amp; B updated enterprise tiers to include mandatory multi-agent swarms. Major customer friction is unverified agent mutations leading to data corruption.
@@ -775,11 +775,11 @@ export function AllRounderStudioShowcase() {
           TAB 4: HUMAN APPROVAL FIREWALL (CORE DIFFERENTIATOR)
           ---------------------------------------------------- */}
       {activePillar === 'approval-firewall' && (
-        <div className="mt-6 flex flex-col gap-5">
-          {/* Main Firewall Interception Card */}
-          <div className="p-5 sm:p-6 rounded-hero bg-surface-panel border-2 border-plum/30 shadow-clay-card">
+        <div className="mt-6 flex flex-col gap-5 perspective-container">
+          {/* Main Firewall Interception Card with 3D Depth */}
+          <div className="p-5 sm:p-6 rounded-hero bg-surface-panel border-2 border-plum/30 shadow-clay-card clay-card-3d">
             {/* Top Firewall Alert Badge */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-border-subtle">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-border-subtle clay-card-3d-content">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-control bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep">
                   <ShieldCheck className="w-5 h-5" />
@@ -791,11 +791,11 @@ export function AllRounderStudioShowcase() {
                   <span className="text-xs text-ink-muted">Server Boundary Security Policy Triggered</span>
                 </div>
               </div>
-              <Badge variant="danger">CRITICAL ACTION PENDING</Badge>
+              <Badge variant="danger" className="clay-card-3d-badge">CRITICAL ACTION PENDING</Badge>
             </div>
 
             {/* Mutation Summary */}
-            <div className="mt-4">
+            <div className="mt-4 clay-card-3d-content">
               <div className="text-xs font-mono text-ink-muted mb-1">AGENT INTENDED ACTION:</div>
               <h4 className="text-base sm:text-lg font-extrabold text-ink leading-snug">
                 Send Enterprise Proposal &amp; Binding Service Agreement to Acme Corp ($24,000/yr)
@@ -808,7 +808,7 @@ export function AllRounderStudioShowcase() {
             </div>
 
             {/* Inspectable Payload Preview in Recessed Clay Well */}
-            <div className="mt-4 p-4 rounded-control bg-surface-white border border-border-subtle shadow-clay-inset">
+            <div className="mt-4 p-4 rounded-control bg-surface-white border border-border-subtle shadow-clay-inset clay-card-3d-content">
               <span className="text-[11px] font-mono font-bold text-ink-muted block uppercase mb-2">
                 Cryptographic Payload Preview:
               </span>
@@ -834,7 +834,7 @@ export function AllRounderStudioShowcase() {
 
             {/* Interactive Decision States */}
             {approvalDecision === 'pending' && (
-              <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-border-subtle">
+              <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-border-subtle clay-card-3d-content">
                 <button
                   type="button"
                   onClick={() => setIsPromptingRejection(true)}
@@ -855,7 +855,7 @@ export function AllRounderStudioShowcase() {
 
             {/* Rejection Prompt Modal/Drawer */}
             {isPromptingRejection && approvalDecision === 'pending' && (
-              <div className="mt-4 p-4 rounded-panel bg-surface-white border border-plum-border">
+              <div className="mt-4 p-4 rounded-panel bg-surface-white border border-plum-border clay-card-3d-content">
                 <label className="block text-xs font-bold text-ink mb-1.5">
                   Provide revision instruction for the agent:
                 </label>
@@ -890,7 +890,7 @@ export function AllRounderStudioShowcase() {
 
             {/* Approved State Feedback */}
             {approvalDecision === 'approved' && (
-              <div className="mt-6 p-4 rounded-panel bg-sage-light border border-sage-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
+              <div className="mt-6 p-4 rounded-panel bg-sage-light border border-sage-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in clay-card-3d-content">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full bg-sage-deep text-white flex items-center justify-center shrink-0">
                     <Check className="w-5 h-5" />
@@ -921,7 +921,7 @@ export function AllRounderStudioShowcase() {
 
             {/* Rejected State Feedback */}
             {approvalDecision === 'rejected' && (
-              <div className="mt-6 p-4 rounded-panel bg-plum-light border border-plum-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
+              <div className="mt-6 p-4 rounded-panel bg-plum-light border border-plum-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in clay-card-3d-content">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full bg-plum-deep text-white flex items-center justify-center shrink-0">
                     <X className="w-5 h-5" />

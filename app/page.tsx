@@ -15,24 +15,16 @@ import {
   ChevronUp,
   Search,
   Check,
-  Layers,
-  Sparkles,
-  ShieldAlert,
   Database,
-  Terminal,
-  Clock,
   Menu,
   X,
   Lock,
-  RefreshCw,
   Server,
-  Workflow,
   HelpCircle,
   Building,
   Briefcase,
   TrendingUp,
   Code2,
-  Cpu,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -301,7 +293,7 @@ export default function LandingPage() {
               Pillars
             </a>
             <a href="#workflows" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
-              Workflows
+              Workflows (3D)
             </a>
             <a href="#solutions" className="hover:text-ink transition-colors min-h-[44px] flex items-center">
               Solutions
@@ -359,7 +351,7 @@ export default function LandingPage() {
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-3 rounded-control text-sm font-bold text-ink hover:bg-surface-panel min-h-[48px] flex items-center"
             >
-              Department Workflows
+              Department Workflows (3D)
             </a>
             <a
               href="#solutions"
@@ -476,7 +468,7 @@ export default function LandingPage() {
       </section>
 
       {/* -------------------------------------------------------------------------
-          SECTION 3: THE 4 CORE PLATFORM PILLARS
+          SECTION 3: THE 4 CORE PLATFORM PILLARS (WITH 3D PERSPECTIVE DEPTH)
           ------------------------------------------------------------------------- */}
       <section id="pillars" className="py-16 sm:py-24 bg-surface-panel border-y border-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -492,118 +484,126 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* 2x2 Grid of Raised Clay Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          {/* 2x2 Grid of Raised Clay Cards with 3D Tilt */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 perspective-container">
             {/* Pillar 1: Agent Studio */}
-            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
-              <div className="w-12 h-12 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-5">
-                <Bot className="w-6 h-6" />
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-12 h-12 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-5">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-mono font-bold text-plum block uppercase tracking-wider mb-1">
+                  NATURAL LANGUAGE TO AGENT
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Natural-Language Agent Studio</h3>
+                <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                  Describe the desired business outcome in plain English. Agent Studio generates an inspectable configuration including triggers, allowed system tools, knowledge boundaries, and strict output schemas. Never writes code or assumes permissions without your explicit approval.
+                </p>
+                <ul className="space-y-2 text-xs font-medium text-ink">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Guided prompt-to-agent compiler with assumption checklist</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Granular action-level permissions (Read, Draft, Write, Send, Delete)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Live interactive sandbox with sample inputs, token cost, and trace logs</span>
+                  </li>
+                </ul>
               </div>
-              <span className="text-xs font-mono font-bold text-plum block uppercase tracking-wider mb-1">
-                NATURAL LANGUAGE TO AGENT
-              </span>
-              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Natural-Language Agent Studio</h3>
-              <p className="text-sm text-ink-muted leading-relaxed mb-5">
-                Describe the desired business outcome in plain English. Agent Studio generates an inspectable configuration including triggers, allowed system tools, knowledge boundaries, and strict output schemas. Never writes code or assumes permissions without your explicit approval.
-              </p>
-              <ul className="space-y-2 text-xs font-medium text-ink">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Guided prompt-to-agent compiler with assumption checklist</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Granular action-level permissions (Read, Draft, Write, Send, Delete)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Live interactive sandbox with sample inputs, token cost, and trace logs</span>
-                </li>
-              </ul>
             </div>
 
             {/* Pillar 2: Workflow Studio */}
-            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
-              <div className="w-12 h-12 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-5">
-                <GitFork className="w-6 h-6" />
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-12 h-12 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-5">
+                  <GitFork className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-mono font-bold text-sage-dark block uppercase tracking-wider mb-1">
+                  VISUAL GRAPH ORCHESTRATION
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Composable Visual Workflow Studio</h3>
+                <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                  Design mission-critical processes on an infinite node canvas. Chain triggers, LLMs, condition branches, code execution nodes, database connectors, and approval checkpoints with typed schema validation and zero data-loss guarantees.
+                </p>
+                <ul className="space-y-2 text-xs font-medium text-ink">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>15+ node types including Webhooks, Code (Python/TS), and MCP Tools</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>AI Builder converts natural-language instructions into visual graphs</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Schema-aware ports detect incompatible data formats before execution</span>
+                  </li>
+                </ul>
               </div>
-              <span className="text-xs font-mono font-bold text-sage-dark block uppercase tracking-wider mb-1">
-                VISUAL GRAPH ORCHESTRATION
-              </span>
-              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Composable Visual Workflow Studio</h3>
-              <p className="text-sm text-ink-muted leading-relaxed mb-5">
-                Design mission-critical processes on an infinite node canvas. Chain triggers, LLMs, condition branches, code execution nodes, database connectors, and approval checkpoints with typed schema validation and zero data-loss guarantees.
-              </p>
-              <ul className="space-y-2 text-xs font-medium text-ink">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>15+ node types including Webhooks, Code (Python/TS), and MCP Tools</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>AI Builder converts natural-language instructions into visual graphs</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Schema-aware ports detect incompatible data formats before execution</span>
-                </li>
-              </ul>
             </div>
 
             {/* Pillar 3: Agent Workforce Swarms */}
-            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
-              <div className="w-12 h-12 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-5">
-                <Users className="w-6 h-6" />
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-12 h-12 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-5">
+                  <Users className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-mono font-bold text-plum block uppercase tracking-wider mb-1">
+                  MULTI-AGENT COORDINATION
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Autonomous Multi-Agent Swarms</h3>
+                <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                  Coordinate specialized agents that delegate subtasks, share memory, review each other’s work, and aggregate complex research into structured business briefs. Built-in cycle detection guarantees agents never get stuck in infinite execution loops.
+                </p>
+                <ul className="space-y-2 text-xs font-medium text-ink">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Hierarchical coordinator-specialist delegation architecture</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Parallel task execution with shared working memory</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Swarm-level budget caps and automatic loop termination</span>
+                  </li>
+                </ul>
               </div>
-              <span className="text-xs font-mono font-bold text-plum block uppercase tracking-wider mb-1">
-                MULTI-AGENT COORDINATION
-              </span>
-              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Autonomous Multi-Agent Swarms</h3>
-              <p className="text-sm text-ink-muted leading-relaxed mb-5">
-                Coordinate specialized agents that delegate subtasks, share memory, review each other’s work, and aggregate complex research into structured business briefs. Built-in cycle detection guarantees agents never get stuck in infinite execution loops.
-              </p>
-              <ul className="space-y-2 text-xs font-medium text-ink">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Hierarchical coordinator-specialist delegation architecture</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Parallel task execution with shared working memory</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Swarm-level budget caps and automatic loop termination</span>
-                </li>
-              </ul>
             </div>
 
             {/* Pillar 4: Human Approval Firewall */}
-            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all">
-              <div className="w-12 h-12 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-5">
-                <ShieldCheck className="w-6 h-6" />
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card hover:shadow-clay-card-hover transition-all clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-12 h-12 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-5">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-mono font-bold text-sage-dark block uppercase tracking-wider mb-1">
+                  GOVERNANCE &amp; SAFETY FIRST
+                </span>
+                <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Human Approval Firewall</h3>
+                <p className="text-sm text-ink-muted leading-relaxed mb-5">
+                  Enterprise autonomy requires immutable boundaries. The Approval Firewall intercepts sensitive agent actions—sending external emails, updating CRM records, issuing payments, or mutating databases—and holds them until an authorized person approves.
+                </p>
+                <ul className="space-y-2 text-xs font-medium text-ink">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Server-authoritative interception immediately prior to external execution</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>Cryptographic action payload preview and tamper-proof audit hash</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                    <span>1-click approvals via Web Dashboard, Slack, or Email notifications</span>
+                  </li>
+                </ul>
               </div>
-              <span className="text-xs font-mono font-bold text-sage-dark block uppercase tracking-wider mb-1">
-                GOVERNANCE &amp; SAFETY FIRST
-              </span>
-              <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-3">Human Approval Firewall</h3>
-              <p className="text-sm text-ink-muted leading-relaxed mb-5">
-                Enterprise autonomy requires immutable boundaries. The Approval Firewall intercepts sensitive agent actions—sending external emails, updating CRM records, issuing payments, or mutating databases—and holds them until an authorized person approves.
-              </p>
-              <ul className="space-y-2 text-xs font-medium text-ink">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Server-authoritative interception immediately prior to external execution</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>Cryptographic action payload preview and tamper-proof audit hash</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
-                  <span>1-click approvals via Web Dashboard, Slack, or Email notifications</span>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -655,111 +655,113 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Workflow Stage Container */}
-          <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card max-w-4xl mx-auto">
-            {/* Header info bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-border-subtle">
-              <div>
-                <span className="text-xs font-mono font-bold text-sage-dark uppercase block mb-0.5">
-                  Trigger: {currentWorkflow.trigger}
-                </span>
-                <h3 className="text-lg sm:text-xl font-extrabold text-ink">{currentWorkflow.name}</h3>
+          {/* Workflow Stage Container with 3D Depth */}
+          <div className="perspective-container max-w-4xl mx-auto">
+            <div className="p-6 sm:p-8 rounded-card bg-surface-white border border-border-subtle shadow-clay-card clay-card-3d">
+              {/* Header info bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-border-subtle clay-card-3d-content">
+                <div>
+                  <span className="text-xs font-mono font-bold text-sage-dark uppercase block mb-0.5">
+                    Trigger: {currentWorkflow.trigger}
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-ink">{currentWorkflow.name}</h3>
+                </div>
+                <div className="flex items-center gap-3 text-xs font-mono text-ink-muted">
+                  <span className="px-2.5 py-1 rounded-control bg-surface-inset">Avg: {currentWorkflow.avgDuration}</span>
+                  <span className="px-2.5 py-1 rounded-control bg-surface-inset">Cost: {currentWorkflow.tokenCost}</span>
+                  <span className="px-2.5 py-1 rounded-control bg-sage-light text-sage-dark font-bold">
+                    {currentWorkflow.safetyGate}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-xs font-mono text-ink-muted">
-                <span className="px-2.5 py-1 rounded-control bg-surface-inset">Avg: {currentWorkflow.avgDuration}</span>
-                <span className="px-2.5 py-1 rounded-control bg-surface-inset">Cost: {currentWorkflow.tokenCost}</span>
-                <span className="px-2.5 py-1 rounded-control bg-sage-light text-sage-dark font-bold">
-                  {currentWorkflow.safetyGate}
-                </span>
-              </div>
-            </div>
 
-            {/* Stepper Pipeline */}
-            <div className="mt-6 space-y-3">
-              {currentWorkflow.steps.map((step) => {
-                const isStepActive = simulationStep >= step.num;
-                const isGateWaiting = step.isGate && simulationStep === 4 && !simulationApproved;
+              {/* Stepper Pipeline */}
+              <div className="mt-6 space-y-3 clay-card-3d-content">
+                {currentWorkflow.steps.map((step) => {
+                  const isStepActive = simulationStep >= step.num;
+                  const isGateWaiting = step.isGate && simulationStep === 4 && !simulationApproved;
 
-                return (
-                  <div
-                    key={step.num}
-                    className={`p-3.5 sm:p-4 rounded-panel border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
-                      isGateWaiting
-                        ? 'bg-plum-light border-plum shadow-clay-card ring-2 ring-plum/20'
-                        : isStepActive
-                        ? 'bg-surface-white border-sage-border shadow-clay-button-subtle'
-                        : 'bg-surface-panel border-border-subtle opacity-70'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5 ${
-                          isStepActive ? 'bg-sage-deep text-white' : 'bg-surface-inset text-ink-muted'
-                        }`}
-                      >
-                        {step.num}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-bold text-ink uppercase">{step.role}</span>
-                          {step.isGate && (
-                            <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-plum-light text-plum-deep border border-plum-border">
-                              FIREWALL INTERCEPTOR
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs sm:text-sm text-ink-muted font-medium mt-0.5">{step.action}</p>
-                      </div>
-                    </div>
-
-                    {/* Step Action / Status Badge */}
-                    <div className="shrink-0 self-end sm:self-center">
-                      {isGateWaiting ? (
-                        <Button
-                          onClick={handleApproveGatedAction}
-                          size="sm"
-                          className="min-h-[44px] text-xs font-bold animate-pulse"
-                        >
-                          <Check className="w-3.5 h-3.5 mr-1" />
-                          Click to Approve Action
-                        </Button>
-                      ) : (
-                        <span
-                          className={`text-[11px] font-mono px-2 py-0.5 rounded ${
-                            isStepActive ? 'text-sage-dark font-bold' : 'text-ink-muted'
+                  return (
+                    <div
+                      key={step.num}
+                      className={`p-3.5 sm:p-4 rounded-panel border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                        isGateWaiting
+                          ? 'bg-plum-light border-plum shadow-clay-card ring-2 ring-plum/20'
+                          : isStepActive
+                          ? 'bg-surface-white border-sage-border shadow-clay-button-subtle'
+                          : 'bg-surface-panel border-border-subtle opacity-70'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5 ${
+                            isStepActive ? 'bg-sage-deep text-white' : 'bg-surface-inset text-ink-muted'
                           }`}
                         >
-                          {isStepActive ? '✓ Completed' : step.status}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                          {step.num}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono font-bold text-ink uppercase">{step.role}</span>
+                            {step.isGate && (
+                              <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-plum-light text-plum-deep border border-plum-border">
+                                FIREWALL INTERCEPTOR
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs sm:text-sm text-ink-muted font-medium mt-0.5">{step.action}</p>
+                        </div>
+                      </div>
 
-            {/* Simulation Run Controller */}
-            <div className="mt-6 pt-5 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="text-xs text-ink-muted font-medium">
-                Simulate end-to-end execution with real-time gate halt and resume.
-              </span>
-              <Button
-                onClick={handleRunDepartmentSimulation}
-                isLoading={isSimulatingWorkflow}
-                size="md"
-                variant="secondary"
-                className="w-full sm:w-auto min-h-[48px] font-bold"
-              >
-                <Play className="w-4 h-4 mr-1.5 text-sage-dark" />
-                {isSimulatingWorkflow ? 'Simulating Workflow...' : '▶ Simulate Workflow Execution'}
-              </Button>
+                      {/* Step Action / Status Badge */}
+                      <div className="shrink-0 self-end sm:self-center">
+                        {isGateWaiting ? (
+                          <Button
+                            onClick={handleApproveGatedAction}
+                            size="sm"
+                            className="min-h-[44px] text-xs font-bold animate-pulse"
+                          >
+                            <Check className="w-3.5 h-3.5 mr-1" />
+                            Click to Approve Action
+                          </Button>
+                        ) : (
+                          <span
+                            className={`text-[11px] font-mono px-2 py-0.5 rounded ${
+                              isStepActive ? 'text-sage-dark font-bold' : 'text-ink-muted'
+                            }`}
+                          >
+                            {isStepActive ? '✓ Completed' : step.status}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Simulation Run Controller */}
+              <div className="mt-6 pt-5 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4 clay-card-3d-content">
+                <span className="text-xs text-ink-muted font-medium">
+                  Simulate end-to-end execution with real-time gate halt and resume.
+                </span>
+                <Button
+                  onClick={handleRunDepartmentSimulation}
+                  isLoading={isSimulatingWorkflow}
+                  size="md"
+                  variant="secondary"
+                  className="w-full sm:w-auto min-h-[48px] font-bold"
+                >
+                  <Play className="w-4 h-4 mr-1.5 text-sage-dark" />
+                  {isSimulatingWorkflow ? 'Simulating Workflow...' : '▶ Simulate Workflow Execution'}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* -------------------------------------------------------------------------
-          SECTION 5: TARGET CUSTOMER SEGMENTS MATRIX
+          SECTION 5: TARGET CUSTOMER SEGMENTS MATRIX (WITH 3D TILT)
           ------------------------------------------------------------------------- */}
       <section id="solutions" className="py-16 sm:py-24 bg-surface-panel border-y border-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -775,11 +777,11 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* 4-Column Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* 4-Column Grid with 3D Depth */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 perspective-container">
             {/* Segment 1: Small Businesses */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <div className="w-10 h-10 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-4">
                   <Building className="w-5 h-5" />
                 </div>
@@ -806,7 +808,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/dashboard"
-                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px] clay-card-3d-content"
               >
                 <span>Browse Small Business Templates</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -814,8 +816,8 @@ export default function LandingPage() {
             </div>
 
             {/* Segment 2: Agencies */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <div className="w-10 h-10 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-4">
                   <Briefcase className="w-5 h-5" />
                 </div>
@@ -842,7 +844,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/dashboard"
-                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px] clay-card-3d-content"
               >
                 <span>Explore Agency Solutions</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -850,8 +852,8 @@ export default function LandingPage() {
             </div>
 
             {/* Segment 3: Growing Companies */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <div className="w-10 h-10 rounded-panel bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark mb-4">
                   <TrendingUp className="w-5 h-5" />
                 </div>
@@ -878,7 +880,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/dashboard"
-                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px] clay-card-3d-content"
               >
                 <span>Scale Your Workforce</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -886,8 +888,8 @@ export default function LandingPage() {
             </div>
 
             {/* Segment 4: Developers & Engineers */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <div className="w-10 h-10 rounded-panel bg-plum-light border border-plum-border flex items-center justify-center text-plum-deep mb-4">
                   <Code2 className="w-5 h-5" />
                 </div>
@@ -914,7 +916,7 @@ export default function LandingPage() {
               </div>
               <Link
                 href="/dashboard"
-                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px]"
+                className="text-xs font-bold text-plum-deep hover:underline flex items-center gap-1 min-h-[48px] clay-card-3d-content"
               >
                 <span>View Developer Documentation</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -941,36 +943,42 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* 3 Pillars of Security Architecture */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card">
-              <div className="w-10 h-10 rounded-control bg-sage-light text-sage-dark flex items-center justify-center mb-4">
-                <ShieldCheck className="w-5 h-5" />
+          {/* 3 Pillars of Security Architecture with 3D Depth */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 perspective-container">
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-10 h-10 rounded-control bg-sage-light text-sage-dark flex items-center justify-center mb-4">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-extrabold text-ink mb-2">The Human Approval Firewall</h3>
+                <p className="text-xs text-ink-muted leading-relaxed">
+                  External actions (sending emails, modifying databases, charging cards) are halted at the server boundary. Generates an immutable SHA-256 payload digest. Configurable approval routing via dashboard, Slack, or email.
+                </p>
               </div>
-              <h3 className="text-base font-extrabold text-ink mb-2">The Human Approval Firewall</h3>
-              <p className="text-xs text-ink-muted leading-relaxed">
-                External actions (sending emails, modifying databases, charging cards) are halted at the server boundary. Generates an immutable SHA-256 payload digest. Configurable approval routing via dashboard, Slack, or email.
-              </p>
             </div>
 
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card">
-              <div className="w-10 h-10 rounded-control bg-plum-light text-plum-deep flex items-center justify-center mb-4">
-                <Lock className="w-5 h-5" />
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-10 h-10 rounded-control bg-plum-light text-plum-deep flex items-center justify-center mb-4">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-extrabold text-ink mb-2">Multi-Tenant Isolation &amp; RBAC</h3>
+                <p className="text-xs text-ink-muted leading-relaxed">
+                  Strict tenant separation enforced in database rules and server authorization; never trusts client-supplied workspace IDs. 6 granular roles (`Owner`, `Admin`, `Builder`, `Operator`, `Approver`, `Viewer`). Zero credential leakage.
+                </p>
               </div>
-              <h3 className="text-base font-extrabold text-ink mb-2">Multi-Tenant Isolation &amp; RBAC</h3>
-              <p className="text-xs text-ink-muted leading-relaxed">
-                Strict tenant separation enforced in database rules and server authorization; never trusts client-supplied workspace IDs. 6 granular roles (`Owner`, `Admin`, `Builder`, `Operator`, `Approver`, `Viewer`). Zero credential leakage.
-              </p>
             </div>
 
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card">
-              <div className="w-10 h-10 rounded-control bg-surface-inset text-ink flex items-center justify-center mb-4">
-                <Server className="w-5 h-5" />
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card clay-card-3d">
+              <div className="clay-card-3d-content">
+                <div className="w-10 h-10 rounded-control bg-surface-inset text-ink flex items-center justify-center mb-4">
+                  <Server className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-extrabold text-ink mb-2">Explainable Audit Traces &amp; Replays</h3>
+                <p className="text-xs text-ink-muted leading-relaxed">
+                  Every agent action, prompt input, retrieved knowledge document, and tool invocation is logged in an immutable execution trace. Idempotency keys prevent duplicate execution. Instant rollback with one click.
+                </p>
               </div>
-              <h3 className="text-base font-extrabold text-ink mb-2">Explainable Audit Traces &amp; Replays</h3>
-              <p className="text-xs text-ink-muted leading-relaxed">
-                Every agent action, prompt input, retrieved knowledge document, and tool invocation is logged in an immutable execution trace. Idempotency keys prevent duplicate execution. Instant rollback with one click.
-              </p>
             </div>
           </div>
         </div>
@@ -981,33 +989,33 @@ export default function LandingPage() {
           ------------------------------------------------------------------------- */}
       <section className="py-14 bg-surface-panel border-y border-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="text-3xl sm:text-4xl font-extrabold text-plum-deep font-mono">99.8%</div>
-              <p className="text-xs font-bold text-ink mt-1">Action Accuracy</p>
-              <span className="text-[11px] text-ink-muted">Enforced by Approval Firewall</span>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center perspective-container">
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="text-3xl sm:text-4xl font-extrabold text-plum-deep font-mono clay-card-3d-content">99.8%</div>
+              <p className="text-xs font-bold text-ink mt-1 clay-card-3d-content">Action Accuracy</p>
+              <span className="text-[11px] text-ink-muted clay-card-3d-content">Enforced by Approval Firewall</span>
             </div>
-            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="text-3xl sm:text-4xl font-extrabold text-sage-dark font-mono">&lt; 1.8s</div>
-              <p className="text-xs font-bold text-ink mt-1">Avg Swarm Execution</p>
-              <span className="text-[11px] text-ink-muted">Parallel sub-agent delegation</span>
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="text-3xl sm:text-4xl font-extrabold text-sage-dark font-mono clay-card-3d-content">&lt; 1.8s</div>
+              <p className="text-xs font-bold text-ink mt-1 clay-card-3d-content">Avg Swarm Execution</p>
+              <span className="text-[11px] text-ink-muted clay-card-3d-content">Parallel sub-agent delegation</span>
             </div>
-            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="text-3xl sm:text-4xl font-extrabold text-plum-deep font-mono">100%</div>
-              <p className="text-xs font-bold text-ink mt-1">Auditability</p>
-              <span className="text-[11px] text-ink-muted">Cryptographic action logs</span>
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="text-3xl sm:text-4xl font-extrabold text-plum-deep font-mono clay-card-3d-content">100%</div>
+              <p className="text-xs font-bold text-ink mt-1 clay-card-3d-content">Auditability</p>
+              <span className="text-[11px] text-ink-muted clay-card-3d-content">Cryptographic action logs</span>
             </div>
-            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <div className="text-3xl sm:text-4xl font-extrabold text-sage-dark font-mono">0</div>
-              <p className="text-xs font-bold text-ink mt-1">Unapproved Side Effects</p>
-              <span className="text-[11px] text-ink-muted">Across 500k+ runs</span>
+            <div className="p-4 rounded-card bg-surface-white border border-border-subtle shadow-clay-button-subtle clay-card-3d">
+              <div className="text-3xl sm:text-4xl font-extrabold text-sage-dark font-mono clay-card-3d-content">0</div>
+              <p className="text-xs font-bold text-ink mt-1 clay-card-3d-content">Unapproved Side Effects</p>
+              <span className="text-[11px] text-ink-muted clay-card-3d-content">Across 500k+ runs</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* -------------------------------------------------------------------------
-          SECTION 8: TRANSPARENT INTERACTIVE PRICING TIERS
+          SECTION 8: TRANSPARENT INTERACTIVE PRICING TIERS (WITH 3D TILT)
           ------------------------------------------------------------------------- */}
       <section id="pricing" className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1052,11 +1060,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Pricing Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Pricing Grid with 3D Depth */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 perspective-container">
             {/* Starter Plan */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <span className="text-xs font-mono font-bold text-ink-muted uppercase block mb-1">STARTER</span>
                 <div className="text-3xl font-extrabold text-ink">$0</div>
                 <p className="text-xs text-ink-muted mt-1 mb-4">Free forever for solo exploration</p>
@@ -1079,7 +1087,7 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link href="/dashboard">
+              <Link href="/dashboard" className="clay-card-3d-content">
                 <Button variant="outline" size="md" className="w-full min-h-[48px] font-bold">
                   Get Started Free
                 </Button>
@@ -1087,13 +1095,13 @@ export default function LandingPage() {
             </div>
 
             {/* Pro Plan */}
-            <div className="p-6 rounded-card bg-surface-white border-2 border-plum shadow-clay-card flex flex-col justify-between relative">
-              <div className="absolute -top-3 right-4">
+            <div className="p-6 rounded-card bg-surface-white border-2 border-plum shadow-clay-card flex flex-col justify-between relative clay-card-3d">
+              <div className="absolute -top-3 right-4 clay-card-3d-badge">
                 <Badge variant="default" className="bg-primary text-white border-none shadow-clay-button">
                   MOST POPULAR
                 </Badge>
               </div>
-              <div>
+              <div className="clay-card-3d-content">
                 <span className="text-xs font-mono font-bold text-plum uppercase block mb-1">PRO TEAM</span>
                 <div className="text-3xl font-extrabold text-ink">
                   {billingCycle === 'annual' ? '$39' : '$49'}
@@ -1123,7 +1131,7 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link href="/dashboard">
+              <Link href="/dashboard" className="clay-card-3d-content">
                 <Button size="md" className="w-full min-h-[48px] font-bold">
                   Start 14-Day Pro Trial
                 </Button>
@@ -1131,8 +1139,8 @@ export default function LandingPage() {
             </div>
 
             {/* Team Plan */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <span className="text-xs font-mono font-bold text-sage-dark uppercase block mb-1">BUSINESS SCALE</span>
                 <div className="text-3xl font-extrabold text-ink">
                   {billingCycle === 'annual' ? '$119' : '$149'}
@@ -1162,7 +1170,7 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link href="/dashboard">
+              <Link href="/dashboard" className="clay-card-3d-content">
                 <Button size="md" className="w-full min-h-[48px] font-bold">
                   Upgrade to Business
                 </Button>
@@ -1170,8 +1178,8 @@ export default function LandingPage() {
             </div>
 
             {/* Enterprise Plan */}
-            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between">
-              <div>
+            <div className="p-6 rounded-card bg-surface-white border border-border-subtle shadow-clay-card flex flex-col justify-between clay-card-3d">
+              <div className="clay-card-3d-content">
                 <span className="text-xs font-mono font-bold text-ink-muted uppercase block mb-1">ENTERPRISE VPC</span>
                 <div className="text-3xl font-extrabold text-ink">Custom</div>
                 <p className="text-xs text-ink-muted mt-1 mb-4">Dedicated VPC, custom SLA, and MCP connectors</p>
@@ -1194,7 +1202,7 @@ export default function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <Link href="/login">
+              <Link href="/login" className="clay-card-3d-content">
                 <Button variant="secondary" size="md" className="w-full min-h-[48px] font-bold">
                   Contact Enterprise Sales
                 </Button>
@@ -1257,30 +1265,32 @@ export default function LandingPage() {
           SECTION 10: FINAL CONVERSION STAGE & FOOTER
           ------------------------------------------------------------------------- */}
       <section className="py-16 sm:py-24">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Raised Clay CTA Banner */}
-          <div className="p-8 sm:p-14 rounded-hero bg-surface-white border border-border-subtle shadow-clay-card">
-            <span className="text-xs font-mono font-bold text-sage-dark uppercase tracking-wider block mb-3">
-              DEPLOY YOUR WORKFORCE TODAY
-            </span>
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-ink tracking-tight max-w-2xl mx-auto leading-tight">
-              Ready to Orchestrate Your Autonomous AI Workforce?
-            </h2>
-            <p className="mt-4 text-sm sm:text-base text-ink-muted max-w-xl mx-auto leading-relaxed">
-              Join forward-thinking businesses and agile teams deploying reliable, governed AI agents today. Get started in minutes with zero credit card required.
-            </p>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center perspective-container">
+          {/* Raised Clay CTA Banner with 3D Depth */}
+          <div className="p-8 sm:p-14 rounded-hero bg-surface-white border border-border-subtle shadow-clay-card clay-card-3d">
+            <div className="clay-card-3d-content">
+              <span className="text-xs font-mono font-bold text-sage-dark uppercase tracking-wider block mb-3">
+                DEPLOY YOUR WORKFORCE TODAY
+              </span>
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-ink tracking-tight max-w-2xl mx-auto leading-tight">
+                Ready to Orchestrate Your Autonomous AI Workforce?
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-ink-muted max-w-xl mx-auto leading-relaxed">
+                Join forward-thinking businesses and agile teams deploying reliable, governed AI agents today. Get started in minutes with zero credit card required.
+              </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/dashboard" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-8 font-bold">
-                  Launch Free Workspace →
-                </Button>
-              </Link>
-              <Link href="/login" className="w-full sm:w-auto">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-6 font-bold">
-                  Schedule Platform Demo
-                </Button>
-              </Link>
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/dashboard" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-8 font-bold">
+                    Launch Free Workspace →
+                  </Button>
+                </Link>
+                <Link href="/login" className="w-full sm:w-auto">
+                  <Button variant="secondary" size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-6 font-bold">
+                    Schedule Platform Demo
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -1318,7 +1328,7 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <a href="#pillars" className="hover:text-ink">
-                    Workflow Studio
+                    Workflow Studio (3D)
                   </a>
                 </li>
                 <li>

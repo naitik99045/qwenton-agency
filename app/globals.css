@@ -165,4 +165,28 @@
     align-items: center;
     justify-content: center;
   }
+
+  /* 3D Spatial Perspective & Card Depth */
+  .perspective-container {
+    perspective: 1000px;
+  }
+
+  .clay-card-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+    will-change: transform;
+  }
+
+  .clay-card-3d:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateZ(8px);
+    box-shadow: var(--shadow-clay-card-hover);
+  }
+
+  .clay-card-3d-content {
+    transform: translateZ(14px);
+  }
+
+  .clay-card-3d-badge {
+    transform: translateZ(24px);
+  }
 }

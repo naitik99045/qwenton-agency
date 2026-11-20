@@ -12,14 +12,26 @@
 - **Context:** Blueprint Section 03 mandates a stable left sidebar with 6 navigation groups: Workspace, Build, Connect, Knowledge, Operate, Admin.
 - **Decision:** Implement these groups in `AppShell.tsx` with collapsible mobile drawer, badging for active counts, and deep links.
 
-### DEC-003: Landing Page Value Proposition Pivot
-- **Context:** Previous landing page focused exclusively on Instagram Reel Comment-to-DM automation. Blueprint Section 01 mandates an All-Rounder AI Workforce Platform across Sales, Support, Operations, and Engineering.
-- **Decision:** Replace Instagram-only messaging with the Blueprint positioning statement: *"One workspace to build AI agents, connect business systems, automate processes, coordinate teams of agents, and govern every important action."*
+### DEC-003: All-Rounder Positioning Rework
+- **Context:** User requested to eliminate Instagram-only messaging and properly reflect the All-Rounder AI Workforce Platform.
+- **Decision:** Adopt the headline: *"One workspace to build AI agents, connect business systems, automate processes, coordinate teams of agents, and govern every important action."* Across 4 core pillars and 4 customer segments.
 
-### DEC-004: Interactive Hero Architecture (`AllRounderStudioShowcase.tsx`)
-- **Context:** Prospective users need immediate, frictionless proof of the 4 core pillars without registering.
-- **Decision:** Build `AllRounderStudioShowcase.tsx` as a high-fidelity interactive client component featuring 4 playable tabs: Agent Studio, Workflow Studio, Multi-Agent Swarms, and the Human Approval Firewall with simulated execution traces.
+### DEC-004: Interactive Studio Showcase Architecture
+- **Context:** Need an engaging, tangible demonstration of the 4 pillars without requiring immediate account creation.
+- **Decision:** Built `AllRounderStudioShowcase.tsx` featuring 4 playable interactive tabs: Agent Studio, Visual Workflow Canvas, Multi-Agent Swarms, and the Human Approval Firewall.
 
-### DEC-005: Strict Exclusion of Telephony/Call Management CRM
-- **Context:** Blueprint Section 01 explicitly excludes call-management CRM, inbound/outbound telephony, PBX queues, audio recording, and call-center dashboards.
-- **Decision:** Omit all voice/telephony features from marketing copy, interactive demos, and pricing tiers to ensure zero false promises and focused digital operations.
+### DEC-005: Voice & Telephony Scope Exclusion
+- **Context:** Blueprint Section 01 & 07 explicitly mandates excluding telephony CRM workflows in the current release.
+- **Decision:** Excluded all phone call queues, PBX, voice recording, and telephony features from copy and UI.
+
+### DEC-006: Proper 3D UI Architecture (Tactile Soft Claymorphism vs. Wireframe Tropes)
+- **Context:** User requested: "redisign the ui from making it into a static ui into a proper 3d ui without any error's". Previous user critiques specifically rejected "spinning black hole circle / wireframe spheres" as generic AI slop.
+- **Decision:**
+  1. Implement a **Proper 3D Claymorphic WebGL Scene** (`ThreeWorkforceStudio3D.tsx`) using Three.js with soft clay materials (`MeshStandardMaterial` / `MeshPhysicalMaterial`, roughness: 0.75, zero metalness, warm ivory/sage/plum lighting).
+  2. Geometries represent the **All-Rounder AI Workforce Platform**:
+     - Beveled 3D Workflow Nodes: `[Trigger]` -> `[Agent Brain]` -> `[Approval Firewall]` -> `[Execution Action]`.
+     - 3D Floating Agent Swarm Orbs with real shadows and connecting data pipes.
+     - Interactive 3D Cursor Tilt & Gyroscope Physics (the 3D scene rotates and tracks cursor/touch smoothly).
+     - Interactive 3D Node Selection: Clicking 3D nodes triggers live state updates on the studio board!
+  3. Complement with **CSS 3D Perspective Card Tilt** across marketing cards for tactile physical depth.
+  4. Ensure zero black, zero neon, zero unhandled errors, WebGL fallback, and 48px Android touch targets.

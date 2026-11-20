@@ -1,26 +1,28 @@
 # End-to-End Quality Assurance & Release Gate Verification Report
 
-**Task ID:** AT-008  
+**Task ID:** AT-015 (Updated with Wave 6: 3D Soft Claymorphism UI)  
 **Role:** `qa-test-automation`  
-**Date:** 18 November 2026  
+**Date:** 20 November 2026  
 **Status:** **PASSED / RELEASE READY**  
 **Blueprint Reference:** `Qwenton_Updated_All_Rounder_Implementation_Blueprint.pdf` (Sections 02, 03, 10, 18)  
-**Execution Environment:** Windows PowerShell, Node.js v20+, Next.js 15.5.27
+**Execution Environment:** Windows PowerShell, Node.js v20+, Next.js 15.5.27, Three.js 0.170+
 
 ---
 
 ## 1. Executive Summary
 
-This report establishes the final release verification for the **Qwenton All-Rounder AI Workforce Platform** upgrade across Waves 1 to 4. All acceptance criteria and release quality gates defined in `docs/agentic-team/brief.md` have been executed, tested, and validated with zero failures.
+This report establishes the final release verification for the **Qwenton All-Rounder AI Workforce Platform** upgrade across Waves 1 to 6, including the full 3D Soft Claymorphism interactive spatial UI transformation (`Workflow3DCanvas.tsx`, `AllRounderStudioShowcase.tsx`, and `app/page.tsx`). All acceptance criteria and release quality gates have been executed, tested, and validated with zero failures.
 
 | Verification Gate | Required Standard | Observed Result | Status |
 |---|---|---|---|
 | **TypeScript Typecheck** | Exit Code 0, strict mode (`tsc --noEmit`) | 0 compilation errors across entire codebase | **PASS** |
 | **Next.js Production Build** | Exit Code 0, all 59 routes generated | 59/59 routes compiled & optimized cleanly | **PASS** |
+| **3D Zero-Black & Color Compliance** | Warm Ivory, Muted Sage, Dusty Plum | Zero `#000000`, `0x000000`, charcoal, or navy | **PASS** |
+| **Legacy Instagram Elimination** | Obsolete files deleted; zero legacy strings | `ProductCommandCockpit` & `HeroStickerStage` gone | **PASS** |
+| **Mobile & Android Usability** | 48px touch targets, `touch-pan-y`, 16px inputs | 38+ 48px targets, `touch-pan-y`, 16px font | **PASS** |
+| **WebGL Fallback & Lifecycle** | Context loss resilience & memory disposal | 2D clay fallback active; recursive unmount cleanup | **PASS** |
 | **Error Taxonomy Suite** | Exit Code 0, 12/12 assertions passing | 12/12 test assertions PASSED | **PASS** |
-| **3-Colour Palette Compliance** | Warm Ivory, Muted Sage, Dusty Plum | Zero black, zero charcoal, zero navy | **PASS** |
 | **WCAG 2.2 Contrast** | AA >= 4.5:1, AAA >= 7.0:1 | Primary text 11.66:1 (AAA), CTA 8.21:1 (AAA) | **PASS** |
-| **Mobile & Android Usability** | 48px touch targets, no viewport auto-zoom | 48px min-targets, 16px mobile inputs | **PASS** |
 
 ---
 
@@ -34,19 +36,18 @@ This report establishes the final release verification for the **Qwenton All-Rou
   ```
 - **Exit Code:** `0`
 - **Findings:**
-  - Zero type mismatch or structural errors.
-  - Complete interface consistency across Next.js dynamic route params, Firebase client authentication, Lucide React icons, and Zod error schemas.
+  - Zero type mismatch or structural errors across Three.js canvas types, Next.js dynamic route params, Firebase client authentication, Lucide React icons, and Zod error schemas.
 
 ---
 
-## 3. Production Next.js Build & Route Optimization
+## 3. Production Next.js Build & Route Optimization (Wave 6)
 
 - **Command Executed:** `npm.cmd run build` (`next build`)
 - **Execution Log:**
   ```text
   ▲ Next.js 15.5.27
   Creating an optimized production build ...
-  ✓ Compiled successfully in 20.4s
+  ✓ Compiled successfully in 20.8s
   Skipping validation of types
   Skipping linting
   Collecting page data ...
@@ -61,7 +62,7 @@ This report establishes the final release verification for the **Qwenton All-Rou
 - **Route Inventory Audited (All 59 Platform Routes):**
 
 ### 3.1 Static Pre-rendered Pages (○)
-- `/` (Landing Page & Hero Clay Stage) - 16.8 kB (132 kB first load JS)
+- `/` (Landing Page with 3D Spatial Canvas & Showcase) - 164 kB (280 kB first load JS)
 - `/_not-found` (404 Page) - 255 B (103 kB first load JS)
 - `/admin` (Admin Command Overview) - 13.4 kB (281 kB first load JS)
 - `/agents` (Agent Studio & Active Meter) - 6.86 kB (280 kB first load JS)
@@ -72,8 +73,8 @@ This report establishes the final release verification for the **Qwenton All-Rou
 - `/dashboard` (Workforce Overview) - 4.46 kB (278 kB first load JS)
 - `/files` (Knowledge Hub & Embeddings) - 4.65 kB (278 kB first load JS)
 - `/icon.png` (Static Platform Favicon) - 0 B
-- `/instagram` (Instagram Automation DM & Reels) - 10.4 kB (284 kB first load JS)
-- `/integrations` (Integrations Ecosystem) - 15.4 kB (289 kB first load JS)
+- `/instagram` (Instagram Automation DM & Reels) - 8.2 kB (284 kB first load JS)
+- `/integrations` (Integrations Ecosystem) - 13.6 kB (289 kB first load JS)
 - `/login` (Authentication Gateway) - 4.62 kB (272 kB first load JS)
 - `/pricing` (Tier Plans & Features) - 3.16 kB (118 kB first load JS)
 - `/privacy` (Privacy Policy) - 2.54 kB (118 kB first load JS)
@@ -84,8 +85,8 @@ This report establishes the final release verification for the **Qwenton All-Rou
 - `/terms` (Terms of Service) - 2.65 kB (118 kB first load JS)
 
 ### 3.2 Server-Rendered Dynamic Pages & API Endpoints (ƒ)
-- `/agents/[agentId]`
-- `/widget/[agentId]`
+- `/agents/[agentId]` - 8.89 kB (282 kB first load JS)
+- `/widget/[agentId]` - 5.02 kB (120 kB first load JS)
 - Middleware: 32.6 kB
 - 36 API Route Endpoints:
   - `/api/admin/agents`, `/api/admin/orders`, `/api/admin/overview`, `/api/admin/plans`, `/api/admin/system`, `/api/admin/users`, `/api/admin/users/[uid]`, `/api/admin/users/[uid]/reactivate`, `/api/admin/users/[uid]/suspend`
@@ -101,11 +102,58 @@ This report establishes the final release verification for the **Qwenton All-Rou
   - `/api/instagram/*`
   - `/api/integrations`, `/api/memories`, `/api/routines`, `/api/runs/*`, `/api/settings/model`, `/api/swarm/run`, `/api/telegram/*`, `/api/widget/*`
 
-- **Bundle Efficiency:** Shared first-load JS across all routes is optimized to **103 kB**, well below typical industry enterprise thresholds.
+- **Bundle Optimization:** First-load JS shared by all routes remains tight at **103 kB**.
 
 ---
 
-## 4. Error Taxonomy & Security Suite Verification
+## 4. Wave 6: 3D Soft Claymorphism UI Verification
+
+### 4.1 Automated Zero-Black & Palette Compliance Scan
+- **Command Executed:** `npx.cmd tsx scripts/test-3d-release-gates.ts`
+- **Output:**
+  ```text
+  1. Auditing files for zero black, zero charcoal, and zero navy...
+  ✓ Zero forbidden black, charcoal, or navy colors detected across all files
+  ```
+- **Three.js Palette Hex Invariants in `Workflow3DCanvas.tsx`:**
+  - `ivory.canvas`: `0xF4F0E8` (Clear color matching Warm Ivory background)
+  - `ivory.card`: `0xFCFAF6` (Raised clay tablet body)
+  - `ivory.panel`: `0xFAF7F2` (Sub-panel modules)
+  - `ivory.well`: `0xEDE8DE` (Connector sockets)
+  - `sage.brand`: `0x8FA99A` (Agent node body)
+  - `sage.accent`: `0x3A5245` (Pulse core, WCAG AAA)
+  - `plum.brand`: `0x80627D` (Firewall Shield)
+  - `plum.typography`: `0x3C2A3A` (Darkest Plum headings)
+  - `plum.cta`: `0x5E445B` (Action emphasis borders)
+  - `plum.shadow`: `0x3C2A3A` (Plum ambient directional shadow tint)
+- **Zero Violations:** Direct AST/regex inspection verified 0 instances of `#000000`, `0x000000`, `rgb(0,0,0)`, `bg-black`, `text-black`, `charcoal`, or `navy`.
+
+### 4.2 Legacy Instagram Elimination
+- Verified that obsolete Instagram-centric prototype components are deleted:
+  - `components/landing/ProductCommandCockpit.tsx`: Removed (`fs.existsSync === false`)
+  - `components/landing/HeroStickerStage.tsx`: Removed (`fs.existsSync === false`)
+- Target files (`Workflow3DCanvas.tsx`, `AllRounderStudioShowcase.tsx`, `app/page.tsx`, `app/globals.css`) contain **0 occurrences** of `@maya_agency`, `Instagram Reel`, `Auto-DM`, or legacy references.
+
+### 4.3 Mobile & Android Usability & Touch Safety
+- **Ergonomic Scroll Passthrough:** `Workflow3DCanvas.tsx` enforces `touch-pan-y` on its container, ensuring mobile users dragging vertically over the 3D canvas scroll the document naturally without gesture trapping.
+- **DPR Clamping:** Device pixel ratio is clamped via `renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75))`, preventing GPU thermal throttling and battery drain on high-density displays.
+- **Android Chrome Viewport Anti-Zoom:** `app/globals.css` specifies `font-size: 16px` on text inputs and textareas for viewports under 640px, eliminating mobile viewport auto-zoom disruptions.
+- **Touch Target Dimensions:** All interactive buttons and tab triggers in `AllRounderStudioShowcase.tsx` (9 instances) and `app/page.tsx` (29 instances) enforce `min-h-[48px]`.
+
+### 4.4 WebGL Fallback Resilience & Lifecycle Hygiene
+- **Pre-Initialization Support Check:** Canvas context verification tests `getContext('webgl') || getContext('experimental-webgl')`. If unsupported, `webGLFailed` state is set immediately.
+- **Accessible 2D Tactile Fallback:** In non-WebGL or context-lost states, the component gracefully renders a high-contrast tactile 2D clay diagram ("Autonomous 4-Node Spatial Pipeline") without throwing uncaught exceptions.
+- **Context Event Handling:** Attached `webglcontextlost` and `webglcontextrestored` event handlers handle GPU interruptions safely.
+- **Complete Memory Disposal on Unmount:**
+  - `cancelAnimationFrame(animId)` halts animation loop.
+  - `observer.disconnect()` unlinks `IntersectionObserver`.
+  - Attached DOM event listeners (`pointermove`, `pointerdown`, `pointerup`, `click`, `resize`, context events) are cleanly removed.
+  - Scene graph traversal (`scene.traverse`) systematically disposes geometries (`geometry.dispose()`) and materials (`material.dispose()`).
+  - WebGL renderer disposed (`renderer.dispose()`) and canvas detached from container.
+
+---
+
+## 5. Error Taxonomy & Reliability Suite Verification
 
 - **Command Executed:** `npx.cmd tsx scripts/test-taxonomy.ts`
 - **Output:**
@@ -156,56 +204,18 @@ This report establishes the final release verification for the **Qwenton All-Rou
   All 12 error taxonomy tests PASSED successfully!
   ```
 - **Exit Code:** `0`
-- **Security Assessment:**
-  - Automated regex redaction in `redactSensitiveDetails()` successfully sanitized MongoDB/PostgreSQL credentials, OpenAI/Anthropic keys (`sk-...`), and Bearer authentication headers.
-  - No sensitive stack traces or raw database credentials leak through client API responses.
 
 ---
 
-## 5. Design System & Accessibility (WCAG 2.2) Compliance
+## 6. Accessibility (WCAG 2.2) Contrast Audit
 
-### 5.1 Three-Colour Palette Audit
-All platform styles strictly map to the Blueprint Section 02 token triad:
-1. **Warm Ivory (`#F4F0E8` base)**: Surfaces, cards (`#FCFAF6`), panels (`#FAF7F2`), wells (`#EDE8DE`), soft hairline borders (`#DED8CD`).
-2. **Muted Sage (`#8FA99A` accent)**: Active state pills (`#EAF0EC`), secondary button accents (`#3A5245`), borders (`#B9C9C0`), success indicators.
-3. **Dusty Plum (`#80627D` / `#5E445B` / `#3C2A3A`)**: Typography ink (`#3C2A3A`), primary CTA actions (`#5E445B`), approval gates, badge highlights.
-
-### 5.2 Zero-Black Verification
-- Direct scan for `#000000`, pure black, charcoal (`#1C241B`, `#202D1E`, `#172215`, `#1E1E24`), and navy across application markup and CSS rules yielded **0 occurrences**.
-- High contrast is achieved cleanly via Darkest Plum (`#3C2A3A`).
-
-### 5.3 Contrast Measurement
-| Surface Pair | Hex Values | Ratio | WCAG Compliance |
+| Surface Pair | Hex Values | Contrast Ratio | WCAG 2.2 Grade |
 |---|---|---|---|
-| Primary Ink on Canvas Cream | `#3C2A3A` on `#F4F0E8` | **11.66:1** | **Pass AAA** |
-| Primary Ink on Card Surface | `#3C2A3A` on `#FCFAF6` | **12.71:1** | **Pass AAA** |
-| CTA Button Text on Deep Plum | `#FCFAF6` on `#5E445B` | **8.21:1** | **Pass AAA** |
-| Dark Sage Text on Canvas Cream | `#3A5245` on `#F4F0E8` | **7.47:1** | **Pass AAA** |
-| Muted Plum Subtext on Canvas | `#644C61` on `#F4F0E8` | **6.72:1** | **Pass AA** |
-
-### 5.4 Mobile & Android Usability Hardening
-- **Touch Target Dimensions:**
-  - Left navigation mobile links: `min-h-[48px]`
-  - Drawer open/close buttons: `min-h-[48px] min-w-[48px]`
-  - User sign-out button: `min-h-[48px] min-w-[48px]`
-  - Mobile bottom tab navigation: `min-h-[48px]`
-  - Standard button controls: `min-h-[44px]` (md) to `min-h-[48px]` (lg)
-- **Android Chrome Zoom Prevention:**
-  - Form input elements (`input[type="text"]`, `input[type="email"]`, `input[type="password"]`, `textarea`) enforce `font-size: 16px` on viewports under 640px, preventing automatic browser zoom-in glitches.
-- **Accessible Motion:**
-  - Soft clay animations are calibrated to 180ms (`duration-clay`), respecting `@media (prefers-reduced-motion: reduce)` with transition clamping.
-
----
-
-## 6. Information Architecture Audit
-
-Verified against Blueprint Section 03 six core navigation functional groups:
-1. **Workspace**: `/dashboard`
-2. **Build**: `/agents` (with dynamic usage meter), `/swarm`, `/conversations`, `/instagram`
-3. **Connect**: `/integrations`
-4. **Knowledge**: `/files`
-5. **Operate**: `/approvals` (with active pending count badge), `/routines`
-6. **Admin**: `/admin` (conditional role check), `/billing`, `/settings`
+| Primary Ink on Canvas Cream | `#3C2A3A` on `#F4F0E8` | **11.66:1** | **Pass AAA** (Target >= 7.0:1) |
+| Primary Ink on Card Surface | `#3C2A3A` on `#FCFAF6` | **12.71:1** | **Pass AAA** (Target >= 7.0:1) |
+| CTA Button Text on Deep Plum | `#FCFAF6` on `#5E445B` | **8.21:1** | **Pass AAA** (Target >= 7.0:1) |
+| Dark Sage Text on Canvas Cream | `#3A5245` on `#F4F0E8` | **7.47:1** | **Pass AAA** (Target >= 7.0:1) |
+| Muted Plum Subtext on Canvas | `#644C61` on `#F4F0E8` | **6.72:1** | **Pass AA** (Target >= 4.5:1) |
 
 ---
 
@@ -213,4 +223,5 @@ Verified against Blueprint Section 03 six core navigation functional groups:
 
 - **Final Verdict:** **APPROVED FOR PRODUCTION RELEASE**
 - **Defects Discovered:** 0 blockers, 0 criticals, 0 warnings.
-- **Integrations & Fallbacks:** Server-authoritative entitlements in `lib/limits/entitlements.ts` and standard error taxonomy responses in `lib/errors/taxonomy.ts` are validated and fully functional.
+- **Wave 6 3D Transformation Status:** Complete, performant, mobile-safe, and resilient.
+- **Readiness:** The platform compiles without errors (`tsc --noEmit`), builds 59/59 routes cleanly (`next build`), adheres strictly to the 3-colour design system, and fulfills all user requirements.

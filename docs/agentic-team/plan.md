@@ -18,5 +18,11 @@
 
 ## Wave 5: Landing Page Rework & Interactive Hero
 - [x] **AT-009 (product-manager)**: Define product architecture, messaging, interactive states, and component spec for `AllRounderStudioShowcase.tsx` in `docs/agentic-team/brief-landing-rework.md`.
-- [ ] **AT-010 (frontend-developer)**: Implement `components/landing/AllRounderStudioShowcase.tsx` and rework `app/page.tsx` with full 4-pillar showcase and department workflows.
-- [ ] **AT-011 (qa-test-automation)**: Verify zero black, contrast ratios, and clean production build on reworked landing page.
+- [x] **AT-010 (frontend-developer)**: Implement `components/landing/AllRounderStudioShowcase.tsx` and rework `app/page.tsx` with full 4-pillar showcase and department workflows.
+- [x] **AT-011 (qa-test-automation)**: Verify zero black, contrast ratios, and clean production build on reworked landing page.
+
+## Wave 6: Proper 3D UI Transformation
+- [x] **AT-012 (ui-ux-designer)**: Specify the 3D Soft Claymorphism UI architecture (materials, tactile 3D nodes, lighting, camera angles, perspective tilt, zero wireframe/black holes, strict 3-colour palette).
+- [x] **AT-013 (frontend-developer)**: Build `components/landing/Workflow3DCanvas.tsx` and integrate 3D depth, interactive 3D node orchestration, and CSS 3D perspective cards into `app/page.tsx` and `AllRounderStudioShowcase.tsx`.
+- [x] **AT-014 (code-reviewer)**: Audit WebGL resource disposal, zero-black compliance, and performance/memory hygiene.
+- [x] **AT-015 (qa-test-automation)**: Verify typecheck, Next.js 59-route production build, Android mobile touch safety, and release evidence.
