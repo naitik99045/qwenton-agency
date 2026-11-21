@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   Bot,
   GitFork,
   Users,
   ShieldCheck,
+  ShieldAlert,
+  Sparkles,
   Zap,
   ArrowRight,
   Play,
@@ -29,12 +31,43 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { AllRounderStudioShowcase } from '@/components/landing/AllRounderStudioShowcase';
-import { Hero3DExperience } from '@/components/landing/Hero3DExperience';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
 
 export default function LandingPage() {
   // Mobile Nav Drawer Toggle
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Mouse tilt parallax on the Product Studio Cockpit
+  const cockpitRef = useRef<HTMLDivElement>(null);
+  const handleCockpitMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      !cockpitRef.current ||
+      typeof window === 'undefined' ||
+      window.innerWidth < 640 ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+      return;
+    const rect = cockpitRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const maxTilt = 3.5;
+    const tiltX = -((mouseY - centerY) / centerY) * maxTilt;
+    const tiltY = ((mouseX - centerX) / centerX) * maxTilt;
+    cockpitRef.current.style.transform = `perspective(1200px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+  };
+
+  const handleCockpitMouseLeave = () => {
+    if (
+      !cockpitRef.current ||
+      typeof window === 'undefined' ||
+      window.innerWidth < 640 ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+      return;
+    cockpitRef.current.style.transform = `perspective(1200px) rotateX(1.8deg) rotateY(0deg)`;
+  };
 
   // Section 4: Department Workflows State
   const [activeWorkflowTab, setActiveWorkflowTab] = useState<'sales' | 'support' | 'research' | 'pipeline'>('sales');
@@ -402,32 +435,34 @@ export default function LandingPage() {
       </header>
 
       {/* -------------------------------------------------------------------------
-          SECTION 2: HERO STAGE & VALUE PROPOSITION
+          SECTION 2: HERO STAGE & PRODUCT STUDIO COCKPIT
           ------------------------------------------------------------------------- */}
-      <section className="relative pt-12 sm:pt-20 pb-16 sm:pb-24 overflow-hidden">
+      <section className="relative pt-12 sm:pt-20 pb-16 sm:pb-28 overflow-hidden bg-canvas">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-          {/* Eyebrow Badge */}
+          {/* 1. Eyebrow Status Badge */}
           <div className="mb-6 animate-hero-eyebrow">
-            <Badge variant="success" className="px-3.5 py-1 text-xs">
-              ● Production-Ready Multi-Agent Orchestration
-            </Badge>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sage-light border border-sage-border text-sage-dark text-xs font-mono font-bold shadow-clay-button-subtle select-none">
+              <span className="w-2 h-2 rounded-full bg-sage-brand animate-pulse" />
+              <span>ENTERPRISE AUTONOMOUS WORKFORCE PLATFORM</span>
+            </div>
           </div>
 
-          {/* Core Verbatim Positioning Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-ink tracking-tight max-w-5xl leading-[1.12] animate-hero-headline">
+          {/* 2. Core Verbatim Positioning Headline */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-ink tracking-tight max-w-5xl mx-auto leading-[1.08] mb-6 animate-hero-headline">
             One workspace to build AI agents, connect business systems, automate processes, coordinate teams of agents, and govern every important action.
           </h1>
 
-          {/* Sub-headline */}
-          <p className="mt-6 text-base sm:text-xl text-ink-muted max-w-3xl leading-relaxed animate-hero-subhead">
+          {/* 3. Sub-headline */}
+          <p className="text-base sm:text-lg lg:text-xl text-ink-muted max-w-3xl mx-auto leading-relaxed mb-8 animate-hero-subhead">
             Replace brittle point-tool bots with an enterprise workforce. Build autonomous agents with natural language, design visual multi-step workflows, deploy coordinated swarms across departments, and maintain 100% human control with our server-enforced Approval Firewall.
           </p>
 
-          {/* Call-to-Action Group */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto animate-hero-cta">
+          {/* 4. Action CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-10 animate-hero-cta">
             <Link href="/dashboard" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-8 font-bold shadow-clay-button">
-                Start Building Free →
+                Start Building Free
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
             <a href="#showcase" className="w-full sm:w-auto">
@@ -436,39 +471,98 @@ export default function LandingPage() {
                 size="lg"
                 className="w-full sm:w-auto min-h-[48px] text-base px-6 font-bold shadow-clay-button-subtle"
               >
-                Explore Interactive Showcase ↓
+                Explore Interactive Studio
+                <ChevronDown className="w-4 h-4 ml-1.5" />
               </Button>
             </a>
           </div>
 
-          {/* Trust & Assurance Pill Strip */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-mono text-ink-muted animate-hero-pills">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <Check className="w-3.5 h-3.5 text-sage-dark" />
+          {/* 5. Trust Strip (Simplified 3 checkmark pills) */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium text-ink-muted mb-12 animate-hero-pills">
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-sage-dark" />
               <span>Zero-Risk Sandbox Execution</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <Check className="w-3.5 h-3.5 text-sage-dark" />
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-sage-dark" />
               <span>Human-in-the-Loop Approval Firewall</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <Check className="w-3.5 h-3.5 text-sage-dark" />
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Lock className="w-4 h-4 text-sage-dark" />
               <span>Multi-Tenant Workspace Isolation</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
-              <Check className="w-3.5 h-3.5 text-sage-dark" />
-              <span>Zero Telephony Clutter — 100% Digital Business Ops</span>
-            </div>
+            </span>
           </div>
 
-          {/* Spatial 3D Hero Mesh Experience */}
-          <div className="w-full mt-10 sm:mt-14 max-w-5xl animate-hero-3d">
-            <Hero3DExperience />
-          </div>
+          {/* 6. Product Studio Cockpit: Elevated Window with 3D Depth & Parallax Satellites */}
+          <div
+            id="showcase"
+            className="cockpit-perspective-container relative w-full max-w-5xl mt-2 animate-hero-cockpit"
+          >
+            {/* Satellite Parallax Badge A (Top Right): Approval Firewall Interception */}
+            <div className="hidden lg:flex absolute -top-5 -right-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-card bg-surface-white border border-border-subtle shadow-clay-card text-left translate-z-28 animate-float-gentle select-none">
+              <div className="w-8 h-8 rounded-control bg-plum-light border border-plum/30 flex items-center justify-center text-plum-deep shrink-0">
+                <ShieldAlert className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-[11px] font-mono font-bold text-plum-deep uppercase tracking-wider">
+                  Approval Firewall
+                </div>
+                <div className="text-xs font-semibold text-ink">
+                  1 Action Gated ($24,000 Proposal)
+                </div>
+              </div>
+            </div>
 
-          {/* Interactive Centerpiece Component */}
-          <div id="showcase" className="w-full mt-14 sm:mt-20">
-            <AllRounderStudioShowcase />
+            {/* Satellite Parallax Badge B (Bottom Left): Swarm Telemetry */}
+            <div className="hidden lg:flex absolute -bottom-5 -left-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-card bg-surface-white border border-border-subtle shadow-clay-card text-left translate-z-28 animate-float-gentle-reverse select-none">
+              <div className="w-8 h-8 rounded-control bg-sage-light border border-sage-border flex items-center justify-center text-sage-dark shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-[11px] font-mono font-bold text-sage-dark uppercase tracking-wider">
+                  Swarm Coordination
+                </div>
+                <div className="text-xs font-semibold text-ink">
+                  3 Specialist Agents • 1.8s Sync
+                </div>
+              </div>
+            </div>
+
+            {/* Cockpit Window Shell with Soft Claymorphism */}
+            <div
+              ref={cockpitRef}
+              onMouseMove={handleCockpitMouseMove}
+              onMouseLeave={handleCockpitMouseLeave}
+              className="clay-surface rounded-card-lg border border-border-subtle shadow-clay-card overflow-hidden transition-transform duration-200 ease-out"
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: 'perspective(1200px) rotateX(1.8deg) rotateY(0deg)',
+              }}
+            >
+              {/* Cockpit Window Chrome Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle bg-surface-panel/85 backdrop-blur-sm select-none">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-border-strong border border-border-strong" />
+                  <span className="w-3 h-3 rounded-full bg-sage border border-sage-dark" />
+                  <span className="w-3 h-3 rounded-full bg-primary border border-plum-deep" />
+                  <span className="ml-2 font-mono text-xs text-ink-muted">
+                    qwenton / production-workspace / active-swarms
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-sage-light text-sage-dark border border-sage-border">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sage-dark animate-pulse" />
+                    4 Swarms Active
+                  </span>
+                  <span className="hidden sm:inline font-mono text-xs text-ink-muted">
+                    Latency: 1.8s
+                  </span>
+                </div>
+              </div>
+
+              {/* The AllRounderStudioShowcase Component */}
+              <AllRounderStudioShowcase />
+            </div>
           </div>
         </div>
       </section>

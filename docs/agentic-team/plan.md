@@ -30,4 +30,11 @@
 ## Wave 7: Hero 3D Spatial Experience & Entry Animations
 - [x] **AT-016 (frontend-developer)**: Build `components/landing/Hero3DExperience.tsx` and integrate into `app/page.tsx` with choreographed cubic-bezier entry animations in `app/globals.css`.
 - [x] **AT-017 (code-reviewer)**: Audit WebGL resource disposal, zero-black compliance, mobile touch safety, and motion accessibility.
-- [ ] **AT-018 (qa-test-automation)**: Verify typecheck, Next.js 59-route production build, Android touch targets, and final delivery verification.
+- [x] **AT-018 (qa-test-automation)**: Verify typecheck, Next.js 59-route production build, Android touch targets, and final delivery verification.
+
+## Wave 8: Product Studio Cockpit Hero Rework
+- [x] **AT-019 (product-manager)**: Research top 10 AI platforms (Linear, Retool, CrewAI, LangSmith, Relevance AI, etc.), diagnose why spinning 3D spheres failed, and recommend "The Governed Workforce Cockpit" hero pattern in `docs/agentic-team/handoffs/hero-research.md`.
+- [x] **AT-020 (ui-ux-designer)**: Produce authoritative hero visual architecture & UX specification replacing abstract 3D spheres with Product Studio Cockpit in `docs/agentic-team/handoffs/hero-ux-spec.md`.
+- [x] **AT-021 (frontend-developer)**: Purge `Hero3DExperience.tsx` and `Workflow3DCanvas.tsx`, embed `AllRounderStudioShowcase` inside the Product Studio Cockpit with window chrome in `app/page.tsx`, and add cockpit perspective and reduced-motion rules in `app/globals.css`.
+- [x] **AT-022 (code-reviewer)**: Audit complete purge of abstract 3D geometry, zero-black compliance, real product centerpiece, parallax tilt clamping, and build quality.
+- [x] **AT-023 (qa-test-automation)**: Verify end-to-end integration, 59-route production build, mobile touch targets, and final release sign-off.

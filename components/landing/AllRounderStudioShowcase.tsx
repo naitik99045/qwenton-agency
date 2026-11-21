@@ -25,7 +25,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Workflow3DCanvas } from '@/components/landing/Workflow3DCanvas';
 
 export type ShowcasePillar = 'agent-studio' | 'workflow-studio' | 'workforce-swarm' | 'approval-firewall';
 
@@ -532,7 +531,7 @@ export function AllRounderStudioShowcase() {
       )}
 
       {/* ----------------------------------------------------
-          TAB 2: COMPOSABLE WORKFLOW STUDIO (WITH 3D CANVAS)
+          TAB 2: COMPOSABLE WORKFLOW STUDIO
           ---------------------------------------------------- */}
       {activePillar === 'workflow-studio' && (
         <div className="mt-6 flex flex-col gap-6">
@@ -540,10 +539,10 @@ export function AllRounderStudioShowcase() {
           <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-panel bg-surface-panel border border-border-subtle">
             <div>
               <span className="text-xs font-mono font-bold text-plum uppercase tracking-wider block">
-                Visual Graph Pipeline • Interactive 3D Spatial Canvas
+                Visual Graph Pipeline • Composable Workflow Canvas
               </span>
               <p className="text-xs text-ink font-semibold">
-                Click any node in the 3D canvas or the cards below to inspect schemas, parameters, and firewall rules.
+                Click any node below to inspect schemas, parameters, runtime policies, and firewall rules.
               </p>
             </div>
             <Button
@@ -557,13 +556,35 @@ export function AllRounderStudioShowcase() {
             </Button>
           </div>
 
-          {/* Interactive 3D WebGL Canvas Centerpiece */}
-          <Workflow3DCanvas
-            activeNodeId={selectedNodeId}
-            isSimulating={isWorkflowRunning}
-            onNodeSelect={(nodeId) => setSelectedNodeId(nodeId)}
-            className="w-full"
-          />
+          {/* Interactive Pipeline Track Bar with Animated Data Pulses */}
+          <div className="p-4 rounded-panel bg-surface-white border border-border-subtle shadow-clay-card">
+            <div className="flex items-center justify-between mb-3 text-xs font-mono text-ink-muted">
+              <span className="font-bold text-ink flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-sage-dark animate-pulse" />
+                Pipeline Execution Track: Webhook → AI Enrichment → Firewall Gate → CRM Dispatch
+              </span>
+              <span className="text-[11px] font-bold text-plum">
+                {isWorkflowRunning ? `Active Stage: Step ${workflowActiveStep} of 4` : 'Ready for Simulation'}
+              </span>
+            </div>
+            {/* Visual Progress Line */}
+            <div className="relative w-full h-2.5 rounded-full bg-surface-inset border border-border-subtle overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-sage to-plum rounded-full transition-all duration-500 ease-out"
+                style={{
+                  width: isWorkflowRunning
+                    ? `${(workflowActiveStep / 4) * 100}%`
+                    : selectedNodeId === 'trigger'
+                    ? '25%'
+                    : selectedNodeId === 'enrich'
+                    ? '50%'
+                    : selectedNodeId === 'firewall'
+                    ? '75%'
+                    : '100%',
+                }}
+              />
+            </div>
+          </div>
 
           {/* Interactive Node Canvas: 4 Sequential Nodes with 3D Depth */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 relative perspective-container">

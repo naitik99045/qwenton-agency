@@ -242,11 +242,70 @@
     animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both;
   }
 
-  .animate-hero-3d {
-    animation: heroBloomIn 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  /* Cockpit Elevation & Satellite Badges Animation */
+  @keyframes heroCockpitElevate {
+    0% {
+      opacity: 0;
+      transform: perspective(1200px) rotateX(4deg) translateY(28px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: perspective(1200px) rotateX(1.8deg) translateY(0) scale(1);
+    }
+  }
+
+  @keyframes heroFloatGentleReverse {
+    0%, 100% {
+      transform: translateY(0px) translateZ(28px);
+    }
+    50% {
+      transform: translateY(6px) translateZ(28px);
+    }
+  }
+
+  .animate-hero-cockpit {
+    animation: heroCockpitElevate 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both;
   }
 
   .animate-float-gentle {
     animation: heroFloatGentle 4.5s ease-in-out infinite;
+  }
+
+  .animate-float-gentle-reverse {
+    animation: heroFloatGentleReverse 5.2s ease-in-out infinite;
+  }
+
+  .translate-z-28 {
+    transform: translateZ(28px);
+  }
+
+  .cockpit-perspective-container {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+  }
+
+  @media (max-width: 640px) {
+    .cockpit-perspective-container {
+      perspective: none !important;
+    }
+    .animate-hero-cockpit {
+      animation: heroFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both;
+      transform: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-hero-eyebrow,
+    .animate-hero-headline,
+    .animate-hero-subhead,
+    .animate-hero-cta,
+    .animate-hero-pills,
+    .animate-hero-cockpit,
+    .animate-float-gentle,
+    .animate-float-gentle-reverse {
+      animation: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
   }
 }

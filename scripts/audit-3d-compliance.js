@@ -1,8 +1,6 @@
 const fs = require('fs');
 
 const files = [
-  'components/landing/Hero3DExperience.tsx',
-  'components/landing/Workflow3DCanvas.tsx',
   'components/landing/AllRounderStudioShowcase.tsx',
   'app/page.tsx',
   'app/globals.css'
@@ -56,5 +54,5 @@ if (violations.length > 0) {
   console.log(JSON.stringify(violations, null, 2));
   process.exit(1);
 } else {
-  console.log('PASS: Zero forbidden black, charcoal, or navy colors detected across all files including Hero3DExperience.tsx!');
+  console.log('PASS: Zero forbidden black, charcoal, or navy colors detected across active landing files!');
 }

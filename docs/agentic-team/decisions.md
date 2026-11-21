@@ -35,3 +35,13 @@
      - Interactive 3D Node Selection: Clicking 3D nodes triggers live state updates on the studio board!
   3. Complement with **CSS 3D Perspective Card Tilt** across marketing cards for tactile physical depth.
   4. Ensure zero black, zero neon, zero unhandled errors, WebGL fallback, and 48px Android touch targets.
+
+### DEC-007: Enterprise Hero Pattern Pivot (The Governed Workforce Cockpit)
+- **Context:** User explicitly rejected spinning 3D spheres with orbital rings, capsules, and floating geometric shapes as "AI slop." Enterprise operations buyers (COOs, VPs of Ops, Engineering leaders) need immediate visual proof that the platform is real, functional, and governed.
+- **Decision:**
+  1. Retire the abstract spinning sphere and orbital satellite scene from the hero stage of `app/page.tsx`.
+  2. Adopt the single highest-converting enterprise hero pattern: **The Governed Workforce Cockpit**.
+  3. Structure as a tactile 2-pane interactive product twin:
+     - Left Pane: Visual Multi-Agent Workflow DAG connecting real business triggers (Webhooks, Tickets), specialist agent swarms, and execution actions.
+     - Right Pane: **The Human Approval Firewall** showstopper card displaying an intercepted critical business action (e.g. sending a $24,000 contract or issuing a refund) with inspectable payload hash, risk level, and 1-click Approve/Reject interaction.
+  4. Enforce strict negative design constraints: zero black, zero sci-fi neon grids, zero floating geometric shapes, zero fake testimonials, and 100% adherence to Warm Ivory, Muted Sage, and Dusty Plum soft claymorphism.

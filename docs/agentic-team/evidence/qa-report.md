@@ -1,26 +1,30 @@
 # End-to-End Quality Assurance & Release Gate Verification Report
 
-**Task ID:** AT-015 (Updated with Wave 6: 3D Soft Claymorphism UI)  
+**Task ID:** AT-023 (Wave 8: Product Studio Cockpit Hero Rework Release Gate)  
 **Role:** `qa-test-automation`  
-**Date:** 20 November 2026  
+**Date:** 21 November 2026  
 **Status:** **PASSED / RELEASE READY**  
-**Blueprint Reference:** `Qwenton_Updated_All_Rounder_Implementation_Blueprint.pdf` (Sections 02, 03, 10, 18)  
-**Execution Environment:** Windows PowerShell, Node.js v20+, Next.js 15.5.27, Three.js 0.170+
+**Blueprint Reference:** `Qwenton_Updated_All_Rounder_Implementation_Blueprint.pdf` (Sections 01, 02, 03, 10, 18)  
+**UX Spec Reference:** `docs/agentic-team/handoffs/hero-ux-spec.md`  
+**Execution Environment:** Windows PowerShell, Node.js v20+, Next.js 15.5.27
 
 ---
 
 ## 1. Executive Summary
 
-This report establishes the final release verification for the **Qwenton All-Rounder AI Workforce Platform** upgrade across Waves 1 to 6, including the full 3D Soft Claymorphism interactive spatial UI transformation (`Workflow3DCanvas.tsx`, `AllRounderStudioShowcase.tsx`, and `app/page.tsx`). All acceptance criteria and release quality gates have been executed, tested, and validated with zero failures.
+This report establishes the final release verification for the **Qwenton All-Rounder AI Workforce Platform**, incorporating the complete **Wave 8: Product Studio Cockpit Hero Rework**. All user requests, negative design constraints, and release quality gates have been strictly verified with zero failures.
+
+The user's explicit rejection of generic abstract 3D geometry (spinning spheres, orbital rings, floating scatter) has been decisively resolved. All abstract 3D meshes have been **permanently purged** (`Hero3DExperience.tsx` and `Workflow3DCanvas.tsx` deleted). The landing hero is now anchored by the authentic software: **`AllRounderStudioShowcase` embedded within a soft claymorphic Product Studio Cockpit** featuring realistic desktop window chrome, live status telemetry, and floating parallax depth satellites.
 
 | Verification Gate | Required Standard | Observed Result | Status |
 |---|---|---|---|
 | **TypeScript Typecheck** | Exit Code 0, strict mode (`tsc --noEmit`) | 0 compilation errors across entire codebase | **PASS** |
 | **Next.js Production Build** | Exit Code 0, all 59 routes generated | 59/59 routes compiled & optimized cleanly | **PASS** |
-| **3D Zero-Black & Color Compliance** | Warm Ivory, Muted Sage, Dusty Plum | Zero `#000000`, `0x000000`, charcoal, or navy | **PASS** |
-| **Legacy Instagram Elimination** | Obsolete files deleted; zero legacy strings | `ProductCommandCockpit` & `HeroStickerStage` gone | **PASS** |
-| **Mobile & Android Usability** | 48px touch targets, `touch-pan-y`, 16px inputs | 38+ 48px targets, `touch-pan-y`, 16px font | **PASS** |
-| **WebGL Fallback & Lifecycle** | Context loss resilience & memory disposal | 2D clay fallback active; recursive unmount cleanup | **PASS** |
+| **Landing Bundle Optimization** | Significant reduction (< 50 kB) | **21.6 kB** (down from 164 kB, **~87% reduction**) | **PASS** |
+| **Abstract 3D Meshes Purge** | 0 occurrences of rejected 3D components | `Hero3DExperience` & `Workflow3DCanvas` deleted; 0 references | **PASS** |
+| **Zero-Black & Color Compliance** | Warm Ivory, Muted Sage, Dusty Plum | Zero `#000000`, `0x000000`, charcoal, or navy | **PASS** |
+| **Parallax Tilt Clamping** | Clamped to ±3.5deg; disabled on mobile | `maxTilt = 3.5`, `innerWidth < 640` guard, `prefers-reduced-motion` | **PASS** |
+| **Mobile & Android Usability** | 48px touch targets, 16px mobile inputs | 38+ 48px targets, 16px input anti-zoom, perspective disabled on mobile | **PASS** |
 | **Error Taxonomy Suite** | Exit Code 0, 12/12 assertions passing | 12/12 test assertions PASSED | **PASS** |
 | **WCAG 2.2 Contrast** | AA >= 4.5:1, AAA >= 7.0:1 | Primary text 11.66:1 (AAA), CTA 8.21:1 (AAA) | **PASS** |
 
@@ -36,18 +40,19 @@ This report establishes the final release verification for the **Qwenton All-Rou
   ```
 - **Exit Code:** `0`
 - **Findings:**
-  - Zero type mismatch or structural errors across Three.js canvas types, Next.js dynamic route params, Firebase client authentication, Lucide React icons, and Zod error schemas.
+  - Zero compilation errors.
+  - Complete type safety across Next.js 15 route definitions, React 19 hooks, cockpit event listeners, and Tailwind CSS configuration.
 
 ---
 
-## 3. Production Next.js Build & Route Optimization (Wave 6)
+## 3. Production Next.js Build & Route Optimization (Wave 8)
 
 - **Command Executed:** `npm.cmd run build` (`next build`)
 - **Execution Log:**
   ```text
   ▲ Next.js 15.5.27
   Creating an optimized production build ...
-  ✓ Compiled successfully in 20.8s
+  ✓ Compiled successfully in 18.5s
   Skipping validation of types
   Skipping linting
   Collecting page data ...
@@ -59,101 +64,94 @@ This report establishes the final release verification for the **Qwenton All-Rou
   Finalizing page optimization ...
   ```
 - **Exit Code:** `0`
-- **Route Inventory Audited (All 59 Platform Routes):**
 
-### 3.1 Static Pre-rendered Pages (○)
-- `/` (Landing Page with 3D Spatial Canvas & Showcase) - 164 kB (280 kB first load JS)
-- `/_not-found` (404 Page) - 255 B (103 kB first load JS)
-- `/admin` (Admin Command Overview) - 13.4 kB (281 kB first load JS)
-- `/agents` (Agent Studio & Active Meter) - 6.86 kB (280 kB first load JS)
-- `/agents/new` (Agent Creation Flow) - 10.8 kB (284 kB first load JS)
-- `/approvals` (Approvals Inbox Firewall) - 3.52 kB (277 kB first load JS)
-- `/billing` (Billing & Entitlement Upgrades) - 7.76 kB (281 kB first load JS)
-- `/conversations` (Live Multi-Agent Chat) - 7.63 kB (281 kB first load JS)
-- `/dashboard` (Workforce Overview) - 4.46 kB (278 kB first load JS)
-- `/files` (Knowledge Hub & Embeddings) - 4.65 kB (278 kB first load JS)
-- `/icon.png` (Static Platform Favicon) - 0 B
-- `/instagram` (Instagram Automation DM & Reels) - 8.2 kB (284 kB first load JS)
-- `/integrations` (Integrations Ecosystem) - 13.6 kB (289 kB first load JS)
-- `/login` (Authentication Gateway) - 4.62 kB (272 kB first load JS)
-- `/pricing` (Tier Plans & Features) - 3.16 kB (118 kB first load JS)
-- `/privacy` (Privacy Policy) - 2.54 kB (118 kB first load JS)
-- `/routines` (Autonomous Runs & Routines) - 4.6 kB (278 kB first load JS)
-- `/settings` (Platform Configuration) - 4.77 kB (278 kB first load JS)
-- `/signup` (User Onboarding) - 4.67 kB (272 kB first load JS)
-- `/swarm` (Multi-Agent Swarm Orchestration) - 7.3 kB (281 kB first load JS)
-- `/terms` (Terms of Service) - 2.65 kB (118 kB first load JS)
+### 3.1 Route Bundle Comparison & 87% Size Reduction
+| Metric | Pre-Wave 8 (Abstract 3D WebGL) | Wave 8 (Product Studio Cockpit) | Improvement |
+|---|---|---|---|
+| **Landing Route (`/`) Size** | 164 kB – 171 kB | **21.6 kB** | **87.4% Reduction** |
+| **First Load JS (`/`)** | 280 kB | **137 kB** | **51.1% Reduction** |
+| **Shared Base JS** | 103 kB | **103 kB** | Standard baseline |
+| **Compilation Time** | 20.8s | **18.5s** | 11.1% Faster |
 
-### 3.2 Server-Rendered Dynamic Pages & API Endpoints (ƒ)
-- `/agents/[agentId]` - 8.89 kB (282 kB first load JS)
-- `/widget/[agentId]` - 5.02 kB (120 kB first load JS)
-- Middleware: 32.6 kB
-- 36 API Route Endpoints:
-  - `/api/admin/agents`, `/api/admin/orders`, `/api/admin/overview`, `/api/admin/plans`, `/api/admin/system`, `/api/admin/users`, `/api/admin/users/[uid]`, `/api/admin/users/[uid]/reactivate`, `/api/admin/users/[uid]/suspend`
-  - `/api/agents`, `/api/agents/[agentId]`, `/api/agents/[agentId]/archive`, `/api/agents/[agentId]/restore`
-  - `/api/approvals`, `/api/approvals/[approvalId]/approve`, `/api/approvals/[approvalId]/reject`
-  - `/api/auth/session`
-  - `/api/billing/checkout`, `/api/billing/fam/*`, `/api/billing/otp/*`, `/api/billing/plans`, `/api/billing/portal`, `/api/billing/webhook`
-  - `/api/conversations`, `/api/conversations/[conversationId]/messages`
-  - `/api/cron/routines`
-  - `/api/demo/audit`
-  - `/api/files`, `/api/files/[fileId]`
-  - `/api/health`
-  - `/api/instagram/*`
-  - `/api/integrations`, `/api/memories`, `/api/routines`, `/api/runs/*`, `/api/settings/model`, `/api/swarm/run`, `/api/telegram/*`, `/api/widget/*`
-
-- **Bundle Optimization:** First-load JS shared by all routes remains tight at **103 kB**.
+### 3.2 Route Inventory Audited (All 59 Platform Routes Generated):
+- **Static Pages (○):**
+  - `/` (Landing Page with Product Studio Cockpit) - **21.6 kB** (137 kB First Load JS)
+  - `/_not-found` - 255 B
+  - `/admin` - 13.4 kB
+  - `/agents`, `/agents/new` - 6.86 kB / 10.8 kB
+  - `/approvals` - 3.52 kB
+  - `/billing` - 7.76 kB
+  - `/conversations` - 7.63 kB
+  - `/dashboard` - 4.46 kB
+  - `/files` - 4.65 kB
+  - `/icon.png` - 0 B
+  - `/instagram` - 8.2 kB
+  - `/integrations` - 13.6 kB
+  - `/login`, `/signup` - 4.62 kB / 4.67 kB
+  - `/pricing`, `/privacy`, `/terms` - 3.16 kB / 2.54 kB / 2.65 kB
+  - `/routines` - 4.6 kB
+  - `/settings` - 4.77 kB
+  - `/swarm` - 7.3 kB
+- **Server-Rendered Dynamic Pages & APIs (ƒ):**
+  - `/agents/[agentId]` - 8.89 kB
+  - `/widget/[agentId]` - 5.02 kB
+  - Middleware: 32.6 kB
+  - 36 API Route Endpoints under `/api/*` compiled cleanly without warnings.
 
 ---
 
-## 4. Wave 6: 3D Soft Claymorphism UI Verification
+## 4. Wave 8: Product Studio Cockpit Verification
 
-### 4.1 Automated Zero-Black & Palette Compliance Scan
-- **Command Executed:** `npx.cmd tsx scripts/test-3d-release-gates.ts`
+### 4.1 Verification of Abstract 3D Meshes Purge
+- **Files Verified Deleted:**
+  - `components/landing/Hero3DExperience.tsx`: `fs.existsSync === false` (PASS)
+  - `components/landing/Workflow3DCanvas.tsx`: `fs.existsSync === false` (PASS)
+  - `components/landing/ProductCommandCockpit.tsx`: `fs.existsSync === false` (PASS)
+  - `components/landing/HeroStickerStage.tsx`: `fs.existsSync === false` (PASS)
+- **Symbol & AST Scans:**
+  - `Hero3DExperience` across `app/`, `components/`, `scripts/`: **0 occurrences**.
+  - `Workflow3DCanvas` across `app/`, `components/`, `scripts/`: **0 occurrences**.
+  - Abstract Three.js geometry constructors (`SphereGeometry`, `TorusGeometry`, `CylinderGeometry`, `IcosahedronGeometry`) across `app/` and `components/`: **0 occurrences**.
+
+### 4.2 Automated Zero-Black & Color Compliance Scan
+- **Command Executed:** `node scripts/audit-3d-compliance.js`
 - **Output:**
   ```text
-  1. Auditing files for zero black, zero charcoal, and zero navy...
-  ✓ Zero forbidden black, charcoal, or navy colors detected across all files
+  Total violations found: 0
+  PASS: Zero forbidden black, charcoal, or navy colors detected across active landing files!
   ```
-- **Three.js Palette Hex Invariants in `Workflow3DCanvas.tsx`:**
-  - `ivory.canvas`: `0xF4F0E8` (Clear color matching Warm Ivory background)
-  - `ivory.card`: `0xFCFAF6` (Raised clay tablet body)
-  - `ivory.panel`: `0xFAF7F2` (Sub-panel modules)
-  - `ivory.well`: `0xEDE8DE` (Connector sockets)
-  - `sage.brand`: `0x8FA99A` (Agent node body)
-  - `sage.accent`: `0x3A5245` (Pulse core, WCAG AAA)
-  - `plum.brand`: `0x80627D` (Firewall Shield)
-  - `plum.typography`: `0x3C2A3A` (Darkest Plum headings)
-  - `plum.cta`: `0x5E445B` (Action emphasis borders)
-  - `plum.shadow`: `0x3C2A3A` (Plum ambient directional shadow tint)
-- **Zero Violations:** Direct AST/regex inspection verified 0 instances of `#000000`, `0x000000`, `rgb(0,0,0)`, `bg-black`, `text-black`, `charcoal`, or `navy`.
+- **Palette Adherence:**
+  - Warm Ivory (`#F4F0E8` canvas, `#FCFAF6` raised cockpit cards, `#FAF7F2` panels, `#DED8CD` hairline borders).
+  - Muted Sage (`#8FA99A` brand, `#587363` deep sage, `#3A5245` dark text/icons, `#EAF0EC` active pills).
+  - Dusty Plum (`#80627D` brand primary, `#5E445B` deep plum CTA, `#3C2A3A` high-contrast ink).
+  - 0 instances of `#000000`, `0x000000`, `rgb(0,0,0)`, `bg-black`, `text-black`, `charcoal`, or `navy`.
 
-### 4.2 Legacy Instagram Elimination
-- Verified that obsolete Instagram-centric prototype components are deleted:
-  - `components/landing/ProductCommandCockpit.tsx`: Removed (`fs.existsSync === false`)
-  - `components/landing/HeroStickerStage.tsx`: Removed (`fs.existsSync === false`)
-- Target files (`Workflow3DCanvas.tsx`, `AllRounderStudioShowcase.tsx`, `app/page.tsx`, `app/globals.css`) contain **0 occurrences** of `@maya_agency`, `Instagram Reel`, `Auto-DM`, or legacy references.
+### 4.3 Cockpit Window Architecture & Interactive Functionality
+- **Desktop Chrome:** Authentically rendered soft clay window header with 3 tactile dot indicators (Warm Ivory, Muted Sage, Dusty Plum), workspace breadcrumb (`qwenton / production-workspace / active-swarms`), and live status pill (`● 4 Swarms Active`, `Latency: 1.8s`).
+- **Interactive Studios Embedded:**
+  1. *Agent Studio*: Natural language prompt compiler, permission checklist, and ticket trace simulation.
+  2. *Workflow Studio*: 4-node visual pipeline graph with type-safe schema inspection and runtime execution progress.
+  3. *Multi-Agent Swarms*: Parallel execution roster with dependency topology and mission trigger.
+  4. *Approval Firewall*: Human governance firewall with 1-tap Approve/Reject controls.
+- **Floating Parallax Satellites:**
+  - Satellite A (Top Right): `Approval Firewall: 1 Action Gated ($24,000 Proposal)` positioned at `translateZ(28px)`.
+  - Satellite B (Bottom Left): `Swarm Coordination: 3 Specialist Agents • 1.8s Sync` positioned at `translateZ(28px)`.
+  - Gracefully hidden on mobile screens (`hidden lg:flex`) to avoid covering interactive controls.
 
-### 4.3 Mobile & Android Usability & Touch Safety
-- **Ergonomic Scroll Passthrough:** `Workflow3DCanvas.tsx` enforces `touch-pan-y` on its container, ensuring mobile users dragging vertically over the 3D canvas scroll the document naturally without gesture trapping.
-- **DPR Clamping:** Device pixel ratio is clamped via `renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75))`, preventing GPU thermal throttling and battery drain on high-density displays.
-- **Android Chrome Viewport Anti-Zoom:** `app/globals.css` specifies `font-size: 16px` on text inputs and textareas for viewports under 640px, eliminating mobile viewport auto-zoom disruptions.
-- **Touch Target Dimensions:** All interactive buttons and tab triggers in `AllRounderStudioShowcase.tsx` (9 instances) and `app/page.tsx` (29 instances) enforce `min-h-[48px]`.
-
-### 4.4 WebGL Fallback Resilience & Lifecycle Hygiene
-- **Pre-Initialization Support Check:** Canvas context verification tests `getContext('webgl') || getContext('experimental-webgl')`. If unsupported, `webGLFailed` state is set immediately.
-- **Accessible 2D Tactile Fallback:** In non-WebGL or context-lost states, the component gracefully renders a high-contrast tactile 2D clay diagram ("Autonomous 4-Node Spatial Pipeline") without throwing uncaught exceptions.
-- **Context Event Handling:** Attached `webglcontextlost` and `webglcontextrestored` event handlers handle GPU interruptions safely.
-- **Complete Memory Disposal on Unmount:**
-  - `cancelAnimationFrame(animId)` halts animation loop.
-  - `observer.disconnect()` unlinks `IntersectionObserver`.
-  - Attached DOM event listeners (`pointermove`, `pointerdown`, `pointerup`, `click`, `resize`, context events) are cleanly removed.
-  - Scene graph traversal (`scene.traverse`) systematically disposes geometries (`geometry.dispose()`) and materials (`material.dispose()`).
-  - WebGL renderer disposed (`renderer.dispose()`) and canvas detached from container.
+### 4.4 Mobile & Android Usability & Touch Safety
+- **Perspective Disabled on Mobile:** In `app/globals.css`, `@media (max-width: 640px)` sets `perspective: none !important;` and `transform: none !important;`, preventing touch traps, zoom anomalies, and mobile GPU throttling.
+- **Parallax Tilt Clamping:** Mouse tilt physics are clamped to `±3.5deg` (`maxTilt = 3.5`), lerped at `0.08`, and guarded with `if (window.innerWidth < 640) return;`.
+- **Reduced Motion Support:** `@media (prefers-reduced-motion: reduce)` disables all animations and transitions (`animation: none !important; transform: none !important;`).
+- **Android Viewport Zoom Prevention:** CSS rule enforces `font-size: 16px` on mobile text inputs and textareas.
+- **48px Touch Targets:**
+  - All hero CTA buttons (`Start Building Free`, `Explore Interactive Studio`): `min-h-[48px]`.
+  - All 4 studio selector tabs: `min-h-[48px]`.
+  - All simulator buttons (`Compile Verified Agent Spec`, `Simulate Refund Ticket #4492`, `Run Workflow Simulation`, `Dispatch Coordinated Swarm Mission`, `Simulate High-Risk Inbound Action`): `min-h-[48px]`.
+  - Mobile hamburger drawer links: `min-h-[48px]`.
 
 ---
 
-## 5. Error Taxonomy & Reliability Suite Verification
+## 5. Error Taxonomy & Security Suite Verification
 
 - **Command Executed:** `npx.cmd tsx scripts/test-taxonomy.ts`
 - **Output:**
@@ -223,5 +221,9 @@ This report establishes the final release verification for the **Qwenton All-Rou
 
 - **Final Verdict:** **APPROVED FOR PRODUCTION RELEASE**
 - **Defects Discovered:** 0 blockers, 0 criticals, 0 warnings.
-- **Wave 6 3D Transformation Status:** Complete, performant, mobile-safe, and resilient.
-- **Readiness:** The platform compiles without errors (`tsc --noEmit`), builds 59/59 routes cleanly (`next build`), adheres strictly to the 3-colour design system, and fulfills all user requirements.
+- **Wave 8 Quality Gate Sign-Off:**
+  - Abstract 3D scenes eliminated.
+  - Landing page bundle reduced by 87% (from 164 kB to 21.6 kB).
+  - Product Studio Cockpit hero is tactile, responsive, accessible, and showcases the real product.
+  - Zero forbidden colors.
+  - All 59 static and dynamic routes compiled and optimized cleanly with exit code 0.
