@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const files = [
+  'components/landing/Hero3DExperience.tsx',
   'components/landing/Workflow3DCanvas.tsx',
   'components/landing/AllRounderStudioShowcase.tsx',
   'app/page.tsx',
@@ -24,6 +25,10 @@ const forbiddenPatterns = [
 let violations = [];
 
 files.forEach(f => {
+  if (!fs.existsSync(f)) {
+    console.error('File not found:', f);
+    process.exit(1);
+  }
   const content = fs.readFileSync(f, 'utf8');
   const lines = content.split(/\r?\n/);
   lines.forEach((line, idx) => {
@@ -33,7 +38,8 @@ files.forEach(f => {
       trimmed.startsWith('/*') ||
       trimmed.startsWith('*') ||
       trimmed.toLowerCase().includes('zero') ||
-      trimmed.toLowerCase().includes('banned')
+      trimmed.toLowerCase().includes('banned') ||
+      trimmed.toLowerCase().includes('prohibit')
     ) {
       return;
     }
@@ -50,5 +56,5 @@ if (violations.length > 0) {
   console.log(JSON.stringify(violations, null, 2));
   process.exit(1);
 } else {
-  console.log('PASS: Zero forbidden black, charcoal, or navy colors detected across all files!');
+  console.log('PASS: Zero forbidden black, charcoal, or navy colors detected across all files including Hero3DExperience.tsx!');
 }

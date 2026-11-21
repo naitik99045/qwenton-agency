@@ -189,4 +189,64 @@
   .clay-card-3d-badge {
     transform: translateZ(24px);
   }
+
+  /* GSAP-Style Choreographed Entry Sequences with cubic-bezier(0.16, 1, 0.3, 1) */
+  @keyframes heroFadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(28px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes heroBloomIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.94) translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes heroFloatGentle {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .animate-hero-eyebrow {
+    animation: heroFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+  }
+
+  .animate-hero-headline {
+    animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+
+  .animate-hero-subhead {
+    animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  }
+
+  .animate-hero-cta {
+    animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both;
+  }
+
+  .animate-hero-pills {
+    animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both;
+  }
+
+  .animate-hero-3d {
+    animation: heroBloomIn 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  }
+
+  .animate-float-gentle {
+    animation: heroFloatGentle 4.5s ease-in-out infinite;
+  }
 }

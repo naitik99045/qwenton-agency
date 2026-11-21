@@ -26,3 +26,8 @@
 - [x] **AT-013 (frontend-developer)**: Build `components/landing/Workflow3DCanvas.tsx` and integrate 3D depth, interactive 3D node orchestration, and CSS 3D perspective cards into `app/page.tsx` and `AllRounderStudioShowcase.tsx`.
 - [x] **AT-014 (code-reviewer)**: Audit WebGL resource disposal, zero-black compliance, and performance/memory hygiene.
 - [x] **AT-015 (qa-test-automation)**: Verify typecheck, Next.js 59-route production build, Android mobile touch safety, and release evidence.
+
+## Wave 7: Hero 3D Spatial Experience & Entry Animations
+- [x] **AT-016 (frontend-developer)**: Build `components/landing/Hero3DExperience.tsx` and integrate into `app/page.tsx` with choreographed cubic-bezier entry animations in `app/globals.css`.
+- [x] **AT-017 (code-reviewer)**: Audit WebGL resource disposal, zero-black compliance, mobile touch safety, and motion accessibility.
+- [ ] **AT-018 (qa-test-automation)**: Verify typecheck, Next.js 59-route production build, Android touch targets, and final delivery verification.

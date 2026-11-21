@@ -29,6 +29,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { AllRounderStudioShowcase } from '@/components/landing/AllRounderStudioShowcase';
+import { Hero3DExperience } from '@/components/landing/Hero3DExperience';
 import { ScrollProgressBar } from '@/components/landing/ScrollProgressBar';
 
 export default function LandingPage() {
@@ -406,24 +407,24 @@ export default function LandingPage() {
       <section className="relative pt-12 sm:pt-20 pb-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
           {/* Eyebrow Badge */}
-          <div className="mb-6">
+          <div className="mb-6 animate-hero-eyebrow">
             <Badge variant="success" className="px-3.5 py-1 text-xs">
               ● Production-Ready Multi-Agent Orchestration
             </Badge>
           </div>
 
           {/* Core Verbatim Positioning Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-ink tracking-tight max-w-5xl leading-[1.12]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-ink tracking-tight max-w-5xl leading-[1.12] animate-hero-headline">
             One workspace to build AI agents, connect business systems, automate processes, coordinate teams of agents, and govern every important action.
           </h1>
 
           {/* Sub-headline */}
-          <p className="mt-6 text-base sm:text-xl text-ink-muted max-w-3xl leading-relaxed">
+          <p className="mt-6 text-base sm:text-xl text-ink-muted max-w-3xl leading-relaxed animate-hero-subhead">
             Replace brittle point-tool bots with an enterprise workforce. Build autonomous agents with natural language, design visual multi-step workflows, deploy coordinated swarms across departments, and maintain 100% human control with our server-enforced Approval Firewall.
           </p>
 
           {/* Call-to-Action Group */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto animate-hero-cta">
             <Link href="/dashboard" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto min-h-[48px] text-base px-8 font-bold shadow-clay-button">
                 Start Building Free →
@@ -441,7 +442,7 @@ export default function LandingPage() {
           </div>
 
           {/* Trust & Assurance Pill Strip */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-mono text-ink-muted">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-mono text-ink-muted animate-hero-pills">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-white border border-border-subtle shadow-clay-button-subtle">
               <Check className="w-3.5 h-3.5 text-sage-dark" />
               <span>Zero-Risk Sandbox Execution</span>
@@ -460,8 +461,13 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* Spatial 3D Hero Mesh Experience */}
+          <div className="w-full mt-10 sm:mt-14 max-w-5xl animate-hero-3d">
+            <Hero3DExperience />
+          </div>
+
           {/* Interactive Centerpiece Component */}
-          <div className="w-full mt-12 sm:mt-16">
+          <div id="showcase" className="w-full mt-14 sm:mt-20">
             <AllRounderStudioShowcase />
           </div>
         </div>
